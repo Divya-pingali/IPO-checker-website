@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import type { Finding, FilterState, ViewMode, AssetConfig } from './types';
+import type { CheckerJson, Finding, FilterState, ViewMode } from './types';
 import { useFindingsParser } from './hooks/useFindingsParser';
 import { usePdfDocument } from './hooks/usePdfDocument';
 import { usePdfAnchorMatcher } from './hooks/usePdfAnchorMatcher';
@@ -9,30 +9,52 @@ import { AppShell } from './components/AppShell';
 import { PdfViewer } from './components/PdfViewer';
 import { Sidebar } from './components/Sidebar';
 import { RulebookPanel } from './components/RulebookPanel';
-
-// ─── Asset configuration ──────────────────────────────────────────────────────
-const DEFAULT_ASSETS: AssetConfig = {
-  prospectusUrl: '/prospectus.pdf',
-  checkerJsonUrl: '/checker.json',
-  rulebookUrl: '/rulebook.pdf',
-  label: 'Black Sesame Technologies',
-};
+import { UploadScreen } from './components/UploadScreen';
 
 export default function App() {
-  const assets = DEFAULT_ASSETS;
+  // ── Upload / viewer state ────────────────────────────────────────────────────
+  const [view, setView] = useState<'upload' | 'viewer'>('upload');
+  const [checkerData, setCheckerData] = useState<CheckerJson | null>(null);
+  const [pdfBlobUrl, setPdfBlobUrl] = useState<string>('');
+  // Keep a ref to the blob URL so we can revoke it when replaced
+  const prevBlobUrl = useRef<string>('');
+
+  const handleAnalysisComplete = useCallback(
+    (data: CheckerJson, blobUrl: string) => {
+      // Revoke old blob URL to avoid memory leaks
+      if (prevBlobUrl.current) URL.revokeObjectURL(prevBlobUrl.current);
+      prevBlobUrl.current = blobUrl;
+      setCheckerData(data);
+      setPdfBlobUrl(blobUrl);
+      setView('viewer');
+    },
+    [],
+  );
+
+  const handleNewAnalysis = useCallback(() => {
+    setView('upload');
+  }, []);
+
+  // Revoke blob URL on unmount
+  useEffect(() => {
+    return () => {
+      if (prevBlobUrl.current) URL.revokeObjectURL(prevBlobUrl.current);
+    };
+  }, []);
 
   // ── Data loading ─────────────────────────────────────────────────────────────
+  // useFindingsParser accepts a CheckerJson object directly — no fetch needed
   const { findings, meta, loading: jsonLoading, error: jsonError } =
-    useFindingsParser(assets.checkerJsonUrl);
+    useFindingsParser(view === 'viewer' ? checkerData : null);
 
   const { pdfDoc, numPages, loading: pdfLoading, error: pdfError } =
-    usePdfDocument(assets.prospectusUrl);
+    usePdfDocument(view === 'viewer' ? pdfBlobUrl : '');
 
   const { matchResults, extractionProgress, selectCandidate } =
     usePdfAnchorMatcher(pdfDoc, findings);
 
   const { rulebookUrl, rulebookOpen, openRulebook, closeRulebook, rulebookPage } =
-    useRulebookReference(assets.rulebookUrl);
+    useRulebookReference('/rulebook.pdf');
 
   // ── Panel resize ─────────────────────────────────────────────────────────────
   const { sidebarWidth, isDragging, handleMouseDown } = useResizablePanels({
@@ -86,8 +108,6 @@ export default function App() {
       if (targetPage) {
         setScrollToPage(targetPage);
         setCurrentPage(targetPage);
-        // After the page scrolls into view and highlights render, scroll to
-        // the sentence-level highlight box for this finding.
         window.setTimeout(() => {
           const el = document.querySelector<HTMLElement>(
             `[data-highlight-id="${finding.id}"]`,
@@ -109,6 +129,11 @@ export default function App() {
   }, []);
 
   // ── Render ────────────────────────────────────────────────────────────────────
+
+  if (view === 'upload') {
+    return <UploadScreen onComplete={handleAnalysisComplete} />;
+  }
+
   if (jsonError) {
     return (
       <div className="app-error">
@@ -123,8 +148,8 @@ export default function App() {
       pdfLoading={pdfLoading}
       jsonLoading={jsonLoading}
       extractionProgress={extractionProgress}
+      onNewAnalysis={handleNewAnalysis}
     >
-      {/* Prevent text selection while dragging */}
       <div
         className="app-panels"
         style={{ userSelect: isDragging ? 'none' : undefined }}

@@ -7,6 +7,7 @@ interface AppShellProps {
   jsonLoading: boolean;
   extractionProgress: number;
   children: React.ReactNode;
+  onNewAnalysis?: () => void;
 }
 
 /**
@@ -20,6 +21,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   jsonLoading,
   extractionProgress,
   children,
+  onNewAnalysis,
 }) => {
   const isLoading = pdfLoading || jsonLoading;
 
@@ -41,6 +43,12 @@ export const AppShell: React.FC<AppShellProps> = ({
             <span className="topbar__divider">·</span>
             <span className="topbar__date">{meta.analysis_date}</span>
           </div>
+        )}
+
+        {onNewAnalysis && (
+          <button className="topbar__new-btn" onClick={onNewAnalysis} title="Analyse a new document">
+            ↑ New Analysis
+          </button>
         )}
 
         <div className="topbar__status">

@@ -1,0 +1,778 @@
+{
+  "meta": {
+    "rulebook_version": "v3.0",
+    "company_name": "Black Sesame International Holding Limited",
+    "analysis_date": "2026-04-11"
+  },
+
+  "company_classification": {
+    "specialist_technology_industry": "Advanced hardware and software",
+    "acceptable_sector": "Semiconductors (automotive-grade SoC design for autonomous driving)",
+    "commercial_or_precommercial": "Commercial",
+    "expected_market_cap_hkd_bn": 16.59,
+    "applicable_market_cap_tier": "HK$15-30bn",
+    "applicable_aggregate_sii_threshold_pct": 15,
+    "classification_notes": "Market cap calculated at offer price mid-point HK$29.15 x 569,169,253 total shares post-IPO (assuming Offer Size Adjustment Option and Over-allotment Option not exercised, all Preferred Shares converted 1:1). Revenue 2023: RMB312.4m ≈ HK$340m at prevailing rates, exceeding PARAM_COMM_REV_MIN. Note: temporary modifications in effect from 1 Sep 2024 (Guide para 10) lower Commercial Company minimum market cap from HK$15bn to HK$6bn; this company easily clears both the original and modified threshold."
+  },
+
+  "conditional_modules": {
+    "module_F_triggered": true,
+    "module_G_triggered": true,
+    "module_H_triggered": false,
+    "module_I_triggered": false,
+    "trigger_basis": {
+      "F": "All SIIs held Preferred Shares (Series A through Series C+) that convert to ordinary shares on a 1:1 basis upon completion of the Global Offering; convertible securities are held by SIIs and are included in the threshold calculations — Module F is triggered (source: tier2/pre_ipo_investment, p.185).",
+      "G": "Two Pathfinder SIIs are identified (Northern Light SIIs and Oceanpine SIIs) — Module G is triggered as lock-up obligations attach to Pathfinder SIIs under MB Rule 18C.14(2) (source: tier2/pathfinder_sii, p.176–178).",
+      "H": "No SII Placees are identified in the prospectus; the Aggregate Investment Benchmark is met through pre-IPO investments only; cornerstone investors are separately categorised and are not presented as SII Placees for Module E purposes (source: tier2/cornerstone_placing, p.344–352) — Module H is not triggered.",
+      "I": "No existing overseas listing is disclosed; the company lists solely on HKEX in this offering (source: tier2/corporate_structure, tier1/listing_statistics) — Module I is not triggered."
+    }
+  },
+
+  "modules": [
+    {
+      "module_id": "0",
+      "module_name": "Pre-Conditions and Company Classification",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "P1",
+          "rule_description": "Specialist Technology Company status",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "Company identified as Specialist Technology Company in semiconductor/advanced hardware sector; consistently applied across prospectus.",
+          "detail": {
+            "explanation": "The prospectus identifies Black Sesame as a Specialist Technology Company under MB Rule 18C.03, engaged in R&D and commercialisation of automotive-grade SoCs for autonomous driving. This falls within the 'Semiconductors' sub-sector of 'Advanced hardware and software' per para 2(ii) of the Guide. The sector identification is consistent across the corporate information section (application for listing on basis of 18C.03 as Commercial Company), the SII section (SII descriptions reference 'Specialist Technology Companies' in 'next-generation information technology' and 'advanced hardware and software'), and the SII sophistication disclosures.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 125,
+              "anchor_phrase": "we satisfy the requirements under Rule 18C.03 of the Listing Rules"
+            }
+          }
+        },
+        {
+          "rule_id": "P2",
+          "rule_description": "Commercial or Pre-Commercial classification",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Commercial Company classification asserted but the revenue figure is not expressly linked to the classification in the SII or corporate information section.",
+          "detail": {
+            "explanation": "The prospectus states in the corporate information section (p.125) that the Company applies for listing 'as a Commercial Company (as defined in the Listing Rules) with reference to our expected market capitalisation at the time of Listing, which exceeds HK$6 billion.' The revenue figure (RMB312.4m for FY2023, approximately HK$340m) appears in the Financial Information section (p.353) and exceeds PARAM_COMM_REV_MIN (HK$250m). However, [D] check fails on one point: no single passage in the prospectus expressly links the stated revenue figure to the Commercial Company classification, as required — the corporate information section references market cap but not revenue in the classification statement. The [T] threshold is substantively met (HK$~340m > HK$250m) but the cross-reference is missing. [K]: Revenue figures in the financial statements are internally consistent. [L]: The classification statement references market cap rather than the revenue test, which is the operative test under MB 18C.03(4); this may mislead a reader about the compliance basis.",
+            "recommendation": "Reviewer should confirm whether the prospectus elsewhere (e.g. in the Business section or a summary table) expressly links the RMB312.4m FY2023 revenue to the Commercial Company classification. If no such linkage exists, this is a disclosure gap under [D] of rule P2.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 125,
+              "anchor_phrase": "satisfy the requirements under Rule 18C.03 of the Listing Rules as a Commercial Company"
+            }
+          }
+        },
+        {
+          "rule_id": "P3",
+          "rule_description": "Market capitalisation tier",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Expected market cap exceeds HK$6bn minimum and places the company in the HK$15–30bn tier, but no single disclosure in the SII section states the applicable tier or threshold.",
+          "detail": {
+            "explanation": "The prospectus states expected market cap 'exceeds HK$6 billion' (p.125) — this establishes minimum eligibility as a Commercial Company per the modified PARAM_MKTCAP_COMM_MIN effective 1 Sep 2024. At mid-point offer price (HK$29.15 x 569,169,253 shares ≈ HK$16.59bn), the company falls in the HK$15–30bn tier. However: (1) The prospectus says only 'exceeds HK$6 billion' — it does not state the specific tier (HK$15–30bn) or identify the applicable aggregate SII threshold (15%) that flows from it. (2) The 1 Sep 2024 temporary modification lowering the Commercial minimum from HK$15bn to HK$6bn is not acknowledged or explained (Guide para 10). [K]: The market cap figure is not cross-referenced to the SII section or Pathfinder SII section; the SII section makes no reference to expected market cap at all.",
+            "recommendation": "Reviewer should confirm: (a) whether the prospectus elsewhere states the HK$15–30bn tier and the 15% aggregate SII threshold as the applicable benchmark; (b) whether the omission of any explanation of the 1 Sep 2024 temporary modification is material given that the stated 'exceeds HK$6bn' figure would only have been sufficient under the modified threshold.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 125,
+              "anchor_phrase": "expected market capitalization at the time of Listing, which, based on the Offer Price, exceeds HK$6 billion"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "A",
+      "module_name": "Independence of Sophisticated Investors",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "A1",
+          "rule_description": "Date of independence assessment",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Independence confirmed but no specific date of definitive agreement cited per-SII; single-block assertion lacks investor-specific dating.",
+          "detail": {
+            "explanation": "Page 186 states that 'each of our Sophisticated Independent Investors is independent from and not connected with any Director, chief executive or substantial shareholder of our Company' as of the Latest Practicable Date. This confirmation is prospectus-date oriented. Para 17 requires independence to be determined as at the date of signing the definitive agreement for the relevant investment. No per-SII disclosure identifies the specific definitive agreement date and confirms independence as at that date. [K]: The investment milestones in tier2/pathfinder_sii (pp.176–177) provide some timeline context (e.g. Tencent/Bosch April 2021, NIO Capital/Geely January 2022) but these are described as investment receipt dates, not definitive agreement signing dates. [L]: The independence statement is templated and prospectus-date oriented rather than dated to each definitive agreement.",
+            "recommendation": "Reviewer should verify whether elsewhere in the prospectus (e.g. in the Pre-IPO Investment tables) the definitive agreement date is identified for each SII and independence is confirmed as at that date. If the independence confirmation is solely as of the Latest Practicable Date without a back-dated confirmation to the definitive agreement date, this may not satisfy para 17.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "each of our Sophisticated Independent Investors is independent from and not connected"
+            }
+          }
+        },
+        {
+          "rule_id": "A2",
+          "rule_description": "Independence from applicant, controlling shareholders, and founders",
+          "check_types": ["D", "R", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Independence from the applicant and controlling shareholders asserted; however Dr. Yang Lei's historical role at Northern Light Venture Capital is disclosed but its effect on independence reasoning is not substantiated.",
+          "detail": {
+            "explanation": "Page 186 provides a blanket independence statement for all nine SIIs. [R]: For Northern Light SIIs specifically, the prospectus discloses that Dr. Yang Lei, a non-executive Director of the Company, 'was a partner at Northern Light Venture Capital from February 2010 to October 2021.' Northern Light Venture Capital is the ultimate manager of the Northern Light SIIs and is a Pathfinder SII. This is a close associate or connected person disclosure that directly engages para 17 — yet the prospectus provides no specific reasoning explaining why this historical relationship does not negate independence of the Northern Light SIIs, or why Dr. Yang Lei's departure in October 2021 is sufficient to sever any relevant connection. [K]: Cross-referencing tier1/directors_mgmt confirms Dr. Yang Lei's role as non-executive Director and the Northern Light affiliation. [L]: A bare assertion of independence at p.186 is not supplemented by investor-specific analysis for Northern Light.",
+            "recommendation": "Reviewer should assess whether the disclosed relationship between Dr. Yang Lei and Northern Light Venture Capital — particularly given he was a partner during the period covering the Series A and Series B investments — adequately supports the independence assertion, or whether further analysis is required under para 17.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner at Northern Light"
+            }
+          }
+        },
+        {
+          "rule_id": "A3",
+          "rule_description": "No relationship with founder or close associate",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Close associate of founder test addressed only by way of general independence statement; not separately addressed per SII.",
+          "detail": {
+            "explanation": "The general independence statement at p.186 covers independence from Directors, chief executives, and substantial shareholders, and states each Pre-IPO Investor is independent of 'any of their respective associates (within the meaning of the Listing Rules).' The founder of the Company is Mr. Shan Jizhang (executive chairman and CEO). The prospectus does not contain an express per-SII statement that no SII is a close associate of Mr. Shan. The general statement at p.186 arguably covers this but does not expressly use the word 'founder' or address the close associate test as a distinct item. [L]: The close-associate-of-founder test under para 17 is not visibly addressed as a separate checklist item.",
+            "recommendation": "Reviewer should confirm whether the Listing Rules definition of 'close associate' is satisfied by the general disclosure, or whether a separate express statement addressing the close-associate-of-founder test is expected by HKEX practice.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "each of our Sophisticated Independent Investors is independent from and not connected with any Director"
+            }
+          }
+        },
+        {
+          "rule_id": "A4",
+          "rule_description": "No acting-in-concert arrangements",
+          "check_types": ["D", "K", "L"],
+          "severity": "High",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "No express acting-in-concert statement found for SIIs; cross-SII relationships disclosed but acting-in-concert not addressed.",
+          "detail": {
+            "explanation": "Para 18 requires the prospectus to address acting-in-concert arrangements. The prospectus discloses at p.186 that the Northern Light SIIs, Oceanpine SIIs, and SummitView SIIs are each internally related (same fund manager aggregation) but notes that 'Save for the Northern Light SIIs, the Oceanpine SIIs and the SummitView SIIs as disclosed herein, each of the Pre-IPO Investors is independent from each other.' This addresses intra-SII co-investment groupings, but does not contain any statement that no SII is acting in concert with the applicant or controlling shareholders. [L]: The acting-in-concert question is not directly addressed; a general independence statement is present but does not specifically disclaim concert arrangements in the manner contemplated by para 18.",
+            "recommendation": "Reviewer should confirm whether the prospectus elsewhere contains an express statement that no SII is acting in concert with the Company, its controlling shareholders, or other SIIs. If no such statement exists, this is an absence under [D].",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "Save for the Northern Light SIIs, the Oceanpine SIIs and the SummitView SIIs"
+            }
+          }
+        },
+        {
+          "rule_id": "A5",
+          "rule_description": "No agreements to return investment",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Absent",
+          "status_colour": "red",
+          "summary": "No express statement found confirming the absence of any agreement to return, reimburse, or compensate SIIs.",
+          "detail": {
+            "explanation": "Para 19 requires an express statement that there is no agreement or arrangement under which the applicant or its associates would return, reimburse, or compensate any SII in connection with the investment. No such statement has been identified in tier2/sii_disclosure, tier2/pre_ipo_investment, or any other section. The prospectus at p.185 confirms that certain special rights (divestment rights, liquidation preferences, etc.) have been terminated, but this addresses pre-IPO rights and does not constitute the express para 19 statement. [K]: No cross-referenced side letters, fee arrangements, or compensation mechanisms are disclosed, but the absence of a confirmatory statement is itself a gap.",
+            "recommendation": "Reviewer should search the full prospectus — particularly the Pre-IPO Investment section and any relevant appendices — for a statement expressly confirming no para 19 arrangements exist. If absent, this is a material disclosure gap.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 185,
+              "anchor_phrase": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "B",
+      "module_name": "Sophistication of Investors",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "B1",
+          "rule_description": "Sophistication requirement generally",
+          "check_types": ["D", "R", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Each SII's sophistication is addressed with investor-specific facts, but several entries use templated or portfolio-listing formats without demonstrating actual expertise.",
+          "detail": {
+            "explanation": "Para 20 requires each SII to have the knowledge, expertise, and experience to assess the risk profile and prospects of the applicant as at the date of investment. The prospectus provides per-SII descriptions at pp.186–192. These vary materially in quality: Northern Light, Oceanpine, SummitView, Xiaomi, Tencent, and BOCGI provide substantive descriptions linking their investment focus to the relevant technology sector. However, Geely SII and SAIC Motor SII are characterised as 'key participant[s] in the downstream automotive industry' with reference to Frost & Sullivan reports — this is a market share characterisation, not a demonstration of knowledge and expertise to assess semiconductor/autonomous driving SoC risk. [R]: The Geely and SAIC characterisations do not constitute a substantiated sophistication case under para 20 without further explanation of how being a vehicle OEM equips these investors to assess the risk profile of an SoC design company.",
+            "recommendation": "Reviewer should consider whether Geely and SAIC's sophistication under para 21(iv) (key market participant) is adequately substantiated for para 20 purposes, given that market share data from Frost & Sullivan does not itself demonstrate expertise in assessing SoC design company risk.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 191,
+              "anchor_phrase": "Geely Automobile Holdings Limited is a key participant in the downstream automotive industry"
+            }
+          }
+        },
+        {
+          "rule_id": "B2",
+          "rule_description": "Asset management / fund AUM threshold (para 21(i))",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Northern Light and BOCGI rely on para 21(i); AUM figures meet thresholds but Northern Light's first-investment reference date gap requires verification.",
+          "detail": {
+            "explanation": "Northern Light (Pathfinder SII): AUM of Northern Light Venture Capital disclosed as HK$17.69bn as of June 30, 2016 (footnote 1 confirms this is 'a date not more than six months prior to the date on which the relevant investor signed the relevant definitive agreement'). [T]: HK$17.69bn ≥ PARAM_B2_AUM_MIN (HK$15bn) ✓. However, Northern Light first invested in Series A (investment date circa Sep–Dec 2016 per the overview table at p.181); June 30, 2016 is approximately 3–6 months prior — within PARAM_C2_REF_MONTHS — but only marginally so, and needs verification that the definitive agreement was signed no earlier than January 1, 2016. BOCGI: AUM HK$118.7bn as of June 30, 2021 (footnote 1) — [T]: HK$118.7bn ≥ HK$15bn ✓. Future Industry Fund: CS Capital AUM RMB59bn (footnote 1) ≈ HK$64bn ≥ HK$15bn ✓. [K]: AUM figures are consistent between sii_disclosure and pre_ipo_investment.",
+            "recommendation": "Reviewer should verify the exact definitive agreement signing date for Northern Light's Series A investment to confirm the June 30, 2016 AUM reference date falls within 6 months prior.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "AUM of Northern Light Venture Capital was approximately HK$17.69 billion as of June 30, 2016"
+            }
+          }
+        },
+        {
+          "rule_id": "B3",
+          "rule_description": "Corporate portfolio threshold (para 21(ii))",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Xiaomi and Tencent rely on para 21(ii); portfolio sizes disclosed far exceed HK$15bn but neither confirms exclusion of consolidated subsidiaries.",
+          "detail": {
+            "explanation": "Xiaomi SII: 'diverse investment portfolio of approximately RMB74.5 billion as of June 30, 2021' — [T]: RMB74.5bn ≈ HK$89bn ≥ PARAM_B3_PORT_MIN (HK$15bn) ✓. Tencent SII: 'diverse investment portfolio of approximately RMB878.7 billion as of December 31, 2021' — [T]: far exceeds threshold ✓. [D]: However, para 21(ii) requires the portfolio to exclude 'investments in consolidated subsidiaries.' Neither the Xiaomi nor Tencent disclosure expressly states that consolidated subsidiaries are excluded from the stated portfolio figure. Xiaomi Corporation and Tencent Holdings are large conglomerates with significant consolidated operations; the consolidated subsidiaries exclusion is material and cannot be assumed. [L]: The omission of the consolidated subsidiaries exclusion is a gap in the disclosure template for these two SIIs.",
+            "recommendation": "Reviewer should request confirmation from Xiaomi and Tencent that the portfolio figures stated (RMB74.5bn and RMB878.7bn respectively) exclude investments in consolidated subsidiaries, and that the figures still meet PARAM_B3_PORT_MIN after such exclusion. Given the scale of both portfolios the substantive threshold is unlikely to be at risk, but the disclosure gap should be flagged.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 189,
+              "anchor_phrase": "Xiaomi Corporation has a diverse investment portfolio of approximately RMB74.5 billion"
+            }
+          }
+        },
+        {
+          "rule_id": "B4",
+          "rule_description": "Specialist Technology focus threshold (para 21(iii))",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Oceanpine and SummitView rely on para 21(iii); SummitView's disclosure is adequate but Oceanpine's AUM at the relevant reference date falls below HK$15bn and the Specialist Technology breakdown is unclear.",
+          "detail": {
+            "explanation": "SummitView SIIs: AUM HK$13.2bn as of December 31, 2020, 'with more than HK$5 billion in Specialist Technology Companies.' [T] re PARAM_B4_TECH_MIN: HK$5bn ✓. But [T] re PARAM_B3_PORT_MIN: total AUM HK$13.2bn < HK$15bn — this means SummitView cannot qualify under para 21(ii) (total portfolio size). It must therefore rely solely on para 21(iii), which requires AUM/portfolio 'primarily derived' from Specialist Technology investments to be at least HK$5bn. The disclosure states >HK$5bn in Specialist Technology at Dec 31, 2020 — this meets PARAM_B4_TECH_MIN. However, the Dec 31, 2020 reference date is after SummitView's investment (Series B2, September 2019); the footnote 1 convention ('not more than six months prior to definitive agreement') would place the required reference date no later than approximately March 2020. December 31, 2020 is approximately 15 months after September 2019 — this is after the definitive agreement, not before it, and therefore cannot satisfy para 25(i)/C2. This is a material reference date issue for SummitView. Oceanpine SIIs: AUM 'approximately HK$14.3 billion as of December 31, 2023 derived primarily from the valuation of their investments in Specialist Technology Companies.' [T] re PARAM_B3_PORT_MIN: HK$14.3bn < HK$15bn — cannot qualify under para 21(ii). [T] re PARAM_B4_TECH_MIN: the AUM is stated to be 'primarily derived' from Specialist Technology investments but no specific HKD figure for the Specialist Technology portion is given. At HK$14.3bn total, if 'primarily' means >50%, the Specialist Technology portion would be >HK$7.15bn ≥ PARAM_B4_TECH_MIN (HK$5bn) — but this is inferential, not stated. [D]: Oceanpine does not disclose the specific amount attributable to Specialist Technology investments.",
+            "recommendation": "For SummitView: reviewer should urgently check the definitive agreement date for the Series B2 investment. If signed in September 2019, the December 31, 2020 AUM reference is approximately 15 months after the agreement and does not comply with para 25(i). For Oceanpine: reviewer should obtain confirmation of the specific HKD amount of AUM attributable to Specialist Technology investments to verify PARAM_B4_TECH_MIN is met by express disclosure rather than inference.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 189,
+              "anchor_phrase": "AUM of SummitView Capital (M&A) was approximately HK$13.2 billion as of 31 December 2020"
+            }
+          }
+        },
+        {
+          "rule_id": "B5",
+          "rule_description": "Key market participant (para 21(iv))",
+          "check_types": ["D", "R", "L"],
+          "severity": "High",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Geely and SAIC rely on para 21(iv) as key market participants; market share data cited but no advance HKEX submission disclosed and the reasoning link to SoC expertise is not established.",
+          "detail": {
+            "explanation": "Geely SII (GCF Prosperity Limited): The prospectus characterises Geely Automobile Holdings as 'a key participant in the downstream automotive industry in terms of sales volume' citing Frost & Sullivan. SAIC Motor SII: similarly characterised as 'a key participant in the downstream automotive industry.' [D]: (a) The basis for key market participant status is described (vehicle OEM scale); (b) the Specialist Technology Industry in which the SII is active is identified as autonomous driving/smart vehicle industry, which overlaps with the applicant's sector; (c) however, the prospectus does not explain how OEM status in the vehicle assembly/sales market constitutes expertise in assessing SoC design risk. [R]: Being a customer/user of autonomous driving chips in vehicles is not the same as being an expert in SoC design — the reasoning connection between OEM market participation and ability to assess the applicant's risk profile is not established. Note 1 reference for Geely is 'December 31, 2021' and 'December 31, 2023' — but neither is confirmed as within 6 months of Geely's definitive agreement date (January 2022 per the corporate timeline). The Dec 31, 2021 figure predates the Jan 2022 investment by approximately one month — this satisfies C2 on its face, but needs verification.",
+            "recommendation": "Reviewer should: (a) confirm whether advance submission to HKEX was made for Geely and SAIC as para 21(iv) claimants (per H2c requirement — even though Module H is not triggered, the advance submission obligation for para 21(iv) applies to pre-listing investors too); (b) assess whether OEM market share data is sufficient to establish expertise to assess SoC investment risk without further substantiation.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 191,
+              "anchor_phrase": "According to Frost & Sullivan, Geely Automobile Holdings Limited is a key participant"
+            }
+          }
+        },
+        {
+          "rule_id": "B6",
+          "rule_description": "Government / sovereign wealth fund (para 21(v))",
+          "check_types": ["D", "K", "L"],
+          "severity": "High",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "No SII claims para 21(v) status; not applicable.",
+          "detail": {
+            "explanation": "None of the nine SIIs is characterised as a government body, government fund, sovereign wealth fund, or multilateral body. BOCGI is a wholly owned subsidiary of Bank of China (a state-owned bank), but its sophistication is grounded in para 21(i) AUM, not para 21(v) governmental status. Module B6 is not triggered.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": null,
+              "anchor_phrase": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "C",
+      "module_name": "SII Disclosure Requirements",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "C1",
+          "rule_description": "Identity disclosure",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "All nine SIIs identified by full legal name, entity type, jurisdiction of incorporation, and principal business activity.",
+          "detail": {
+            "explanation": "Pages 186–192 identify each SII with full legal name (including Chinese name where applicable), entity type (exempted limited partnership, company incorporated in HK/BVI/Delaware/PRC), jurisdiction of incorporation, and a description of principal business. Each entry is sufficiently specific that an industry participant could identify the entity. [K]: Names are consistent across tier2/sii_disclosure, tier2/pre_ipo_investment, and tier1/cap_table.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "Set out below is a description of our Sophisticated Independent Investors"
+            }
+          }
+        },
+        {
+          "rule_id": "C2",
+          "rule_description": "Reference date — definitive agreement (para 25(i))",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "A collective footnote confirms dates are within 6 months of the relevant definitive agreement, but no actual calendar dates are stated per SII.",
+          "detail": {
+            "explanation": "Footnote 1 at p.192 states that figures are 'a date not more than six months prior to the date on which the relevant investor signed the relevant definitive agreement for their investment in the Company.' This is a compliance assertion rather than a disclosure of the actual reference date for each SII. Para 25(i) requires figures to be as of a stated date; the footnote convention substitutes a general assertion for specific dates, making independent verification impossible. The specific concern raised in B4 regarding SummitView (reference date Dec 31, 2020 vs investment circa Sep 2019) suggests the footnote assertion may not be accurate for all SIIs. [L]: The absence of per-SII actual reference dates (e.g. '31 December 2023') leaves the compliance chain unverifiable without access to the underlying definitive agreements.",
+            "recommendation": "Reviewer should compile a per-SII table mapping: (a) the stated AUM/portfolio reference date; (b) the confirmed definitive agreement date; and (c) the gap in months. SummitView in particular warrants priority attention given the apparent date inconsistency identified in B4.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 192,
+              "anchor_phrase": "being a date not more than six months prior to the date on which the relevant investor"
+            }
+          }
+        },
+        {
+          "rule_id": "C3",
+          "rule_description": "Reference date — listing application (para 25(ii))",
+          "check_types": ["D", "T", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Updated figures as of late 2023 are provided for most SIIs and likely satisfy para 25(ii) relative to the June 2023 listing application, but this is not expressly confirmed.",
+          "detail": {
+            "explanation": "The prospectus provides two sets of AUM/portfolio figures for most SIIs: an earlier figure (at the time of investment, per footnote 1) and an updated figure as of late 2023 (e.g. Northern Light: HK$31.19bn as of September 30, 2023; Oceanpine: HK$14.3bn as of December 31, 2023). The listing application date was June 29, 2023. The September–December 2023 updated figures are therefore after the listing application date, not within 6 months before it. The June 2023 listing application date would require figures as of approximately January–June 2023 to satisfy PARAM_C3_REF_MONTHS. Late-2023 figures satisfy para 25(ii) if the prospectus is treated as the listing document (as distinct from the listing application) — but the prospectus does not explain which set of figures satisfies which para 25 obligation. [L]: The relationship between the para 25(i) figures (footnote 1 dates) and the para 25(ii) figures (late-2023 updates) is not identified in the prospectus.",
+            "recommendation": "Reviewer should confirm: (a) whether the June 2023 listing application or the August 2024 prospectus date is the operative date for para 25(ii); (b) whether either the footnote 1 dates or the late-2023 updated figures satisfy para 25(ii) and which set is intended to do so.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "approximately HK$31.19 billion as of September 30, 2023, respectively"
+            }
+          }
+        },
+        {
+          "rule_id": "C4",
+          "rule_description": "Investment amount disclosure",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "High",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Investment amounts are disclosed by round in USD in the Pre-IPO overview table but no HKD equivalent or conversion rate is stated.",
+          "detail": {
+            "explanation": "The Pre-IPO overview table at p.181 discloses per-round total funds received in USD (e.g. Series A: US$8.1m; Series B1: US$14.4m; through Series C+: US$218.2m). Individual SII investment amounts are not explicitly stated in a single table; they must be inferred by cross-referencing round totals with per-SII descriptions. [L]: Para 25 requires investment amounts in HKD or equivalent with conversion basis. All figures in the pre-IPO table are in USD; the SII descriptions state only the current shareholding percentage, not the original investment amount per SII in any currency. There is no HKD conversion basis stated.",
+            "recommendation": "Reviewer should confirm whether the prospectus elsewhere provides per-SII investment amounts in HKD (or USD with a stated HKD conversion rate). If only percentage shareholdings are disclosed at the SII level and only aggregate USD round figures at the round level, this may not satisfy para 25 disclosure of investment amounts.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 181,
+              "anchor_phrase": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "D",
+      "module_name": "Pathfinder SII Requirements",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "D1a",
+          "rule_description": "Pathfinder SII count",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "Two Pathfinder SIIs identified (Northern Light SIIs and Oceanpine SIIs), clearly distinguished from the seven other SIIs; count of 2 within PARAM_D_COUNT_MIN/MAX (2–5).",
+          "detail": {
+            "explanation": "Page 186 introduces 'Our Pathfinder SIIs' as a distinct headed subsection followed by 'Our Other Sophisticated Independent Investors.' Northern Light SIIs and Oceanpine SIIs are explicitly identified as Pathfinder SIIs. Both are multi-entity groupings counted as single Pathfinder SIIs under the same-fund-manager aggregation rule per Chapter 2.5 of the Guide. Count = 2 ✓. [K]: Consistent designation in tier2/pathfinder_sii and tier2/pre_ipo_investment.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "Our Pathfinder SIIs"
+            }
+          }
+        },
+        {
+          "rule_id": "D1b",
+          "rule_description": "Pathfinder SII investment timing",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Investment dates disclosed via corporate timeline; 12-month holding period appears met for both Pathfinder SIIs but 'irrevocable settlement' date not expressly confirmed per SII.",
+          "detail": {
+            "explanation": "Para 26(i) measures the 12-month period to the date of irrevocable settlement. From the corporate timeline (tier2/pathfinder_sii, p.176): Oceanpine Capital first invested in September 2020 (Series B3). Listing application date: June 29, 2023. Gap: ~33 months ≫ PARAM_D_HOLD_MONTHS (12 months) ✓. Northern Light first invested in Series A (2016–2017). Gap: vastly exceeds 12 months ✓. However, the prospectus states holding periods as of 'June 29, 2022 (being the commencement date of the pre-application 12-month period)' — Northern Light held 12.53% and Oceanpine held 6.52% at that date — confirming they were shareholders throughout the pre-application 12-month window. [L]: The prospectus uses the phrase 'first invested' and 'listing application date' but does not explicitly state that settlement was irrevocable on the investment date, nor does it define 'irrevocable settlement date' for either Pathfinder SII. This is a minor language gap.",
+            "recommendation": "Reviewer should confirm that the investment dates cited represent the date of irrevocable settlement (i.e. funds transferred and shares allotted) rather than agreement execution only.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 187,
+              "anchor_phrase": "In compliance with Rule 18C.05 of the Listing Rules, the Oceanpine SIIs held approximately 5.97%"
+            }
+          }
+        },
+        {
+          "rule_id": "D2",
+          "rule_description": "Pathfinder SII aggregate threshold",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "Aggregate Pathfinder SII holding 17.45% at listing application date exceeds PARAM_D2_AGG_PCT (10%); arithmetic verified.",
+          "detail": {
+            "explanation": "Page 187 states: 'Our Pathfinder SIIs, in aggregate, held approximately 17.45% and 19.05% of the total issued share capital of the Company, as of June 29, 2023 (being the date of submission of the Company's first listing application) and June 29, 2022 (being the commencement date of the pre-application 12-month period), respectively.' [T]: 17.45% ≥ PARAM_D2_AGG_PCT (10%) ✓. [K]: Northern Light 11.48% + Oceanpine 5.97% = 17.45% — arithmetic checks out exactly ✓. The aggregate % basis is stated as 'total issued share capital' — consistent with the Module D requirement. [L]: The basis (total issued share capital) is identified.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 187,
+              "anchor_phrase": "Our Pathfinder SIIs, in aggregate, held approximately 17.45%"
+            }
+          }
+        },
+        {
+          "rule_id": "D3",
+          "rule_description": "Individual Pathfinder SII threshold",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "High",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "Both Pathfinder SIIs individually exceed PARAM_D3_IND_PCT (3%): Northern Light 11.48%, Oceanpine 5.97%, both at listing application date.",
+          "detail": {
+            "explanation": "Northern Light SIIs: 11.48% at June 29, 2023 ≥ PARAM_D3_IND_PCT (3%) ✓. Oceanpine SIIs: 5.97% at June 29, 2023 ≥ PARAM_D3_IND_PCT (3%) ✓. Both are well above the threshold on the % limb; investment amount alternative not needed. [K]: Northern Light's current holding at LPD is 10.47% (p.186) and Oceanpine's is 5.44% (p.187) — both lower than the listing application date figures, consistent with some share dilution from subsequent rounds and the Global Offering. No arithmetic inconsistency. [L]: Individual breakdowns are provided per Pathfinder SII ✓.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "the Northern Light SIIs held approximately 11.48% and 12.53% of the total issued share capital"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "E",
+      "module_name": "Aggregate SII Investment Benchmark",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "E1",
+          "rule_description": "Aggregate SII shareholding benchmark",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "Individual SII holdings are disclosed; aggregate summed figure implies well over 15%, but no single prospectus statement expressly states the aggregate SII % for Module E compliance purposes.",
+          "detail": {
+            "explanation": "[D]: The prospectus at pp.186–192 discloses individual SII holdings at the Latest Practicable Date: Northern Light 10.47%, Oceanpine 5.44%, SummitView 7.00%, Xiaomi 3.69%, Tencent 3.53%, BOCGI 2.71%, Future Industry Fund 2.33%, Geely 0.78%, SAIC 0.52%. Sum at LPD ≈ 36.47% — far exceeds applicable threshold of 15% (Commercial, HK$15–30bn tier). However, the prospectus contains no single statement identifying: (a) the expected market cap tier and applicable threshold; (b) the total aggregate SII % for Module E purposes; (c) the calculation basis (pre-offer/post-offer, fully diluted/basic). These figures are at LPD, not at listing application date or post-offer. [T]: Substantive threshold clearly met on the available data. [L]: The absence of a consolidated compliance statement linking the aggregate SII figure to the applicable threshold is a disclosure gap; a reviewer cannot trace the E1 compliance without performing their own arithmetic.",
+            "recommendation": "Reviewer should confirm whether the prospectus contains a consolidated E1 compliance statement elsewhere (e.g. in a summary table or the SII section). If absent, this is a [D] gap and the basis of the aggregate calculation should be clarified.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 186,
+              "anchor_phrase": "the Northern Light SIIs hold approximately 10.47% of the total issued shares of the Company"
+            }
+          }
+        },
+        {
+          "rule_id": "E2",
+          "rule_description": "Threshold tier verification",
+          "check_types": ["T", "K", "L"],
+          "severity": "Critical",
+          "status": "Insufficient",
+          "status_colour": "amber",
+          "summary": "The applicable 15% threshold (Commercial, HK$15–30bn) is not identified anywhere in the SII disclosures; the 1 Sep 2024 temporary modification is not acknowledged.",
+          "detail": {
+            "explanation": "[T]: At HK$16.59bn market cap and Commercial classification, the applicable threshold is PARAM_E_COMM_MID (15%). The disclosed aggregate SII holdings (≈36.47% at LPD) substantively clear this threshold by a wide margin. However, the prospectus does not state which cell of the threshold table applies or that the 15% threshold is met. [K]: The market cap figure used in the corporate information section (p.125) states only 'exceeds HK$6 billion' — this is the modified minimum for listing eligibility, not the threshold-tier determination. The HK$15–30bn tier for aggregate SII purposes is neither identified nor referenced. [L]: Guide para 10 temporary modifications effective 1 Sep 2024 modified the minimum market cap thresholds but not the aggregate SII percentage table — yet the prospectus does not clarify which set of rules it is applying, nor does it acknowledge the 1 Sep 2024 modifications.",
+            "recommendation": "Reviewer should confirm that the prospectus explicitly identifies: (a) the expected market cap placing the company in the HK$15–30bn tier; (b) the resultant 15% aggregate SII threshold; and (c) that the disclosed SII holdings meet or exceed that threshold on a post-offer basis.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 125,
+              "anchor_phrase": "expected market capitalization at the time of Listing, which, based on the Offer Price, exceeds HK$6 billion"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "F",
+      "module_name": "Convertible Securities",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "F1",
+          "rule_description": "Conversion requirement",
+          "check_types": ["D", "T", "K", "L"],
+          "severity": "Critical",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "All Preferred Shares held by SIIs confirmed to convert to ordinary shares 1:1 upon completion of the Global Offering; conversion is mandatory and binding.",
+          "detail": {
+            "explanation": "Page 185 states: 'All of the Preferred Shares will be converted into Shares on a one-to-one basis immediately upon completion of the Global Offering.' This is a mandatory conversion, not an optional or conditional one. [T]: No SII holds convertible instruments that will remain unconverted at listing. [K]: Consistent with the share capital section (p.339) which confirms the total share count on a fully converted basis. [L]: The language is unambiguous — 'immediately upon completion' confirms conversion at listing.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 185,
+              "anchor_phrase": "All of the Preferred Shares will be converted into Shares on a one-to-one basis"
+            }
+          }
+        },
+        {
+          "rule_id": "F2",
+          "rule_description": "Convertible securities counting basis",
+          "check_types": ["D", "T", "K"],
+          "severity": "High",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "1:1 conversion ratio disclosed; SII percentage thresholds calculated on post-conversion share capital basis.",
+          "detail": {
+            "explanation": "The conversion ratio is 1 Preferred Share : 1 Ordinary Share (p.185). The SII percentage holdings in Modules D and E are expressed as percentages of 'total issued share capital' — confirmed from p.339 to include all Preferred Shares converted on a 1:1 basis. [K]: The cap table at p.339 confirms total shares of 569,169,253 post-conversion, consistent with the denominator implied by the individual SII percentage disclosures.",
+            "source_anchor": {
+              "source_file": "tier2/pre_ipo_investment",
+              "page": 185,
+              "anchor_phrase": "All of the Preferred Shares will be converted into Shares on a one-to-one basis immediately"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "G",
+      "module_name": "Lock-Up Obligations",
+      "triggered": true,
+      "rules": [
+        {
+          "rule_id": "G1",
+          "rule_description": "Lock-up disclosure",
+          "check_types": ["D", "K", "L"],
+          "severity": "High",
+          "status": "Present",
+          "status_colour": "green",
+          "summary": "Pathfinder SII 6-month lock-up under MB Rule 18C.14(2) disclosed in the Underwriting section with deed undertaking; consistent with Pathfinder SII identification in Module D.",
+          "detail": {
+            "explanation": "Page 431 discloses that lock-up undertakings have been given under a deed, covering Pathfinder SIIs for 6 months from the Listing Date. The disclosure identifies the Pathfinder SIIs as subject to Rule 18C.14(2) lock-up. The lock-up section is in the main body of the prospectus (Underwriting chapter), not merely in an appendix. The reversed-text section at p.182 also references lock-up obligations. [K]: The Pathfinder SIIs identified in the lock-up section (Northern Light and Oceanpine) are consistent with those identified in Module D. [L]: The lock-up period (6 months) is stated plainly; reference to Rule 18C.14(2) is made.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 431,
+              "anchor_phrase": "Pathfinder SIIs) from the Listing Date"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "H",
+      "module_name": "SII Placees",
+      "triggered": false,
+      "rules": [
+        {
+          "rule_id": "H1",
+          "rule_description": "Placee category eligibility",
+          "check_types": ["D", "K", "L"],
+          "severity": "Critical",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Module H not triggered; no SII Placees relied upon for Module E compliance.",
+          "detail": {
+            "explanation": "Evaluated against tier2/cornerstone_placing (pp.344–352). The Cornerstone Investors (Gardex Development Limited and others) are identified and treated separately from the nine SIIs. No statement in the prospectus indicates that the Aggregate Investment Benchmark relies on any placing allocations to SIIs. Module H is not triggered.",
+            "source_anchor": {
+              "source_file": "tier2/cornerstone_placing",
+              "page": null,
+              "anchor_phrase": null
+            }
+          }
+        },
+        {
+          "rule_id": "H2a",
+          "rule_description": "Applicant/OC/Sponsor undertaking",
+          "check_types": ["D", "L"],
+          "severity": "Critical",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Not applicable — Module H not triggered.",
+          "detail": {
+            "explanation": "Module H not triggered. See H1.",
+            "source_anchor": { "source_file": null, "page": null, "anchor_phrase": null }
+          }
+        },
+        {
+          "rule_id": "H2b",
+          "rule_description": "SII Placee sophistication",
+          "check_types": ["D", "R"],
+          "severity": "Critical",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Not applicable — Module H not triggered.",
+          "detail": {
+            "explanation": "Module H not triggered. See H1.",
+            "source_anchor": { "source_file": null, "page": null, "anchor_phrase": null }
+          }
+        },
+        {
+          "rule_id": "H2c",
+          "rule_description": "Advance HKEX submission for para 21(iv) Placees",
+          "check_types": ["D", "R"],
+          "severity": "High",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Not applicable — Module H not triggered.",
+          "detail": {
+            "explanation": "Module H not triggered. See H1. Note: the advance HKEX submission requirement for para 21(iv) investors (B5) is flagged separately under Module B regardless of H trigger status.",
+            "source_anchor": { "source_file": null, "page": null, "anchor_phrase": null }
+          }
+        },
+        {
+          "rule_id": "H3",
+          "rule_description": "Post-listing disclosure (forward-looking note)",
+          "check_types": ["D"],
+          "severity": "Medium",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Not applicable — Module H not triggered.",
+          "detail": {
+            "explanation": "Module H not triggered. See H1.",
+            "source_anchor": { "source_file": null, "page": null, "anchor_phrase": null }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "I",
+      "module_name": "Secondary / Dual Listings",
+      "triggered": false,
+      "rules": [
+        {
+          "rule_id": "I1",
+          "rule_description": "Non-standard compliance disclosure",
+          "check_types": ["D", "R", "K", "L"],
+          "severity": "High",
+          "status": "Not Applicable",
+          "status_colour": "grey",
+          "summary": "Module I not triggered; no existing overseas listing.",
+          "detail": {
+            "explanation": "No overseas listing is disclosed in tier2/corporate_structure or tier2/history_of_group. The corporate information section (p.125) states 'No part of our Company's Shares or loan capital is listed on or dealt in on any other stock exchange.' Module I is not triggered.",
+            "source_anchor": {
+              "source_file": "tier1/listing_statistics",
+              "page": 125,
+              "anchor_phrase": "No part of our Company's Shares or loan capital is listed on or dealt in"
+            }
+          }
+        }
+      ]
+    }
+  ],
+
+  "reasoning_flags": [
+    {
+      "flag_id": "RF-001",
+      "category": "cross_reference",
+      "severity": "High",
+      "status_colour": "red",
+      "rules_triggered": ["A2", "B1"],
+      "summary": "Dr. Yang Lei's partnership at Northern Light Venture Capital (2010–2021) is disclosed but the independence analysis does not substantiate why this historical relationship does not affect Northern Light SII independence at the time of the Series A investment (2016–2017).",
+      "detail": {
+        "explanation": "Tier2/pre_ipo_investment (p.186) discloses that Dr. Yang Lei was a partner at Northern Light Venture Capital from February 2010 to October 2021. The Northern Light SIIs are managed by Northern Light Venture Capital. Dr. Yang Lei became a non-executive Director of the Company. The Series A investment (first Northern Light investment) was made in 2016–2017, during which time Dr. Yang Lei was an active partner at Northern Light Venture Capital. Cross-referencing tier1/directors_mgmt confirms Dr. Yang Lei's directorship. The independence assertion at p.186 is blanket and does not address this overlap. A reasonable reviewer could question whether Northern Light's independence from the Company was properly maintained given the dual role of a sitting partner during the investment period.",
+        "recommendation": "Reviewer should obtain a specific independence analysis for Northern Light addressing why Dr. Yang Lei's concurrent partnership at Northern Light Venture Capital and his subsequent directorship at the Company do not constitute a connected person or close associate relationship affecting SII independence.",
+        "source_anchors": [
+          {
+            "source_file": "tier2/pre_ipo_investment",
+            "page": 186,
+            "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner at Northern Light"
+          },
+          {
+            "source_file": "tier1/directors_mgmt",
+            "page": 286,
+            "anchor_phrase": null
+          }
+        ]
+      }
+    },
+    {
+      "flag_id": "RF-002",
+      "category": "cross_reference",
+      "severity": "High",
+      "status_colour": "red",
+      "rules_triggered": ["B4", "C2"],
+      "summary": "SummitView's AUM reference date (31 December 2020) appears to post-date its Series B2 investment (September 2019) by approximately 15 months, potentially violating the para 25(i) 6-month reference date rule.",
+      "detail": {
+        "explanation": "Tier2/pre_ipo_investment (p.189) states SummitView's AUM was HK$13.2bn 'as of 31 December 2020.' The corporate timeline in tier2/pathfinder_sii (p.176) indicates September 2019 as the date Oceanpine Capital (not SummitView) first invested; separately, the pre-IPO overview table at p.181 shows Series B2 with a first subscription date of September 25, 2019, and last payment December 2019. SummitView invested in Series B2 (per shareholding: ~7.00% at LPD, consistent with B2/B3 timing). If SummitView's definitive agreement was signed in September–December 2019, the December 31, 2020 reference date is 12–15 months after the agreement — well beyond PARAM_C2_REF_MONTHS (6 months). Footnote 1's assertion that all figures are within 6 months prior to the definitive agreement appears inconsistent with this date gap.",
+        "recommendation": "Reviewer should urgently obtain the definitive agreement date for SummitView's Series B2 investment and verify whether the December 31, 2020 AUM reference date satisfies para 25(i). If the definitive agreement predates December 31, 2020 by more than 6 months, the AUM disclosure for SummitView does not comply with para 25(i) and an earlier reference date figure must be provided.",
+        "source_anchors": [
+          {
+            "source_file": "tier2/pre_ipo_investment",
+            "page": 189,
+            "anchor_phrase": "AUM of SummitView Capital (M&A) was approximately HK$13.2 billion as of 31 December 2020"
+          },
+          {
+            "source_file": "tier2/pathfinder_sii",
+            "page": 176,
+            "anchor_phrase": "SIIs, first invested in our Company."
+          }
+        ]
+      }
+    },
+    {
+      "flag_id": "RF-003",
+      "category": "cross_reference",
+      "severity": "High",
+      "status_colour": "red",
+      "rules_triggered": ["E1", "E2"],
+      "summary": "Individual SII holdings sum to approximately 36.47% at LPD (post-offer basis unclear), but no single prospectus figure states total aggregate SII % for Module E compliance; post-offer percentage basis not confirmed.",
+      "detail": {
+        "explanation": "Summing the nine per-SII LPD figures from tier2/pre_ipo_investment gives approximately 36.47% of 'total issued shares.' However, these are pre-offer figures (LPD, before Global Offering). The prospectus does not state the post-offer aggregate SII % (on 569,169,253 post-IPO shares). The applicable threshold (15%) under para 26(ii) is applied to 'issued share capital at listing.' A pre-offer aggregate percentage on a smaller share base would overstate the post-offer percentage. The offer comprises 37,000,000 new shares (6.5% of post-offer total), meaning all existing SII percentages will be diluted by approximately 6.5% upon completion — post-offer SII aggregate would be approximately 36.47% × (1 - 0.065) ≈ 34.1%, still well above 15%. However, this calculation is not stated in the prospectus and the basis of E1 compliance is not confirmed.",
+        "recommendation": "Reviewer should request a single, auditable Module E compliance statement in the prospectus that: (a) states the aggregate SII % on a post-offer basis (on total issued share capital immediately after completion of the Global Offering); (b) identifies the applicable threshold (15%); and (c) confirms the benchmark is met.",
+        "source_anchors": [
+          {
+            "source_file": "tier2/pre_ipo_investment",
+            "page": 186,
+            "anchor_phrase": "nine Sophisticated Independent Shareholders, five of which respectively holds more than 3%"
+          },
+          {
+            "source_file": "tier1/cap_table",
+            "page": 339,
+            "anchor_phrase": "Total 569,169,253 56,916.93 100.00"
+          }
+        ]
+      }
+    },
+    {
+      "flag_id": "RF-004",
+      "category": "cross_reference",
+      "severity": "Medium",
+      "status_colour": "amber",
+      "rules_triggered": ["C4"],
+      "summary": "SII investment amounts are disclosed only in USD at the round level; no per-SII HKD investment amount is stated, making individual D3 amount threshold verification impossible from the prospectus alone.",
+      "detail": {
+        "explanation": "The pre-IPO overview table (p.181) states USD round totals. Individual SII descriptions state current shareholding percentages only. Para 25 requires disclosure of investment amount per SII; para 26(i)(b) requires individual Pathfinder SII investment amount of at least PARAM_D3_IND_AMT (HK$450m) as an alternative threshold. While Northern Light and Oceanpine meet the 3% threshold making the HK$450m alternative unnecessary, the absence of per-SII investment amounts in HKD means the amount limb cannot be independently verified from the prospectus for any SII. Cross-referencing tier1/cap_table does not yield per-SII investment amounts.",
+        "recommendation": "Reviewer should confirm whether a per-SII investment amount table exists elsewhere in the prospectus (e.g. Appendix IV). If not, the absence of per-SII investment amounts in HKD is a gap under rule C4 [D].",
+        "source_anchors": [
+          {
+            "source_file": "tier2/pre_ipo_investment",
+            "page": 181,
+            "anchor_phrase": null
+          },
+          {
+            "source_file": "tier1/cap_table",
+            "page": 334,
+            "anchor_phrase": null
+          }
+        ]
+      }
+    }
+  ],
+
+  "summary": {
+    "total_rules_checked": 24,
+    "not_applicable": 6,
+    "present": 7,
+    "absent": 1,
+    "insufficient": 10,
+    "reasoning_flags_total": 4,
+    "critical_flags": 0,
+    "high_flags": 3,
+    "medium_flags": 1,
+    "overall_assessment": "Black Sesame's Meaningful Investment disclosure structure is substantively sound — the Pathfinder SII count (2), aggregate Pathfinder holding (17.45%), individual Pathfinder holdings (11.48%/5.97%), conversion mechanics (mandatory 1:1), and lock-up obligations are all clearly disclosed and appear to meet the applicable thresholds. The principal issues are presentation and reference-date gaps rather than substantive shortfalls: no single consolidated Module E compliance statement links the aggregate SII holding to the applicable 15% threshold; the market cap tier determination is implicit rather than stated; investment amounts lack HKD conversion; and per-SII independence confirmations are templated rather than dated to the definitive agreement. The most material concerns requiring priority review are: (1) the SummitView reference date, which appears to post-date the definitive agreement by ~15 months in potential breach of para 25(i); (2) the Northern Light/Dr. Yang Lei independence reasoning gap; and (3) the absence of any express para 19 statement (no agreements to return investment) — the only Absent finding."
+  }
+}

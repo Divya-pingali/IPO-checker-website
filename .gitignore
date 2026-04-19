@@ -1,7 +1,18 @@
-# Environment files
+# Environment
 .env
 .env.*
 !.env.example
 
-# Dependencies
+# Node
 node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Build output
+dist/
+
+# Pipeline runtime artefacts
+extracted/
+*.raw.txt

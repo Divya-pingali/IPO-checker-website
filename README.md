@@ -1,187 +1,131 @@
-# Linklaters IPO Checker Website
+# Linklaters IPO Prospectus Checker
 
-A web application for checking and analyzing IPO-related findings and rulebook references. Built with React, TypeScript, and Vite.
+A web application that runs an end-to-end compliance analysis of HKEX Chapter 18C IPO prospectuses against the Meaningful Investment (SII) requirements, and displays the results in an interactive PDF viewer.
 
-## Features
-
-- **PDF Viewer**: Interactive PDF viewing with text highlighting capabilities
-- **Finding Cards**: Organized display of audit findings with detailed information
-- **Filtering System**: Filter findings by various criteria
-- **Rulebook Panel**: Reference rulebook sections alongside findings
-- **Responsive Layout**: Resizable panels for flexible workspace management
-
-## Technology Stack
-
-- **React** - UI framework
-- **TypeScript** - Type-safe JavaScript
-- **Vite** - Lightning-fast build tool
-- **CSS** - Styling
+---
 
 ## Project Structure
 
 ```
-src/
-├── components/       # React components
-│   ├── AppShell.tsx
-│   ├── FilterBar.tsx
-│   ├── FindingCard.tsx
-│   ├── HighlightLayer.tsx
-│   ├── ModuleSection.tsx
-│   ├── PageRenderer.tsx
-│   ├── PdfViewer.tsx
-│   ├── RulebookPanel.tsx
-│   └── Sidebar.tsx
-├── hooks/           # Custom React hooks
-│   ├── useFindingsParser.ts
-│   ├── usePdfAnchorMatcher.ts
-│   ├── usePdfDocument.ts
-│   ├── useResizablePanels.ts
-│   └── useRulebookReference.ts
-├── utils/          # Utility functions
-│   ├── normalizeFindings.ts
-│   └── textMatcher.ts
-├── types/          # TypeScript type definitions
-├── App.tsx         # Main app component
-├── main.tsx        # Entry point
-└── index.css       # Global styles
+llaw3272-linklaters-ipo-checker-website/
+├── backend/                   Python pipeline
+│   ├── extract_sections.py    Extracts tier1/tier2 sections from a prospectus PDF
+│   ├── analyze.py             Sends sections to Claude API, produces checker.json
+│   ├── server.py              FastAPI server (used by the web upload flow)
+│   └── run_pipeline.py        CLI runner: extract → analyse in one command
+│
+├── reference/                 Backend reference materials (not served to the browser)
+│   └── rulebook_prompt_v3.md  System prompt with all SII rules
+│
+├── public/                    Static assets served by Vite
+│   ├── checker.json           Analysis output consumed by the viewer
+│   ├── rulebook.pdf           Rulebook shown in the side panel
+│   └── prospectus.pdf         Sample prospectus for the viewer
+│
+├── src/                       React + TypeScript frontend
+│   ├── components/            UI components (viewer, sidebar, upload screen…)
+│   ├── hooks/                 Custom hooks (PDF, findings parser, anchors…)
+│   ├── utils/                 normalizeFindings, textMatcher
+│   └── types/                 TypeScript schema matching checker.json
+│
+├── .env.example               Copy to .env and fill in your API key
+├── requirements.txt           All Python dependencies
+└── package.json               Frontend dependencies (npm)
 ```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v16 or higher)
-- npm
-
-### Installation
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Development
-
-Run the development server:
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-### Build
-
-Create a production build:
-```bash
-npm run build
-```
-
-### Preview
-
-Preview the production build locally:
-```bash
-npm run preview
-```
-
-## Configuration
-
-- `vite.config.ts` - Vite configuration
-- `tsconfig.json` - TypeScript configuration
-- `package.json` - Project dependencies and scripts
-
-## Data Files
-
-- `public/checker.json` - Rulebook data
-- `BST_checker_output_v3.json` - Findings data
 
 ---
 
-## Backend Pipeline — Extract & Analyse
+## Setup
 
-The pipeline converts a prospectus PDF (or DOCX) into the `checker.json` consumed by the website.
-
-### Prerequisites
+### 1. Python dependencies
 
 ```bash
-# 1. Section extraction (pdfplumber)
-pip install -r section_extraction/requirements.txt
-
-# 2. Claude API analysis (anthropic SDK)
-pip install -r pipeline/requirements.txt
-
-# 3. Set your Anthropic API key
-export ANTHROPIC_API_KEY="sk-ant-..."
+pip install -r requirements.txt
 ```
 
-### Full pipeline (one command)
-
-Run from inside `llaw3272-linklaters-ipo-checker-website/`:
+### 2. Frontend dependencies
 
 ```bash
-python pipeline/run_pipeline.py path/to/prospectus.pdf
+npm install
 ```
 
-This will:
-1. Extract sections from the prospectus into `./extracted/tier1/` and `./extracted/tier2/`
-2. Send them to the Claude API using `public/rulebook_prompt_v3.md` as the system prompt
-3. Save the resulting analysis as `public/checker.json`
+### 3. API key
 
-Then start the viewer:
+```bash
+cp .env.example .env
+# Edit .env and set ANTHROPIC_API_KEY=sk-ant-...
+```
 
+---
+
+## Running the full web UI
+
+Start both servers in separate terminals from inside this directory.
+
+**Terminal 1 — Python backend:**
+```bash
+python backend/server.py
+# Listening on http://localhost:8000
+```
+
+**Terminal 2 — Vite frontend:**
 ```bash
 npm run dev
+# Open http://localhost:5173
 ```
 
-### Options
+Open the browser, drop a prospectus PDF onto the upload screen, click **Analyse**, and watch the pipeline run. Results appear directly in the viewer when complete.
 
-```
-python pipeline/run_pipeline.py <prospectus.pdf> [options]
+---
 
-  --extraction-dir DIR    Where to write extracted sections (default: ./extracted)
-  --checker-output FILE   Output path for checker.json (default: public/checker.json)
-  --prospectus-dest FILE  Also copy the PDF here so the viewer can load it
-                          (e.g. --prospectus-dest public/prospectus.pdf)
-  --model MODEL           Claude model ID (default: claude-opus-4-7)
-  --api-key KEY           API key (or set ANTHROPIC_API_KEY env var)
-  --skip-extraction       Reuse an existing ./extracted directory; skip step 1
-  --toc-pages START-END   PDF pages to search for Table of Contents (default: 1-15)
-  --verbose               Enable detailed logging
-```
-
-### Run steps separately
+## CLI pipeline (no browser required)
 
 ```bash
-# Step 1: extract sections only
-python section_extraction/extract_sections.py prospectus.pdf --output-dir ./extracted
+# Full pipeline: extract + analyse → public/checker.json
+python backend/run_pipeline.py path/to/prospectus.pdf
 
-# Step 2: analyse only (sections already extracted)
-python pipeline/analyze.py --extraction-dir ./extracted
+# Also copy the prospectus so the viewer can load it:
+python backend/run_pipeline.py path/to/prospectus.pdf \
+  --prospectus-dest public/prospectus.pdf
+
+# Skip extraction (reuse a previous ./extracted run):
+python backend/run_pipeline.py path/to/prospectus.pdf --skip-extraction
+
+# Options
+#   --extraction-dir DIR    Where to write extracted sections (default: ./extracted)
+#   --output FILE           checker.json output path (default: public/checker.json)
+#   --model MODEL           Claude model (default: claude-opus-4-7)
+#   --toc-pages START-END   PDF pages to scan for Table of Contents (default: 1-15)
+#   --verbose               Detailed logging
 ```
 
-### How it works
+---
+
+## How it works
 
 ```
 prospectus.pdf
-  └─► extract_sections.py
-        ├─ extracted/tier1/<chapter>.json   (full chapters: cap_table, directors_mgmt, …)
-        └─ extracted/tier2/<section>.json   (SII subsections: sii_disclosure, pathfinder_sii, …)
-              └─► analyze.py
-                    ├─ system prompt: public/rulebook_prompt_v3.md
-                    ├─ user message : formatted tier1 + tier2 JSON blocks
-                    └─► Claude API (claude-opus-4-7)
-                          └─► public/checker.json   ← consumed by the React viewer
+  └─► backend/extract_sections.py
+        ├─ extracted/tier1/<chapter>.json    full chapters (cap table, directors…)
+        └─ extracted/tier2/<section>.json    SII subsections (sii_disclosure, pathfinder_sii…)
+              └─► backend/analyze.py
+                    ├─ system prompt : reference/rulebook_prompt_v3.md
+                    ├─ rulebook PDF  : public/rulebook.pdf  (cached per API call)
+                    └─► Claude API (module-by-module, with retry + rate-limit handling)
+                          └─► public/checker.json  ← loaded by the React viewer
 ```
 
-**Prompt caching** is enabled on the system prompt to reduce API cost on repeated runs against the same rulebook version.
+**Prompt caching:** the system prompt and rulebook PDF are sent with `cache_control: ephemeral`, so repeated runs against the same rulebook version cost significantly less.
 
-**Label mapping** — `extract_sections.py` names certain subsections differently from the prompt's expected file paths. `analyze.py` remaps them automatically (e.g. `corporate_structure_chart` → `tier2/corporate_structure`). Tier-1 modules are matched by keyword (e.g. any module whose ID contains `substantial_shareholders` becomes `tier1/cap_table`).
+**Module-by-module calls:** each of the 10 modules (0, A–I) is analysed in a separate API call to stay within output token limits and allow targeted retries.
 
-### Adapting for a different rulebook or prompt
+---
 
-- Replace `public/rulebook_prompt_v3.md` with your new prompt file, or pass `--prompt path/to/new_prompt.md` to `analyze.py`.
-- The section label mappings are defined at the top of `pipeline/analyze.py` (`TIER2_LABEL_MAP`, `TIER1_PATTERN_MAP`) and can be extended for other document types.
-- To use a less expensive model for testing: `--model claude-haiku-4-5-20251001`.
+## Adapting for a different rulebook or prompt
+
+- Replace `reference/rulebook_prompt_v3.md` with your new prompt, or pass `--prompt path/to/prompt.md`.
+- Section label mappings are in `backend/analyze.py` (`TIER2_LABEL_MAP`, `TIER1_PATTERN_MAP`).
+- To use a cheaper model for testing: `--model claude-haiku-4-5-20251001`.
 
 ---
 

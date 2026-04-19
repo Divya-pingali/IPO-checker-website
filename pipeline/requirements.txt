@@ -1,9 +1,0 @@
-# Pipeline dependencies
-# Section extraction dependencies are in section_extraction/requirements.txt
-anthropic>=0.40.0
-python-dotenv>=1.0.0
-
-# API server
-fastapi>=0.111.0
-uvicorn[standard]>=0.29.0
-python-multipart>=0.0.9

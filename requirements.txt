@@ -1,0 +1,20 @@
+# ── Python backend dependencies ──────────────────────────────────────────────
+# Install with: pip install -r requirements.txt
+
+# Section extraction
+pdfplumber>=0.10.0
+
+# Claude API
+anthropic>=0.40.0
+
+# Environment variable loading
+python-dotenv>=1.0.0
+
+# API server
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+
+# ── Frontend (Node/npm) ───────────────────────────────────────────────────────
+# Install with: npm install
+# See package.json for frontend dependencies.

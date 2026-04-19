@@ -81,7 +81,7 @@ async def run_pipeline(job_id: str, input_file: Path, temp_dir: Path) -> None:
     prompt_path     = _PROJECT_DIR / "reference" / "rulebook_prompt_v3.md"
     rulebook_path   = _PROJECT_DIR / "public"    / "rulebook.pdf"
 
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = os.environ.get("GEMINI_API_KEY", "")
 
     try:
         pdf_path = input_file
@@ -118,7 +118,7 @@ async def run_pipeline(job_id: str, input_file: Path, temp_dir: Path) -> None:
 
         # Step 2: analysis
         _set(job_id, stage="analysing",
-             message="Analysing with Claude API — this may take a few minutes…")
+             message="Analysing with Gemini API — this may take a few minutes…")
         log.info("[%s] Analysing", job_id)
         cmd = [
             sys.executable, str(analyze_script),
@@ -161,8 +161,8 @@ async def start_analysis(
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in (".pdf", ".docx"):
         raise HTTPException(422, "Only PDF or Word (.docx) files are supported.")
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise HTTPException(500, "ANTHROPIC_API_KEY is not set. Add it to .env.")
+    if not os.environ.get("GEMINI_API_KEY"):
+        raise HTTPException(500, "GEMINI_API_KEY is not set. Add it to .env.")
 
     temp_dir   = Path(tempfile.mkdtemp(prefix="llaw_"))
     input_file = temp_dir / f"prospectus{suffix}"
@@ -205,7 +205,7 @@ async def get_result(job_id: str) -> dict:
 
 @app.get("/api/health")
 async def health() -> dict:
-    return {"ok": True, "api_key_set": bool(os.environ.get("ANTHROPIC_API_KEY"))}
+    return {"ok": True, "api_key_set": bool(os.environ.get("GEMINI_API_KEY"))}
 
 
 # ---------------------------------------------------------------------------

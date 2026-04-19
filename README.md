@@ -64,7 +64,7 @@ Start both servers in separate terminals from inside this directory.
 
 **Terminal 1 — Python backend:**
 ```bash
-python backend/server.py
+python -m backend.server
 # Listening on http://localhost:8000
 ```
 

@@ -4,8 +4,11 @@
 # Section extraction
 pdfplumber>=0.10.0
 
-# Claude API
+# Claude API (kept for reference)
 anthropic>=0.40.0
+
+# Gemini API
+google-genai>=0.8.0
 
 # Environment variable loading
 python-dotenv>=1.0.0

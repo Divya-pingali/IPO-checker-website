@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None) -> int:
                         help="Output checker.json path (default: public/checker.json)")
     parser.add_argument("--prospectus-dest",
                         help="Also copy prospectus here for the viewer (e.g. public/prospectus.pdf)")
-    parser.add_argument("--model", "-m", default="claude-opus-4-7")
+    parser.add_argument("--model", "-m", default="gemini-2.5-pro")
     parser.add_argument("--api-key", help="Override ANTHROPIC_API_KEY")
     parser.add_argument("--skip-extraction", action="store_true")
     parser.add_argument("--toc-pages", default="1-15", metavar="START-END")

@@ -19,15 +19,15 @@
   --text-3:      #9ca3af;
 
   /* Accent */
-  --accent:      #2563eb;
-  --accent-bg:   #eff6ff;
-  --accent-hover:#1d4ed8;
+  --accent:      #AF005F;
+  --accent-bg:   #fce7f3;
+  --accent-hover:#8c004c;
 
   /* Severity */
   --c-critical:  #dc2626; --c-critical-bg: #fef2f2; --c-critical-br: #fca5a5;
   --c-high:      #ea580c; --c-high-bg:     #fff7ed; --c-high-br:     #fdba74;
   --c-medium:    #ca8a04; --c-medium-bg:   #fefce8; --c-medium-br:   #fde68a;
-  --c-low:       #2563eb; --c-low-bg:      #eff6ff; --c-low-br:      #93c5fd;
+  --c-low:       #AF005F; --c-low-bg:      #fce7f3; --c-low-br:      #f4a0c8;
   --c-flag:      #7c3aed; --c-flag-bg:     #f5f3ff; --c-flag-br:     #c4b5fd;
 
   /* Status */
@@ -221,7 +221,7 @@ html, body, #root {
 .pdf-toolbar__page-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  box-shadow: 0 0 0 3px rgba(175,0,95,.12);
 }
 
 .pdf-toolbar__page-total {
@@ -429,7 +429,7 @@ html, body, #root {
 .filter-bar__search-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  box-shadow: 0 0 0 3px rgba(175,0,95,.12);
 }
 
 .filter-bar__view-toggle {
@@ -499,8 +499,8 @@ html, body, #root {
   transition: background 0.12s;
   position: relative;
 }
-.module-section__header:hover { background: #f1f4f9; }
-.module-section__header:active { background: #e8edf5; }
+.module-section__header:hover { background: #f9f5f7; }
+.module-section__header:active { background: #f5eef2; }
 
 /* Subtle left accent line when expanded */
 .module-section:not(:has(.module-section__findings + *)) .module-section__header,
@@ -517,7 +517,7 @@ html, body, #root {
   font-family: var(--font-mono);
   color: var(--accent);
   background: var(--accent-bg);
-  border: 1px solid #bfdbfe;
+  border: 1px solid #f4a0c8;
   border-radius: 4px;
   padding: 1px 5px;
   flex-shrink: 0;
@@ -580,7 +580,7 @@ html, body, #root {
   border-left: 3px solid transparent;
 }
 
-.finding-card:hover { background: #f5f7fb; }
+.finding-card:hover { background: #fdf5f9; }
 
 .finding-card--active {
   background: var(--accent-bg) !important;
@@ -655,7 +655,7 @@ html, body, #root {
   font-family: var(--font-mono);
   color: var(--accent);
   background: var(--accent-bg);
-  border: 1px solid #bfdbfe;
+  border: 1px solid #f4a0c8;
   padding: 1px 5px;
   border-radius: 3px;
   white-space: nowrap;
@@ -1017,10 +1017,10 @@ html, body, #root {
   height: 16px;
   font-size: 9px;
   font-weight: 700;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #f4a0c8;
   border-radius: 3px;
-  background: #eef2ff;
-  color: #4338ca;
+  background: #fce7f3;
+  color: #AF005F;
   flex-shrink: 0;
   cursor: default;
   line-height: 1;

@@ -142,8 +142,8 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete, onHelp }
         </div>
 
         <p className="upload-subtitle">
-          Upload a HKEX Chapter 18C IPO prospectus to run automated Meaningful Investment
-          compliance analysis against all 10 modules (Modules 0 and A–I).
+          A pre-submission review tool that checks Chapter 18C prospectus disclosures
+          against the Meaningful Investment requirement across all 10 modules (Modules 0 and A–I).
         </p>
 
         {/* Drop zone */}

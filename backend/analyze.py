@@ -222,9 +222,6 @@ def main() -> None:
     parser.add_argument("--prompt",
                         default=str(_REFERENCE_DIR / "rulebook_prompt_v3.md"),
                         help="Path to rulebook_prompt_v3.md (default: reference/)")
-    parser.add_argument("--rulebook",
-                        default=str(_PUBLIC_DIR / "rulebook_v2.pdf"),
-                        help="(Unused with Gemini — kept for CLI compatibility)")
     parser.add_argument("--output",
                         default=str(_PUBLIC_DIR / "checker.json"),
                         help="Output checker.json path (default: public/checker.json)")

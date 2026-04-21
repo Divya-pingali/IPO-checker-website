@@ -90,17 +90,16 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
             <section className="help-section">
               <h2 className="help-section__title">What this tool does</h2>
               <p className="help-section__body">
-                The <strong>Linklaters IPO Prospectus Checker</strong> is an automated
-                compliance analysis tool for HKEX Chapter 18C IPO prospectuses. It evaluates
-                whether a prospectus satisfies the <strong>Meaningful Investment</strong>{' '}
-                requirement — the rule that Sophisticated Independent Investors (SIIs) must
-                collectively hold a minimum percentage of a Specialist Technology Company at
-                the time of listing.
+                The <strong>Linklaters IPO Prospectus Checker</strong> is a pre-submission
+                review tool that checks Chapter 18C prospectus disclosures against the{' '}
+                <strong>Meaningful Investment</strong> requirement — the rule that
+                Sophisticated Independent Investors (SIIs) must collectively hold a minimum
+                percentage of a Specialist Technology Company at the time of listing.
               </p>
               <p className="help-section__body">
                 The tool extracts the relevant sections from a prospectus PDF, sends them to
-                the <strong>Gemini AI API</strong> with the full rulebook as context, and
-                produces a structured JSON report covering all 10 compliance modules
+                the <strong>Gemini AI API</strong> with the Linklaters rulebook as context,
+                and produces a structured JSON report covering all 10 compliance modules
                 (Modules 0 and A–I). Results are displayed in an interactive viewer with
                 side-by-side PDF navigation and highlighted source passages.
               </p>
@@ -111,7 +110,7 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
                 <li>Click <strong>Analyse</strong> — the tool extracts sections and runs the AI analysis (typically 2–5 minutes).</li>
                 <li>Review findings in the sidebar, grouped by module or listed individually.</li>
                 <li>Click any finding to jump to the relevant page in the prospectus PDF.</li>
-                <li>Use the <strong>Rulebook</strong> button in the sidebar to open the HKEX Guide alongside the prospectus.</li>
+                <li>Use the <strong>Rulebook</strong> button in the sidebar to open the Linklaters Rulebook alongside the prospectus.</li>
               </ol>
 
               <div className="help-callout help-callout--info">
@@ -131,12 +130,14 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
                 Chapter 18C of the HKEX Main Board Listing Rules ("MB Rules") allows{' '}
                 <strong>Specialist Technology Companies</strong> — companies primarily engaged
                 in research, development, and commercialisation of specialist technology
-                products — to list on the Hong Kong Stock Exchange.
+                products — to list on the Hong Kong Stock Exchange. The definition of
+                Specialist Technology Companies and the accepted sectors are set out in the
+                official HKEX Chapter 18C framework.
               </p>
               <p className="help-section__body">
-                Accepted industries include: Next-generation IT (AI, cloud), Advanced
-                hardware &amp; software (semiconductors, robotics, EVs), Advanced materials,
-                New energy, and Life &amp; health sciences.
+                Accepted sectors (as defined by HKEX) include: Next-generation IT (AI,
+                cloud), Advanced hardware &amp; software (semiconductors, robotics, EVs),
+                Advanced materials, New energy, and Life &amp; health sciences.
               </p>
 
               <h3 className="help-section__sub">The Meaningful Investment Requirement</h3>
@@ -274,9 +275,15 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
             <section className="help-section">
               <h2 className="help-section__title">Rulebook</h2>
               <p className="help-section__body">
-                The full <em>HKEX Guide for New Listing Applicants — Chapter 2.5 Meaningful
-                Investment</em> is available below. This is the same document used as context
-                by the AI analysis engine.
+                The rulebook embedded below is a structured compliance guide developed by
+                Linklaters based on the HKEX guidelines for the Chapter 18C Meaningful
+                Investment requirement. It is not an official HKEX publication — it is an
+                internal reference tool created to structure the AI analysis across all 10
+                modules.
+              </p>
+              <p className="help-section__body">
+                The AI analysis engine uses this Linklaters rulebook as its primary context
+                when evaluating prospectus disclosures.
               </p>
               <a
                 href="/rulebook_v2.pdf"

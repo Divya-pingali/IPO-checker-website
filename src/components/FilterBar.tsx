@@ -255,9 +255,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                     filters.checkType.includes(code) ? 'check-type-btn--active' : ''
                   }`}
                   onClick={() => toggle('checkType', code)}
-                  title={`[${code}] ${label} — ${description}`}
+                  title={description}
                 >
-                  {code}
+                  {label.charAt(0) + label.slice(1).toLowerCase()}
                 </button>
               ))}
             </div>

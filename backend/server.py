@@ -79,7 +79,7 @@ async def run_pipeline(job_id: str, input_file: Path, temp_dir: Path) -> None:
     extract_script  = _BACKEND_DIR / "extract_sections.py"
     analyze_script  = _BACKEND_DIR / "analyze.py"
     prompt_path     = _PROJECT_DIR / "reference" / "rulebook_prompt_v3.md"
-    rulebook_path   = _PROJECT_DIR / "public"    / "rulebook.pdf"
+    rulebook_path   = _PROJECT_DIR / "public"    / "rulebook_v2.pdf"
 
     api_key = os.environ.get("GEMINI_API_KEY", "")
 

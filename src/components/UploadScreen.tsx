@@ -3,6 +3,7 @@ import type { CheckerJson } from '../types';
 
 interface UploadScreenProps {
   onComplete: (data: CheckerJson, pdfBlobUrl: string) => void;
+  onHelp: () => void;
 }
 
 type Stage = 'idle' | 'converting' | 'extracting' | 'analysing' | 'complete' | 'error';
@@ -11,14 +12,14 @@ const STAGE_LABELS: Record<Stage, string> = {
   idle: '',
   converting: 'Converting document…',
   extracting: 'Extracting prospectus sections…',
-  analysing: 'Analysing with Claude API…',
+  analysing: 'Analysing with Gemini API…',
   complete: 'Complete',
   error: 'Error',
 };
 
 const STAGE_ORDER: Stage[] = ['converting', 'extracting', 'analysing', 'complete'];
 
-export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete }) => {
+export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete, onHelp }) => {
   const [file, setFile] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
   const [stage, setStage] = useState<Stage>('idle');
@@ -64,7 +65,6 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete }) => {
     setStage('extracting');
     setMessage('Uploading document…');
 
-    // Upload file
     const formData = new FormData();
     formData.append('file', file);
 
@@ -83,11 +83,8 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete }) => {
       return;
     }
 
-    // Create blob URL for the PDF viewer (works even for DOCX uploads —
-    // the viewer will receive the original file; the server converts it separately)
     const blobUrl = URL.createObjectURL(file);
 
-    // Poll for status
     pollRef.current = setInterval(async () => {
       try {
         const res = await fetch(`/api/status/${jobId}`);
@@ -104,7 +101,6 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete }) => {
 
         if (status.status === 'complete') {
           stopPolling();
-          // Fetch the full result
           const resultRes = await fetch(`/api/result/${jobId}`);
           if (!resultRes.ok) throw new Error(`Failed to fetch result: HTTP ${resultRes.status}`);
           const checkerData = await resultRes.json() as CheckerJson;
@@ -142,11 +138,12 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete }) => {
           <span className="upload-brand__logo">Linklaters</span>
           <span className="upload-brand__sep">|</span>
           <span className="upload-brand__title">IPO Prospectus Checker</span>
+          <button className="upload-help-btn" onClick={onHelp} title="Help">?</button>
         </div>
 
         <p className="upload-subtitle">
-          Upload a prospectus to extract sections and run the Meaningful
-          Investment compliance analysis.
+          Upload a HKEX Chapter 18C IPO prospectus to run automated Meaningful Investment
+          compliance analysis against all 10 modules (Modules 0 and A–I).
         </p>
 
         {/* Drop zone */}

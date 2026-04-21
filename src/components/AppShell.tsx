@@ -8,13 +8,9 @@ interface AppShellProps {
   extractionProgress: number;
   children: React.ReactNode;
   onNewAnalysis?: () => void;
+  onHelp?: () => void;
 }
 
-/**
- * Outer shell: top nav bar + two-panel layout container.
- * Drop-in for any prospectus+checker JSON pair — company name and dates come
- * from the checker JSON meta, not from hardcoded values.
- */
 export const AppShell: React.FC<AppShellProps> = ({
   meta,
   pdfLoading,
@@ -22,6 +18,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   extractionProgress,
   children,
   onNewAnalysis,
+  onHelp,
 }) => {
   const isLoading = pdfLoading || jsonLoading;
 
@@ -45,11 +42,18 @@ export const AppShell: React.FC<AppShellProps> = ({
           </div>
         )}
 
-        {onNewAnalysis && (
-          <button className="topbar__new-btn" onClick={onNewAnalysis} title="Analyse a new document">
-            ↑ New Analysis
-          </button>
-        )}
+        <div className="topbar__actions">
+          {onHelp && (
+            <button className="topbar__help-btn" onClick={onHelp} title="Help & documentation">
+              ?
+            </button>
+          )}
+          {onNewAnalysis && (
+            <button className="topbar__new-btn" onClick={onNewAnalysis} title="Analyse a new document">
+              ↑ New Analysis
+            </button>
+          )}
+        </div>
 
         <div className="topbar__status">
           {isLoading && (

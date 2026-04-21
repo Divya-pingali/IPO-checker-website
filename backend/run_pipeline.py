@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     # Step 2: analysis
     analyze_script = _BACKEND_DIR / "analyze.py"
     prompt_path    = _PROJECT_DIR / "reference" / "rulebook_prompt_v3.md"
-    rulebook_path  = _PROJECT_DIR / "public"    / "rulebook.pdf"
+    rulebook_path  = _PROJECT_DIR / "public"    / "rulebook_v2.pdf"
 
     cmd = [
         sys.executable, str(analyze_script),

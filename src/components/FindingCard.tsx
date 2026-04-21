@@ -25,11 +25,19 @@ const STATUS_CLASS: Record<string, string> = {
 };
 
 const CHECK_TYPE_LABELS: Record<string, string> = {
-  D: 'DISCLOSURE — Is the required item present and specific enough?',
-  T: 'THRESHOLD — Does the disclosed figure meet a quantitative requirement?',
-  K: 'CONSISTENCY — Does the disclosed information match other sections?',
-  L: 'LANGUAGE QUALITY — Is the disclosure fairly presented in plain language?',
-  R: 'REASONING — Does the evidence logically support the claimed conclusion?',
+  D: 'Disclosure',
+  T: 'Threshold',
+  K: 'Consistency',
+  L: 'Language Quality',
+  R: 'Reasoning',
+};
+
+const CHECK_TYPE_DESCRIPTIONS: Record<string, string> = {
+  D: 'Is the required item present and specific enough?',
+  T: 'Does the disclosed figure meet a quantitative requirement?',
+  K: 'Does the disclosed information match other sections?',
+  L: 'Is the disclosure fairly presented in plain language?',
+  R: 'Does the evidence logically support the claimed conclusion?',
 };
 
 const MATCH_ICONS: Record<string, string> = {
@@ -98,9 +106,9 @@ export const FindingCard: React.FC<FindingCardProps> = ({
             <span
               key={code}
               className="check-type-badge"
-              title={CHECK_TYPE_LABELS[code] ?? code}
+              title={CHECK_TYPE_DESCRIPTIONS[code] ?? code}
             >
-              {code}
+              {CHECK_TYPE_LABELS[code] ?? code}
             </span>
           ))}
         </div>

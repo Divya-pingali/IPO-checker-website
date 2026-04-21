@@ -10,18 +10,33 @@ import { PdfViewer } from './components/PdfViewer';
 import { Sidebar } from './components/Sidebar';
 import { RulebookPanel } from './components/RulebookPanel';
 import { UploadScreen } from './components/UploadScreen';
+import { HelpScreen } from './components/HelpScreen';
+
+type View = 'upload' | 'viewer' | 'help';
 
 export default function App() {
-  // ── Upload / viewer state ────────────────────────────────────────────────────
-  const [view, setView] = useState<'upload' | 'viewer'>('upload');
+  // ── Navigation state ─────────────────────────────────────────────────────────
+  const [view, setView] = useState<View>('upload');
+  const [prevView, setPrevView] = useState<View>('upload');
+
+  const goHelp = useCallback(() => {
+    setPrevView(view);
+    setView('help');
+  }, [view]);
+
+  const goBack = useCallback(() => {
+    setView(prevView);
+  }, [prevView]);
+
+  const handleNewAnalysis = useCallback(() => setView('upload'), []);
+
+  // ── Analysis state ───────────────────────────────────────────────────────────
   const [checkerData, setCheckerData] = useState<CheckerJson | null>(null);
   const [pdfBlobUrl, setPdfBlobUrl] = useState<string>('');
-  // Keep a ref to the blob URL so we can revoke it when replaced
   const prevBlobUrl = useRef<string>('');
 
   const handleAnalysisComplete = useCallback(
     (data: CheckerJson, blobUrl: string) => {
-      // Revoke old blob URL to avoid memory leaks
       if (prevBlobUrl.current) URL.revokeObjectURL(prevBlobUrl.current);
       prevBlobUrl.current = blobUrl;
       setCheckerData(data);
@@ -31,11 +46,6 @@ export default function App() {
     [],
   );
 
-  const handleNewAnalysis = useCallback(() => {
-    setView('upload');
-  }, []);
-
-  // Revoke blob URL on unmount
   useEffect(() => {
     return () => {
       if (prevBlobUrl.current) URL.revokeObjectURL(prevBlobUrl.current);
@@ -43,7 +53,6 @@ export default function App() {
   }, []);
 
   // ── Data loading ─────────────────────────────────────────────────────────────
-  // useFindingsParser accepts a CheckerJson object directly — no fetch needed
   const { findings, meta, loading: jsonLoading, error: jsonError } =
     useFindingsParser(view === 'viewer' ? checkerData : null);
 
@@ -54,7 +63,7 @@ export default function App() {
     usePdfAnchorMatcher(pdfDoc, findings);
 
   const { rulebookUrl, rulebookOpen, openRulebook, closeRulebook, rulebookPage } =
-    useRulebookReference('/rulebook.pdf');
+    useRulebookReference('/rulebook_v2.pdf');
 
   // ── Panel resize ─────────────────────────────────────────────────────────────
   const { sidebarWidth, isDragging, handleMouseDown } = useResizablePanels({
@@ -89,7 +98,6 @@ export default function App() {
   });
   const [viewMode, setViewMode] = useState<ViewMode>('grouped');
 
-  // Clear scrollToPage after use
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
     if (scrollToPage !== null) {
@@ -130,8 +138,17 @@ export default function App() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
+  if (view === 'help') {
+    return (
+      <HelpScreen
+        onBack={goBack}
+        onNewAnalysis={handleNewAnalysis}
+      />
+    );
+  }
+
   if (view === 'upload') {
-    return <UploadScreen onComplete={handleAnalysisComplete} />;
+    return <UploadScreen onComplete={handleAnalysisComplete} onHelp={goHelp} />;
   }
 
   if (jsonError) {
@@ -149,12 +166,12 @@ export default function App() {
       jsonLoading={jsonLoading}
       extractionProgress={extractionProgress}
       onNewAnalysis={handleNewAnalysis}
+      onHelp={goHelp}
     >
       <div
         className="app-panels"
         style={{ userSelect: isDragging ? 'none' : undefined }}
       >
-        {/* Left: PDF viewer */}
         <PdfViewer
           pdfDoc={pdfDoc}
           numPages={numPages}
@@ -172,14 +189,12 @@ export default function App() {
           statusMap={statusMap}
         />
 
-        {/* Drag handle */}
         <div
           className={`resize-handle${isDragging ? ' resize-handle--dragging' : ''}`}
           onMouseDown={handleMouseDown}
           title="Drag to resize"
         />
 
-        {/* Right: Sidebar */}
         <Sidebar
           findings={findings}
           matchResults={matchResults}

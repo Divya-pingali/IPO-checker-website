@@ -27,8 +27,6 @@ export const AppShell: React.FC<AppShellProps> = ({
       {/* Top bar */}
       <header className="topbar">
         <div className="topbar__brand">
-          <span className="topbar__logo">Linklaters</span>
-          <span className="topbar__separator">|</span>
           <span className="topbar__title">Prospectus Review</span>
         </div>
 

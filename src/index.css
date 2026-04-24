@@ -6,34 +6,34 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Surface */
-  --bg:          #f0f2f5;
+  --bg:          #f1f5f9;
   --surface:     #ffffff;
-  --surface-2:   #f7f8fa;
-  --surface-3:   #f0f2f5;
-  --border:      #e4e7ec;
-  --border-2:    #c9cdd6;
+  --surface-2:   #f8fafc;
+  --surface-3:   #f1f5f9;
+  --border:      #e2e8f0;
+  --border-2:    #cbd5e1;
 
   /* Text */
-  --text:        #111827;
-  --text-2:      #4b5563;
-  --text-3:      #9ca3af;
+  --text:        #1e293b;
+  --text-2:      #475569;
+  --text-3:      #94a3b8;
 
-  /* Brand accent — used ONLY for the Linklaters logo and primary CTA button */
-  --accent:      #AF005F;
-  --accent-bg:   #fce7f3;
-  --accent-hover:#8c004c;
+  /* Accent */
+  --accent:      #4b7fd4;
+  --accent-bg:   #eef4fd;
+  --accent-hover:#3a6bc0;
 
-  /* UI active — dark charcoal used for all interactive active/selected states */
-  --ui:          #1f2937;
-  --ui-bg:       #f1f3f5;
-  --ui-hover-bg: #e9ebee;
-  --ui-border:   #6b7280;
+  /* UI active — slate used for interactive active/selected states */
+  --ui:          #334155;
+  --ui-bg:       #f1f5f9;
+  --ui-hover-bg: #e2e8f0;
+  --ui-border:   #64748b;
 
   /* Severity */
   --c-critical:  #dc2626; --c-critical-bg: #fef2f2; --c-critical-br: #fca5a5;
   --c-high:      #ea580c; --c-high-bg:     #fff7ed; --c-high-br:     #fdba74;
   --c-medium:    #ca8a04; --c-medium-bg:   #fefce8; --c-medium-br:   #fde68a;
-  --c-low:       #AF005F; --c-low-bg:      #fce7f3; --c-low-br:      #f4a0c8;
+  --c-low:       #2563eb; --c-low-bg:      #eff6ff; --c-low-br:      #93c5fd;
   --c-flag:      #7c3aed; --c-flag-bg:     #f5f3ff; --c-flag-br:     #c4b5fd;
 
   /* Status */
@@ -89,9 +89,9 @@ html, body, #root {
   gap: 14px;
   padding: 0 20px;
   background: var(--surface);
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
   z-index: 10;
 }
 
@@ -304,9 +304,9 @@ html, body, #root {
 
 .sidebar__title {
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -.2px;
-  color: var(--text);
+  font-weight: 600;
+  letter-spacing: -.1px;
+  color: var(--text-2);
 }
 
 /* Extraction progress */
@@ -512,22 +512,13 @@ html, body, #root {
 .module-section__header:hover { background: var(--surface-3); }
 .module-section__header:active { background: #e9eaec; }
 
-/* Subtle left accent line when expanded */
-.module-section:not(:has(.module-section__findings + *)) .module-section__header,
-.module-section__header {
-  border-left: 3px solid transparent;
-}
-.module-section:has(.module-section__findings) .module-section__header {
-  border-left-color: var(--accent);
-}
-
 .module-section__id {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
   font-family: var(--font-mono);
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 1px solid #f4a0c8;
+  color: var(--text-2);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
   border-radius: 4px;
   padding: 1px 5px;
   flex-shrink: 0;
@@ -538,8 +529,8 @@ html, body, #root {
 
 .module-section__name {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 500;
+  color: var(--text-2);
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -636,7 +627,7 @@ html, body, #root {
 
 .finding-card__title {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
   margin-bottom: 3px;
   line-height: 1.4;
@@ -1237,12 +1228,12 @@ html, body, #root {
   border-radius: var(--r);
   cursor: pointer;
   transition: background .15s, box-shadow .15s;
-  box-shadow: 0 2px 6px rgba(175,0,95,.35);
+  box-shadow: 0 2px 6px rgba(75,127,212,.25);
 }
 
 .upload-btn:hover:not(:disabled) {
   background: var(--accent-hover);
-  box-shadow: 0 4px 12px rgba(175,0,95,.40);
+  box-shadow: 0 4px 12px rgba(75,127,212,.30);
 }
 
 .upload-btn:disabled {
@@ -1318,6 +1309,132 @@ html, body, #root {
   text-align: center;
   margin-top: -8px;
 }
+
+/* ── Upload tabs (New Analysis / History) ───────────────────────────────────── */
+.upload-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin: -4px -36px 0;
+  padding: 0 36px;
+}
+
+.upload-tab {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .12s, border-color .12s;
+  text-align: center;
+}
+
+.upload-tab:hover { color: var(--text-2); }
+
+.upload-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Upload history list ─────────────────────────────────────────────────────── */
+.upload-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+
+.upload-history__loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-3);
+  font-size: 12px;
+  padding: 20px 0;
+  justify-content: center;
+}
+
+.upload-history__empty {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.upload-history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background .12s, border-color .12s, box-shadow .12s;
+}
+
+.upload-history-item:hover:not(:disabled) {
+  background: var(--surface);
+  border-color: var(--border-2);
+  box-shadow: var(--sh-1);
+}
+
+.upload-history-item:disabled { opacity: .55; cursor: not-allowed; }
+
+.upload-history-item--loading { opacity: .7; }
+
+.upload-history-item__left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.upload-history-item__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.upload-history-item__company {
+  font-size: 12px;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-history-item__meta {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.upload-history-item__arrow {
+  font-size: 14px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+.upload-history__refresh {
+  align-self: center;
+  margin-top: 4px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--text-3);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: color .12s, border-color .12s;
+}
+
+.upload-history__refresh:hover { color: var(--text-2); border-color: var(--border-2); }
 
 /* ── Topbar: action buttons ─────────────────────────────────────────────────── */
 .topbar__actions {
@@ -1478,9 +1595,9 @@ html, body, #root {
   gap: 14px;
   padding: 0 20px;
   background: var(--surface);
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
 .help-topbar__brand {

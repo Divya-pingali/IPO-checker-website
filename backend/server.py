@@ -28,6 +28,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 try:
     from backend.output_saver import save_outputs
@@ -36,6 +37,7 @@ except ImportError:
 
 _BACKEND_DIR  = Path(__file__).parent
 _PROJECT_DIR  = _BACKEND_DIR.parent
+_OUTPUT_DIR   = _PROJECT_DIR / "Output"
 
 load_dotenv(_PROJECT_DIR / ".env")
 
@@ -218,6 +220,46 @@ async def get_result(job_id: str) -> dict:
 @app.get("/api/health")
 async def health() -> dict:
     return {"ok": True, "api_key_set": bool(os.environ.get("GEMINI_API_KEY"))}
+
+
+@app.get("/api/history")
+async def list_history() -> list[dict]:
+    """Return metadata for all saved analyses in the Output/ folder."""
+    results = []
+    if not _OUTPUT_DIR.exists():
+        return results
+    for json_file in sorted(_OUTPUT_DIR.glob("output*.json")):
+        try:
+            data = json.loads(json_file.read_text(encoding="utf-8"))
+            meta = data.get("meta", {})
+            results.append({
+                "name": json_file.stem,
+                "company_name": meta.get("company_name", "Unknown"),
+                "analysis_date": meta.get("analysis_date", ""),
+                "rulebook_version": meta.get("rulebook_version", ""),
+                "has_pdf": (_OUTPUT_DIR / (json_file.stem + ".pdf")).exists(),
+            })
+        except Exception:
+            pass
+    return results
+
+
+@app.get("/api/history/{name}")
+async def get_history_item(name: str) -> dict:
+    """Return a specific saved analysis JSON."""
+    json_file = _OUTPUT_DIR / f"{name}.json"
+    if not json_file.exists():
+        raise HTTPException(404, f"Analysis {name!r} not found.")
+    return json.loads(json_file.read_text(encoding="utf-8"))
+
+
+@app.get("/api/history/{name}/pdf")
+async def get_history_pdf(name: str) -> FileResponse:
+    """Stream the PDF for a saved analysis."""
+    pdf_file = _OUTPUT_DIR / f"{name}.pdf"
+    if not pdf_file.exists():
+        raise HTTPException(404, f"PDF for {name!r} not found.")
+    return FileResponse(pdf_file, media_type="application/pdf")
 
 
 # ---------------------------------------------------------------------------

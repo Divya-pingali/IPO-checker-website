@@ -55,8 +55,6 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
       {/* Top nav */}
       <header className="help-topbar">
         <div className="help-topbar__brand">
-          <span className="help-topbar__logo">Linklaters</span>
-          <span className="help-topbar__sep">|</span>
           <span className="help-topbar__title">IPO Prospectus Checker — Help</span>
         </div>
         <div className="help-topbar__actions">

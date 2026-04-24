@@ -31,7 +31,7 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
     return r?.status === 'unresolved';
   }).length;
 
-  const criticalCount = sorted.filter((f) => f.severity === 'Critical').length;
+  const criticalCount = sorted.filter((f) => f.severity === 'Critical' && f.status !== 'Present').length;
   const absentCount = sorted.filter((f) => f.status === 'Absent').length;
   const insufficientCount = sorted.filter((f) => f.status === 'Insufficient').length;
 

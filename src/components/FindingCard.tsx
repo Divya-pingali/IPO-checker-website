@@ -85,9 +85,11 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       {/* Header row */}
       <div className="finding-card__header">
         <span className="finding-card__id">{finding.ruleId}</span>
-        <span className={`badge ${SEVERITY_CLASS[finding.severity] ?? 'badge--medium'}`}>
-          {finding.severity}
-        </span>
+        {!(finding.severity === 'Critical' && finding.status === 'Present') && (
+          <span className={`badge ${SEVERITY_CLASS[finding.severity] ?? 'badge--medium'}`}>
+            {finding.severity}
+          </span>
+        )}
         <span className={`badge ${STATUS_CLASS[finding.status] ?? 'badge--na'}`}>
           {finding.status}
         </span>

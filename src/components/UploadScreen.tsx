@@ -143,7 +143,7 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({ onComplete, onHelp }
 
         <p className="upload-subtitle">
           A pre-submission review tool that checks Chapter 18C prospectus disclosures
-          against the Meaningful Investment requirement across all 10 modules (Modules 0 and A–I).
+          against the Meaningful Investment requirement.
         </p>
 
         {/* Drop zone */}

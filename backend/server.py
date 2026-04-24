@@ -29,6 +29,11 @@ from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+try:
+    from backend.output_saver import save_outputs
+except ImportError:
+    from output_saver import save_outputs  # when run as python backend/server.py
+
 _BACKEND_DIR  = Path(__file__).parent
 _PROJECT_DIR  = _BACKEND_DIR.parent
 
@@ -136,6 +141,15 @@ async def run_pipeline(job_id: str, input_file: Path, temp_dir: Path) -> None:
             raise RuntimeError("checker.json not produced by analyze.py")
 
         result = json.loads(output_json.read_text(encoding="utf-8"))
+
+        # Persist outputs to Output/ folder (PDF + JSON + Word doc)
+        try:
+            saved = save_outputs(pdf_path, result)
+            log.info("[%s] Saved outputs → %s", job_id,
+                     {k: str(v) for k, v in saved.items()})
+        except Exception as save_exc:
+            log.warning("[%s] Could not save outputs: %s", job_id, save_exc)
+
         _set(job_id, status="complete", stage="complete",
              message="Analysis complete!", result=result)
         log.info("[%s] Job complete", job_id)

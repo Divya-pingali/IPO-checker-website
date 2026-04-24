@@ -197,13 +197,56 @@ def call_gemini(system_prompt: str, user_message: str, model: str, api_key: str,
 # JSON helpers
 # ---------------------------------------------------------------------------
 
-def clean_json(text: str) -> dict:
-    text = text.strip()
-    # Strip markdown fences if present despite response_mime_type
+def _strip_json_noise(text: str) -> str:
+    """Remove common non-JSON noise that models occasionally emit.
+
+    Handles:
+      - Markdown code fences (``` / ```json)
+      - // line comments
+      - /* block comments */
+      - Bare ellipsis lines (... or ,...)
+      - Trailing commas before ] or }
+    """
+    import re
+
+    # Strip markdown fences
     if text.startswith("```"):
         lines = text.splitlines()
+        # Drop first line (fence open) and last if it closes the fence
         text = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
-    return json.loads(text)
+
+    # Remove /* … */ block comments (non-greedy, dotall)
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
+
+    # Remove // line comments — only when // is not inside a string.
+    # Simplified: remove any line whose first non-whitespace chars are //
+    text = re.sub(r'(?m)^[ \t]*//[^\n]*$', '', text)
+
+    # Remove lines that are just an ellipsis (model skipping content)
+    text = re.sub(r'(?m)^[ \t]*\.\.\.[ \t]*,?[ \t]*$', '', text)
+
+    # Remove corrupted string entries where the model dropped the opening quote,
+    # e.g. a line containing  L"  instead of  "L"  (bare word chars + a quote).
+    # These never appear in valid JSON, so stripping them is safe.
+    text = re.sub(r'(?m)^[ \t]*[A-Za-z0-9_]+"[ \t]*,?[ \t]*$', '', text)
+
+    # Remove trailing commas before ] or } (common when model omits items)
+    text = re.sub(r',(\s*[}\]])', r'\1', text)
+
+    return text
+
+
+def clean_json(text: str) -> dict:
+    text = text.strip()
+    text = _strip_json_noise(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        # Log the offending area to help diagnose future issues
+        start = max(0, exc.pos - 120)
+        end   = min(len(text), exc.pos + 120)
+        logging.error("JSON parse error at char %d: …%r…", exc.pos, text[start:end])
+        raise
 
 
 def _count_by_severity(items: list[dict], severity: str) -> int:

@@ -25,9 +25,9 @@ const SEVERITIES = [
 ];
 
 const STATUSES = [
-  { status: 'Present', colour: 'var(--s-present)', bg: 'var(--s-present-bg)', desc: 'The required disclosure is present, specific, and adequate to evaluate compliance. No action required.' },
-  { status: 'Insufficient', colour: 'var(--s-insuf)', bg: 'var(--s-insuf-bg)', desc: 'A disclosure exists but is too vague, templated, or incomplete to confirm compliance. Requires improvement.' },
-  { status: 'Absent', colour: 'var(--s-absent)', bg: 'var(--s-absent-bg)', desc: 'The required disclosure is entirely missing from the prospectus. Must be added.' },
+  { status: 'Clear', colour: 'var(--s-present)', bg: 'var(--s-present-bg)', desc: 'The rule was checked and the disclosure appears to satisfy the requirement based on the cited prospectus text.' },
+  { status: 'Needs detail', colour: 'var(--s-insuf)', bg: 'var(--s-insuf-bg)', desc: 'A disclosure exists but is too vague, templated, or incomplete to confirm compliance. Requires improvement.' },
+  { status: 'Missing disclosure', colour: 'var(--s-absent)', bg: 'var(--s-absent-bg)', desc: 'The required disclosure is entirely missing from the prospectus and should be added.' },
   { status: 'Not Applicable', colour: 'var(--s-na)', bg: 'var(--s-na-bg)', desc: 'The module\'s trigger condition was not met, so all its rules are marked N/A.' },
 ];
 

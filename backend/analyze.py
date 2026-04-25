@@ -18,6 +18,7 @@ import logging
 import os
 import sys
 import time
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -57,6 +58,298 @@ TIER1_PATTERN_MAP = [
 # How many page_blocks per section to include in the API call.
 # Increase this if important information appears late in a section.
 PAGE_BLOCKS_PER_SECTION = 60
+
+CHECK_TYPES = {"D", "T", "K", "L", "R"}
+CHECK_LABELS = {
+    "D": "Disclosure",
+    "T": "Threshold",
+    "K": "Consistency",
+    "L": "Language",
+    "R": "Reasoning",
+}
+SEVERITIES = {"Critical", "High", "Medium"}
+ISSUE_TYPES = {"Absent", "Insufficient"}
+RULE_STATUSES = {"clear", "has_issues", "not_applicable"}
+REASONING_FLAG_CATEGORIES = {"arithmetic", "cross_reference"}
+MARKET_CAP_TIERS = {"< HK$15bn", "HK$15-30bn", "≥ HK$30bn", "Not determinable"}
+COMPANY_CLASSIFICATIONS = {"Commercial", "Pre-Commercial", "Not determinable"}
+SUMMARY_FINDING_KEYS = {
+    "disclosure",
+    "threshold",
+    "consistency",
+    "language",
+    "reasoning",
+}
+SUMMARY_SEVERITY_KEYS = {"critical", "high", "medium"}
+
+
+def _nullable(schema: dict) -> dict:
+    """Return a schema that also allows null."""
+    return {"anyOf": [schema, {"type": "null"}]}
+
+
+CHECKER_RESPONSE_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "meta": {
+            "type": "object",
+            "properties": {
+                "rulebook_version": {"type": "string"},
+                "company_name": {"type": "string"},
+                "analysis_date": {"type": "string"},
+            },
+            "required": ["rulebook_version", "company_name", "analysis_date"],
+            "additionalProperties": True,
+        },
+        "company_classification": {
+            "type": "object",
+            "properties": {
+                "specialist_technology_industry": {"type": "string"},
+                "acceptable_sector": {"type": "string"},
+                "commercial_or_precommercial": {"type": "string"},
+                "expected_market_cap_hkd_bn": _nullable({"type": "number"}),
+                "applicable_market_cap_tier": {"type": "string"},
+                "applicable_aggregate_sii_threshold_pct": _nullable({"type": "number"}),
+                "classification_notes": {"type": "string"},
+            },
+            "required": [
+                "specialist_technology_industry",
+                "acceptable_sector",
+                "commercial_or_precommercial",
+                "expected_market_cap_hkd_bn",
+                "applicable_market_cap_tier",
+                "applicable_aggregate_sii_threshold_pct",
+                "classification_notes",
+            ],
+            "additionalProperties": True,
+        },
+        "conditional_modules": {
+            "type": "object",
+            "properties": {
+                "module_F_triggered": {"type": "boolean"},
+                "module_G_triggered": {"type": "boolean"},
+                "module_H_triggered": {"type": "boolean"},
+                "module_I_triggered": {"type": "boolean"},
+                "trigger_basis": {
+                    "type": "object",
+                    "properties": {
+                        "F": {"type": "string"},
+                        "G": {"type": "string"},
+                        "H": {"type": "string"},
+                        "I": {"type": "string"},
+                    },
+                    "required": ["F", "G", "H", "I"],
+                    "additionalProperties": True,
+                },
+            },
+            "required": [
+                "module_F_triggered",
+                "module_G_triggered",
+                "module_H_triggered",
+                "module_I_triggered",
+                "trigger_basis",
+            ],
+            "additionalProperties": True,
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "module_id": {"type": "string"},
+                    "module_name": {"type": "string"},
+                    "triggered": {"type": "boolean"},
+                    "not_applicable_reason": {"type": "string"},
+                    "filter_tags": {
+                        "type": "object",
+                        "properties": {
+                            "has_disclosure_issue": {"type": "boolean"},
+                            "has_threshold_issue": {"type": "boolean"},
+                            "has_consistency_issue": {"type": "boolean"},
+                            "has_language_issue": {"type": "boolean"},
+                            "has_reasoning_issue": {"type": "boolean"},
+                            "highest_severity": _nullable({"type": "string"}),
+                        },
+                        "required": [
+                            "has_disclosure_issue",
+                            "has_threshold_issue",
+                            "has_consistency_issue",
+                            "has_language_issue",
+                            "has_reasoning_issue",
+                            "highest_severity",
+                        ],
+                        "additionalProperties": True,
+                    },
+                    "rules": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "rule_id": {"type": "string"},
+                                "rule_description": {"type": "string"},
+                                "status": {"type": "string"},
+                                "analysis": {"type": "string"},
+                                "source_anchor": _nullable({
+                                    "type": "object",
+                                    "properties": {
+                                        "source_file": _nullable({"type": "string"}),
+                                        "page": _nullable({"type": "integer"}),
+                                        "anchor_phrase": _nullable({"type": "string"}),
+                                    },
+                                    "required": ["source_file", "page", "anchor_phrase"],
+                                    "additionalProperties": True,
+                                }),
+                                "findings": {
+                                    "type": "array",
+                                    "minItems": 1,
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "check_type": {"type": "string"},
+                                            "check_label": {"type": "string"},
+                                            "severity": {"type": "string"},
+                                            "issue_type": {"type": "string"},
+                                            "explanation": {"type": "string"},
+                                            "recommendation": {"type": "string"},
+                                            "source_anchor": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "source_file": _nullable({"type": "string"}),
+                                                    "page": _nullable({"type": "integer"}),
+                                                    "anchor_phrase": _nullable({"type": "string"}),
+                                                },
+                                                "required": [
+                                                    "source_file",
+                                                    "page",
+                                                    "anchor_phrase",
+                                                ],
+                                                "additionalProperties": True,
+                                            },
+                                        },
+                                        "required": [
+                                            "check_type",
+                                            "check_label",
+                                            "severity",
+                                            "issue_type",
+                                            "explanation",
+                                            "recommendation",
+                                            "source_anchor",
+                                        ],
+                                        "additionalProperties": True,
+                                    },
+                                },
+                            },
+                            "required": ["rule_id", "rule_description", "status", "analysis"],
+                            "additionalProperties": True,
+                        },
+                    },
+                },
+                "required": ["module_id", "module_name", "triggered", "filter_tags", "rules"],
+                "additionalProperties": True,
+            },
+        },
+        "reasoning_flags": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "flag_id": {"type": "string"},
+                    "category": {"type": "string"},
+                    "severity": {"type": "string"},
+                    "rules_triggered": {"type": "array", "items": {"type": "string"}},
+                    "summary": {"type": "string"},
+                    "explanation": {"type": "string"},
+                    "recommendation": {"type": "string"},
+                    "source_anchors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "source_file": _nullable({"type": "string"}),
+                                "page": _nullable({"type": "integer"}),
+                                "anchor_phrase": _nullable({"type": "string"}),
+                            },
+                            "required": ["source_file", "page", "anchor_phrase"],
+                            "additionalProperties": True,
+                        },
+                    },
+                },
+                "required": [
+                    "flag_id",
+                    "category",
+                    "severity",
+                    "rules_triggered",
+                    "summary",
+                    "explanation",
+                    "recommendation",
+                    "source_anchors",
+                ],
+                "additionalProperties": True,
+            },
+        },
+        "summary": {
+            "type": "object",
+            "properties": {
+                "total_rules_evaluated": {"type": "integer"},
+                "not_applicable": {"type": "integer"},
+                "rules_clear": {"type": "integer"},
+                "rules_with_issues": {"type": "integer"},
+                "total_findings": {"type": "integer"},
+                "findings_by_type": {
+                    "type": "object",
+                    "properties": {
+                        "disclosure": {"type": "integer"},
+                        "threshold": {"type": "integer"},
+                        "consistency": {"type": "integer"},
+                        "language": {"type": "integer"},
+                        "reasoning": {"type": "integer"},
+                    },
+                    "required": [
+                        "disclosure",
+                        "threshold",
+                        "consistency",
+                        "language",
+                        "reasoning",
+                    ],
+                    "additionalProperties": True,
+                },
+                "findings_by_severity": {
+                    "type": "object",
+                    "properties": {
+                        "critical": {"type": "integer"},
+                        "high": {"type": "integer"},
+                        "medium": {"type": "integer"},
+                    },
+                    "required": ["critical", "high", "medium"],
+                    "additionalProperties": True,
+                },
+                "reasoning_flags_total": {"type": "integer"},
+                "overall_assessment": {"type": "string"},
+            },
+            "required": [
+                "total_rules_evaluated",
+                "not_applicable",
+                "rules_clear",
+                "rules_with_issues",
+                "total_findings",
+                "findings_by_type",
+                "findings_by_severity",
+                "reasoning_flags_total",
+                "overall_assessment",
+            ],
+            "additionalProperties": True,
+        },
+    },
+    "required": [
+        "meta",
+        "company_classification",
+        "conditional_modules",
+        "modules",
+        "reasoning_flags",
+        "summary",
+    ],
+    "additionalProperties": True,
+}
 
 
 def find_tier1_label(file_stem: str) -> str:
@@ -129,8 +422,9 @@ def build_full_message(tier1: dict, tier2: dict) -> str:
     parts = [
         "Analyse the following extracted prospectus sections according to the rulebook "
         "in your system prompt. Evaluate ALL modules (0, A, B, C, D, E, F, G, H, I) "
-        "and ALL rules within each module. Every rule must appear in the output with a "
-        "status of Present, Absent, Insufficient, or Not Applicable — do not omit any. "
+        "and ALL rules within each triggered module. "
+        "Return every rule in the output with status clear, has_issues, or not_applicable "
+        "exactly as required by Section 5 of the system prompt. "
         "Return the complete checker.json output exactly matching the schema in Section 5 "
         "of the system prompt.\n",
     ]
@@ -154,25 +448,237 @@ def build_full_message(tier1: dict, tier2: dict) -> str:
     return "\n".join(parts)
 
 
+def _default_filter_tags() -> dict:
+    return {
+        "has_disclosure_issue": False,
+        "has_threshold_issue": False,
+        "has_consistency_issue": False,
+        "has_language_issue": False,
+        "has_reasoning_issue": False,
+        "highest_severity": None,
+    }
+
+
+def _validate_source_anchor(anchor: object, path: str) -> None:
+    if not isinstance(anchor, dict):
+        raise ValueError(f"{path} must be an object")
+    for key in ("source_file", "page", "anchor_phrase"):
+        if key not in anchor:
+            raise ValueError(f"{path}.{key} is required")
+    if anchor["source_file"] is not None and not isinstance(anchor["source_file"], str):
+        raise ValueError(f"{path}.source_file must be a string or null")
+    if anchor["page"] is not None and not isinstance(anchor["page"], int):
+        raise ValueError(f"{path}.page must be an integer or null")
+    if anchor["anchor_phrase"] is not None and not isinstance(anchor["anchor_phrase"], str):
+        raise ValueError(f"{path}.anchor_phrase must be a string or null")
+
+
+def validate_checker_json(data: object) -> None:
+    """Validate the v4 checker payload shape before it reaches the UI."""
+    if not isinstance(data, dict):
+        raise ValueError("Checker response must be a JSON object")
+
+    for key in (
+        "meta",
+        "company_classification",
+        "conditional_modules",
+        "modules",
+        "reasoning_flags",
+        "summary",
+    ):
+        if key not in data:
+            raise ValueError(f"Top-level key '{key}' is required")
+
+    meta = data["meta"]
+    if not isinstance(meta, dict):
+        raise ValueError("meta must be an object")
+    for key in ("rulebook_version", "company_name", "analysis_date"):
+        if not isinstance(meta.get(key), str) or not meta[key].strip():
+            raise ValueError(f"meta.{key} must be a non-empty string")
+
+    company = data["company_classification"]
+    if not isinstance(company, dict):
+        raise ValueError("company_classification must be an object")
+    if company.get("commercial_or_precommercial") not in COMPANY_CLASSIFICATIONS:
+        raise ValueError("company_classification.commercial_or_precommercial is invalid")
+    if company.get("applicable_market_cap_tier") not in MARKET_CAP_TIERS:
+        raise ValueError("company_classification.applicable_market_cap_tier is invalid")
+
+    conditional = data["conditional_modules"]
+    if not isinstance(conditional, dict):
+        raise ValueError("conditional_modules must be an object")
+    for key in ("module_F_triggered", "module_G_triggered", "module_H_triggered", "module_I_triggered"):
+        if not isinstance(conditional.get(key), bool):
+            raise ValueError(f"conditional_modules.{key} must be boolean")
+    trigger_basis = conditional.get("trigger_basis")
+    if not isinstance(trigger_basis, dict):
+        raise ValueError("conditional_modules.trigger_basis must be an object")
+    for key in ("F", "G", "H", "I"):
+        if not isinstance(trigger_basis.get(key), str):
+            raise ValueError(f"conditional_modules.trigger_basis.{key} must be a string")
+
+    modules = data["modules"]
+    if not isinstance(modules, list):
+        raise ValueError("modules must be an array")
+    for i, module in enumerate(modules):
+        path = f"modules[{i}]"
+        if not isinstance(module, dict):
+            raise ValueError(f"{path} must be an object")
+        if not isinstance(module.get("module_id"), str):
+            raise ValueError(f"{path}.module_id must be a string")
+        if not isinstance(module.get("module_name"), str):
+            raise ValueError(f"{path}.module_name must be a string")
+        if not isinstance(module.get("triggered"), bool):
+            raise ValueError(f"{path}.triggered must be boolean")
+
+        filter_tags = module.get("filter_tags")
+        if not isinstance(filter_tags, dict):
+            raise ValueError(f"{path}.filter_tags must be an object")
+        for key in (
+            "has_disclosure_issue",
+            "has_threshold_issue",
+            "has_consistency_issue",
+            "has_language_issue",
+            "has_reasoning_issue",
+        ):
+            if not isinstance(filter_tags.get(key), bool):
+                raise ValueError(f"{path}.filter_tags.{key} must be boolean")
+        highest = filter_tags.get("highest_severity")
+        if highest is not None and highest not in SEVERITIES:
+            raise ValueError(f"{path}.filter_tags.highest_severity is invalid")
+
+        rules = module.get("rules")
+        if not isinstance(rules, list):
+            raise ValueError(f"{path}.rules must be an array")
+        for j, rule in enumerate(rules):
+            rule_path = f"{path}.rules[{j}]"
+            if not isinstance(rule, dict):
+                raise ValueError(f"{rule_path} must be an object")
+            if not isinstance(rule.get("rule_id"), str):
+                raise ValueError(f"{rule_path}.rule_id must be a string")
+            if not isinstance(rule.get("rule_description"), str):
+                raise ValueError(f"{rule_path}.rule_description must be a string")
+            status = rule.get("status")
+            if status not in RULE_STATUSES:
+                raise ValueError(f"{rule_path}.status is invalid")
+            if not isinstance(rule.get("analysis"), str):
+                raise ValueError(f"{rule_path}.analysis must be a string")
+
+            if status in {"clear", "not_applicable"}:
+                _validate_source_anchor(rule.get("source_anchor"), f"{rule_path}.source_anchor")
+                if "findings" in rule and rule.get("findings") not in (None, []):
+                    raise ValueError(f"{rule_path}.findings must be omitted for status={status}")
+                continue
+
+            if "source_anchor" in rule and rule.get("source_anchor") not in (None, {}):
+                raise ValueError(f"{rule_path}.source_anchor must be omitted for has_issues rules")
+
+            findings = rule.get("findings")
+            if not isinstance(findings, list) or not findings:
+                raise ValueError(f"{rule_path}.findings must be a non-empty array")
+            for k, finding in enumerate(findings):
+                finding_path = f"{rule_path}.findings[{k}]"
+                if not isinstance(finding, dict):
+                    raise ValueError(f"{finding_path} must be an object")
+                check_type = finding.get("check_type")
+                if check_type not in CHECK_TYPES:
+                    raise ValueError(f"{finding_path}.check_type is invalid")
+                if finding.get("check_label") != CHECK_LABELS[check_type]:
+                    raise ValueError(f"{finding_path}.check_label does not match {check_type}")
+                if finding.get("severity") not in SEVERITIES:
+                    raise ValueError(f"{finding_path}.severity is invalid")
+                if finding.get("issue_type") not in ISSUE_TYPES:
+                    raise ValueError(f"{finding_path}.issue_type is invalid")
+                for field in ("explanation", "recommendation"):
+                    if not isinstance(finding.get(field), str):
+                        raise ValueError(f"{finding_path}.{field} must be a string")
+                _validate_source_anchor(finding.get("source_anchor"), f"{finding_path}.source_anchor")
+
+    flags = data["reasoning_flags"]
+    if not isinstance(flags, list):
+        raise ValueError("reasoning_flags must be an array")
+    for i, flag in enumerate(flags):
+        path = f"reasoning_flags[{i}]"
+        if not isinstance(flag, dict):
+            raise ValueError(f"{path} must be an object")
+        if not isinstance(flag.get("flag_id"), str):
+            raise ValueError(f"{path}.flag_id must be a string")
+        if flag.get("category") not in REASONING_FLAG_CATEGORIES:
+            raise ValueError(f"{path}.category is invalid")
+        if flag.get("severity") not in SEVERITIES:
+            raise ValueError(f"{path}.severity is invalid")
+        if not isinstance(flag.get("rules_triggered"), list):
+            raise ValueError(f"{path}.rules_triggered must be an array")
+        for field in ("summary", "explanation", "recommendation"):
+            if not isinstance(flag.get(field), str):
+                raise ValueError(f"{path}.{field} must be a string")
+        anchors = flag.get("source_anchors")
+        if not isinstance(anchors, list) or len(anchors) != 2:
+            raise ValueError(f"{path}.source_anchors must contain exactly two anchors")
+        for j, anchor in enumerate(anchors):
+            _validate_source_anchor(anchor, f"{path}.source_anchors[{j}]")
+
+    summary = data["summary"]
+    if not isinstance(summary, dict):
+        raise ValueError("summary must be an object")
+    for key in (
+        "total_rules_evaluated",
+        "not_applicable",
+        "rules_clear",
+        "rules_with_issues",
+        "total_findings",
+        "reasoning_flags_total",
+    ):
+        if not isinstance(summary.get(key), int):
+            raise ValueError(f"summary.{key} must be an integer")
+    findings_by_type = summary.get("findings_by_type")
+    if not isinstance(findings_by_type, dict):
+        raise ValueError("summary.findings_by_type must be an object")
+    if set(findings_by_type) != SUMMARY_FINDING_KEYS:
+        raise ValueError("summary.findings_by_type keys are invalid")
+    if not all(isinstance(v, int) for v in findings_by_type.values()):
+        raise ValueError("summary.findings_by_type values must be integers")
+    findings_by_severity = summary.get("findings_by_severity")
+    if not isinstance(findings_by_severity, dict):
+        raise ValueError("summary.findings_by_severity must be an object")
+    if set(findings_by_severity) != SUMMARY_SEVERITY_KEYS:
+        raise ValueError("summary.findings_by_severity keys are invalid")
+    if not all(isinstance(v, int) for v in findings_by_severity.values()):
+        raise ValueError("summary.findings_by_severity values must be integers")
+    if not isinstance(summary.get("overall_assessment"), str):
+        raise ValueError("summary.overall_assessment must be a string")
+
+    if summary["reasoning_flags_total"] != len(flags):
+        raise ValueError("summary.reasoning_flags_total must equal len(reasoning_flags)")
+
+
 # ---------------------------------------------------------------------------
 # Gemini API call with retry
 # ---------------------------------------------------------------------------
 
 def call_gemini(system_prompt: str, user_message: str, model: str, api_key: str,
-                max_tokens: int = 32768, max_retries: int = 5) -> str:
+                max_tokens: int = 32768, max_retries: int = 5,
+                thinking_budget: int | None = None) -> str:
     client = genai.Client(api_key=api_key)
 
     for attempt in range(max_retries):
         try:
+            config_kwargs = dict(
+                system_instruction=system_prompt,
+                max_output_tokens=max_tokens,
+                temperature=0.0,
+                response_mime_type="application/json",
+                response_json_schema=CHECKER_RESPONSE_JSON_SCHEMA,
+            )
+            if thinking_budget is not None and thinking_budget > 0:
+                config_kwargs["thinking_config"] = types.ThinkingConfig(
+                    thinking_budget=thinking_budget
+                )
+
             response = client.models.generate_content(
                 model=model,
                 contents=user_message,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_prompt,
-                    max_output_tokens=max_tokens,
-                    temperature=0.0,
-                    response_mime_type="application/json",
-                ),
+                config=types.GenerateContentConfig(**config_kwargs),
             )
             return response.text
         except Exception as exc:
@@ -253,6 +759,125 @@ def _count_by_severity(items: list[dict], severity: str) -> int:
     return sum(1 for x in items if x.get("severity") == severity)
 
 
+def finalize_checker_json(final: dict) -> dict:
+    """Backfill a few deterministic fields, then validate the final payload."""
+    final.setdefault("meta", {})
+    final["meta"].setdefault("rulebook_version", "v4.0")
+    final["meta"].setdefault("analysis_date", date.today().isoformat())
+
+    final.setdefault("reasoning_flags", [])
+    final.setdefault("modules", [])
+    final.setdefault("summary", {})
+
+    cleaned_modules = []
+    for module in final["modules"]:
+        if not isinstance(module, dict):
+            continue
+        raw_rules = module.get("rules", [])
+        if not isinstance(raw_rules, list):
+            raw_rules = []
+
+        cleaned_rules = []
+        for rule in raw_rules:
+            if not isinstance(rule, dict):
+                continue
+            status = rule.get("status")
+            if status not in RULE_STATUSES:
+                if isinstance(rule.get("findings"), list) and rule.get("findings"):
+                    status = "has_issues"
+                else:
+                    continue
+            rule["status"] = status
+            rule.setdefault("analysis", "")
+
+            if status == "has_issues":
+                findings = rule.get("findings", [])
+                if not isinstance(findings, list):
+                    findings = []
+                findings = [f for f in findings if isinstance(f, dict)]
+                if not findings:
+                    continue
+                rule["findings"] = findings
+                rule.pop("source_anchor", None)
+            else:
+                if not isinstance(rule.get("source_anchor"), dict):
+                    rule["source_anchor"] = {
+                        "source_file": None,
+                        "page": None,
+                        "anchor_phrase": None,
+                    }
+                rule.pop("findings", None)
+            cleaned_rules.append(rule)
+
+        module["rules"] = cleaned_rules
+        type_map = {
+            "D": "has_disclosure_issue",
+            "T": "has_threshold_issue",
+            "K": "has_consistency_issue",
+            "L": "has_language_issue",
+            "R": "has_reasoning_issue",
+        }
+        filter_tags = _default_filter_tags()
+        severities = []
+        for rule in cleaned_rules:
+            if rule.get("status") != "has_issues":
+                continue
+            for finding in rule.get("findings", []):
+                mapped = type_map.get(finding.get("check_type"))
+                if mapped:
+                    filter_tags[mapped] = True
+                sev = finding.get("severity")
+                if sev in SEVERITIES:
+                    severities.append(sev)
+        if severities:
+            order = {"Critical": 0, "High": 1, "Medium": 2}
+            filter_tags["highest_severity"] = min(severities, key=lambda s: order[s])
+        module["filter_tags"] = filter_tags
+        cleaned_modules.append(module)
+
+    final["modules"] = cleaned_modules
+
+    modules = final.get("modules", [])
+    summary = final.setdefault("summary", {})
+    if modules:
+        all_findings = [
+            f
+            for m in modules
+            for r in m.get("rules", [])
+            for f in r.get("findings", [])
+        ]
+        all_rules = [r for m in modules for r in m.get("rules", [])]
+        type_map = {
+            "D": "disclosure",
+            "T": "threshold",
+            "K": "consistency",
+            "L": "language",
+            "R": "reasoning",
+        }
+        by_type = {v: 0 for v in type_map.values()}
+        by_sev = {"critical": 0, "high": 0, "medium": 0}
+        for finding in all_findings:
+            ct = finding.get("check_type", "")
+            if ct in type_map:
+                by_type[type_map[ct]] += 1
+            sev = finding.get("severity", "").lower()
+            if sev in by_sev:
+                by_sev[sev] += 1
+        summary.update({
+            "total_rules_evaluated": sum(1 for r in all_rules if r.get("status") != "not_applicable"),
+            "not_applicable": sum(1 for r in all_rules if r.get("status") == "not_applicable"),
+            "rules_clear": sum(1 for r in all_rules if r.get("status") == "clear"),
+            "rules_with_issues": sum(1 for r in all_rules if r.get("status") == "has_issues"),
+            "total_findings": len(all_findings),
+            "findings_by_type": by_type,
+            "findings_by_severity": by_sev,
+            "reasoning_flags_total": len(final.get("reasoning_flags", [])),
+        })
+
+    validate_checker_json(final)
+    return final
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -263,8 +888,8 @@ def main() -> None:
     parser.add_argument("--extraction-dir", required=True,
                         help="Directory with tier1/ and tier2/ from extract_sections.py")
     parser.add_argument("--prompt",
-                        default=str(_REFERENCE_DIR / "rulebook_prompt_v3.md"),
-                        help="Path to rulebook_prompt_v3.md (default: reference/)")
+                        default=str(_REFERENCE_DIR / "rulebook_prompt_v4.md"),
+                        help="Path to rulebook_prompt_v4.md (default: reference/)")
     parser.add_argument("--output",
                         default=str(_PUBLIC_DIR / "checker.json"),
                         help="Output checker.json path (default: public/checker.json)")
@@ -272,6 +897,15 @@ def main() -> None:
     parser.add_argument("--api-key")
     parser.add_argument("--max-tokens", type=int, default=32768,
                         help="Max output tokens (default: 32768)")
+    parser.add_argument(
+        "--thinking-budget",
+        type=int,
+        default=0,
+        help=(
+            "Gemini thinking budget. Default 0 disables forced thinking so results "
+            "stay closer to the leaner output style used in earlier runs."
+        ),
+    )
     parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args()
 
@@ -308,8 +942,20 @@ def main() -> None:
                  len(user_message), len(tier2), len(tier1))
 
     # Single API call
-    logging.info("Calling Gemini (%s) — this may take a few minutes…", args.model)
-    raw = call_gemini(system_prompt, user_message, args.model, api_key, args.max_tokens)
+    thinking_budget = args.thinking_budget if args.thinking_budget > 0 else None
+    logging.info(
+        "Calling Gemini (%s) — thinking budget: %s — this may take a few minutes…",
+        args.model,
+        thinking_budget if thinking_budget is not None else "default/off",
+    )
+    raw = call_gemini(
+        system_prompt,
+        user_message,
+        args.model,
+        api_key,
+        args.max_tokens,
+        thinking_budget=thinking_budget,
+    )
     logging.info("Response received: %d chars", len(raw))
 
     # Parse and validate
@@ -320,24 +966,13 @@ def main() -> None:
         logging.error("Raw response (first 2000 chars): %s", raw[:2000])
         sys.exit(1)
 
-    # Patch in summary counts computed from modules if model omitted them
-    modules = final.get("modules", [])
-    if modules and not final.get("summary", {}).get("total_rules_checked"):
-        all_rules = [r for m in modules for r in m.get("rules", [])]
-        counts = {"present": 0, "absent": 0, "insufficient": 0, "not_applicable": 0}
-        for r in all_rules:
-            s = r.get("status", "").lower().replace(" ", "_")
-            if s in counts:
-                counts[s] += 1
-        flags = final.get("reasoning_flags", [])
-        final.setdefault("summary", {}).update({
-            **counts,
-            "total_rules_checked": sum(counts.values()),
-            "reasoning_flags_total": len(flags),
-            "critical_flags": _count_by_severity(flags, "Critical"),
-            "high_flags":     _count_by_severity(flags, "High"),
-            "medium_flags":   _count_by_severity(flags, "Medium"),
-        })
+    # Backfill deterministic fields and validate the final payload shape.
+    try:
+        final = finalize_checker_json(final)
+    except ValueError as exc:
+        logging.error("Checker JSON failed validation: %s", exc)
+        logging.error("Validated response (first 2000 chars): %s", json.dumps(final, ensure_ascii=False)[:2000])
+        sys.exit(1)
 
     # Write output
     output_path = Path(args.output)
@@ -345,18 +980,22 @@ def main() -> None:
     output_path.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
     logging.info("Saved → %s", output_path)
 
+    modules = final.get("modules", [])
     s = final.get("summary", {})
+    by_sev = s.get("findings_by_severity", {})
     print(
         f"\n{'='*60}\n"
         f"Analysis complete: {final.get('meta', {}).get('company_name', '?')}\n"
         f"{'='*60}\n"
         f"  Modules: {len(modules)}\n"
-        f"  Present: {s.get('present', '?')}  Absent: {s.get('absent', '?')}  "
-        f"Insufficient: {s.get('insufficient', '?')}  N/A: {s.get('not_applicable', '?')}\n"
-        f"  Reasoning flags: {s.get('reasoning_flags_total', '?')} "
-        f"(Crit: {s.get('critical_flags', '?')} "
-        f"High: {s.get('high_flags', '?')} "
-        f"Med: {s.get('medium_flags', '?')})\n"
+        f"  Rules clear: {s.get('rules_clear', '?')}  "
+        f"Rules with issues: {s.get('rules_with_issues', '?')}  "
+        f"N/A: {s.get('not_applicable', '?')}\n"
+        f"  Total findings: {s.get('total_findings', '?')} "
+        f"(Crit: {by_sev.get('critical', '?')} "
+        f"High: {by_sev.get('high', '?')} "
+        f"Med: {by_sev.get('medium', '?')})\n"
+        f"  Reasoning flags: {s.get('reasoning_flags_total', '?')}\n"
         f"  Output: {output_path}\n"
         f"{'='*60}"
     )

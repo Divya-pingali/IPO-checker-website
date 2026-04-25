@@ -13,7 +13,7 @@ Usage:
     python backend/run_pipeline.py path/to/prospectus.pdf --skip-extraction
 
 Environment:
-    ANTHROPIC_API_KEY  Set in .env at the project root (auto-loaded).
+    GEMINI_API_KEY  Set in .env at the project root (auto-loaded).
 """
 
 import argparse
@@ -52,9 +52,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prospectus-dest",
                         help="Also copy prospectus here for the viewer (e.g. public/prospectus.pdf)")
     parser.add_argument("--model", "-m", default="gemini-2.5-pro")
-    parser.add_argument("--api-key", help="Override ANTHROPIC_API_KEY")
+    parser.add_argument("--api-key", help="Override GEMINI_API_KEY")
     parser.add_argument("--skip-extraction", action="store_true")
     parser.add_argument("--toc-pages", default="1-15", metavar="START-END")
+    parser.add_argument(
+        "--thinking-budget",
+        type=int,
+        default=0,
+        help="Optional Gemini thinking budget forwarded to analyze.py",
+    )
     parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args(argv)
 
@@ -100,19 +106,18 @@ def main(argv: list[str] | None = None) -> int:
 
     # Step 2: analysis
     analyze_script = _BACKEND_DIR / "analyze.py"
-    prompt_path    = _PROJECT_DIR / "reference" / "rulebook_prompt_v3.md"
-    rulebook_path  = _PROJECT_DIR / "public"    / "rulebook_v2.pdf"
-
+    prompt_path    = _PROJECT_DIR / "reference" / "rulebook_prompt_v4.md"
     cmd = [
         sys.executable, str(analyze_script),
         "--extraction-dir", args.extraction_dir,
         "--prompt",   str(prompt_path),
-        "--rulebook", str(rulebook_path),
         "--output",   args.output,
         "--model",    args.model,
     ]
     if args.api_key:
         cmd += ["--api-key", args.api_key]
+    if args.thinking_budget > 0:
+        cmd += ["--thinking-budget", str(args.thinking_budget)]
     if args.verbose:
         cmd.append("--verbose")
     _run(cmd, "STEP 2/2 — Analysis")

@@ -2,7 +2,7 @@
 """
 LLAW Meaningful Investment Checker — API Server
 
-Accepts a prospectus upload, runs extraction + Claude analysis, returns checker.json.
+Accepts a prospectus upload, runs extraction + Gemini analysis, returns checker.json.
 
 Usage:
     # From inside llaw3272-linklaters-ipo-checker-website/
@@ -12,7 +12,7 @@ Usage:
     uvicorn backend.server:app --reload --port 8000
 
 Environment:
-    ANTHROPIC_API_KEY  Set in .env at the project root (auto-loaded).
+    GEMINI_API_KEY  Set in .env at the project root (auto-loaded).
 """
 
 import asyncio
@@ -85,7 +85,7 @@ async def run_pipeline(job_id: str, input_file: Path, temp_dir: Path) -> None:
 
     extract_script  = _BACKEND_DIR / "extract_sections.py"
     analyze_script  = _BACKEND_DIR / "analyze.py"
-    prompt_path     = _PROJECT_DIR / "reference" / "rulebook_prompt_v3.md"
+    prompt_path     = _PROJECT_DIR / "reference" / "rulebook_prompt_v4.md"
 
     api_key = os.environ.get("GEMINI_API_KEY", "")
 

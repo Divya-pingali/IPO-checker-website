@@ -8,6 +8,7 @@ interface HighlightLayerProps {
   scale: number;
   extractionScale: number;
   onHighlightClick: (findingId: string) => void;
+  severityMap?: Map<string, string>;
   statusMap?: Map<string, string>;
 }
 

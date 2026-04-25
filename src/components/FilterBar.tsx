@@ -1,5 +1,6 @@
-import React from 'react';
-import type { FilterState, ViewMode } from '../types';
+import React, { useMemo } from 'react';
+import type { FilterState, Finding, ReviewDecision, ViewMode } from '../types';
+import { getReviewDecisionForFinding, isFindingReviewable } from '../utils/reviewState';
 
 interface FilterBarProps {
   filters: FilterState;
@@ -13,9 +14,14 @@ interface FilterBarProps {
   categories: string[];
   totalCount: number;
   filteredCount: number;
+  countLabel: string;
+  reviewDecisions: Record<string, ReviewDecision>;
+  visibleFindings: Finding[];
 }
 
 const SEVERITY_ORDER = ['Critical', 'High', 'Medium', 'Low'];
+const ALL_SEVERITIES = ['Critical', 'High', 'Medium', 'Low'];
+const ALL_STATUSES = ['Present', 'Insufficient', 'Absent', 'Not Applicable'];
 
 const CHECK_TYPES = [
   {
@@ -51,11 +57,23 @@ const CHECK_TYPES = [
 ];
 
 function sortedSeverities(severities: string[]): string[] {
-  return [...severities].sort(
+  return [...new Set([...ALL_SEVERITIES, ...severities])].sort(
     (a, b) =>
       (SEVERITY_ORDER.indexOf(a) + 1 || 99) -
       (SEVERITY_ORDER.indexOf(b) + 1 || 99),
   );
+}
+
+function sortedStatuses(statuses: string[]): string[] {
+  return [...new Set([...ALL_STATUSES, ...statuses])];
+}
+
+function statusLabel(status: string): string {
+  if (status === 'Present') return 'Clear';
+  if (status === 'Insufficient') return 'Needs detail';
+  if (status === 'Absent') return 'Missing disclosure';
+  if (status === 'Not Applicable') return 'Not applicable';
+  return status;
 }
 
 function toggleArrayItem(arr: string[], item: string): string[] {
@@ -82,8 +100,29 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   categories,
   totalCount,
   filteredCount,
+  countLabel,
+  reviewDecisions,
+  visibleFindings,
 }) => {
   const isRules = filters.tab === 'rules';
+  const reviewableFindings = useMemo(
+    () => visibleFindings.filter((finding) => isFindingReviewable(finding)),
+    [visibleFindings],
+  );
+  const reviewCounts = useMemo(
+    () =>
+      reviewableFindings.reduce(
+        (acc, finding) => {
+          const decision = getReviewDecisionForFinding(finding, reviewDecisions);
+          if (decision === 'approved') acc.approved += 1;
+          else if (decision === 'dismissed') acc.dismissed += 1;
+          else acc.pending += 1;
+          return acc;
+        },
+        { pending: 0, approved: 0, dismissed: 0 },
+      ),
+    [reviewDecisions, reviewableFindings],
+  );
 
   // ── Tab switching ───────────────────────────────────────────────────────────
   const switchTab = (tab: FilterState['tab']) => {
@@ -118,6 +157,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       moduleId: [],
       checkType: [],
       category: [],
+      review: 'pending',
       search: '',
     });
   };
@@ -128,6 +168,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     filters.moduleId.length > 0 ||
     filters.checkType.length > 0 ||
     filters.category.length > 0 ||
+    filters.review !== 'pending' ||
     filters.search.length > 0;
 
   return (
@@ -139,13 +180,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           className={`filter-bar__tab ${isRules ? 'filter-bar__tab--active' : ''}`}
           onClick={() => switchTab('rules')}
         >
-          Basic Rules
+          Rule Checks
         </button>
         <button
           className={`filter-bar__tab ${!isRules ? 'filter-bar__tab--active' : ''}`}
           onClick={() => switchTab('flags')}
         >
-          Overall Reasoning
+          Reasoning Flags
         </button>
       </div>
 
@@ -154,27 +195,61 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         <input
           className="filter-bar__search-input"
           type="search"
-          placeholder="Search findings…"
+          placeholder={isRules ? 'Search rule checks, modules, or explanations...' : 'Search reasoning flags...'}
           value={filters.search}
           onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
         />
       </div>
 
       {/* ── View mode (Basic Rules only) ────────────────────────────────────── */}
-      {isRules && (
-        <div className="filter-bar__view-toggle">
-          <button
-            className={`btn btn--sm ${viewMode === 'grouped' ? 'btn--active' : ''}`}
-            onClick={() => onViewModeChange('grouped')}
-          >
-            Grouped
-          </button>
-          <button
-            className={`btn btn--sm ${viewMode === 'flat' ? 'btn--active' : ''}`}
-            onClick={() => onViewModeChange('flat')}
-          >
-            Flat
-          </button>
+      <div className="filter-bar__view-toggle">
+        <button
+          className={`btn btn--sm ${viewMode === 'grouped' ? 'btn--active' : ''}`}
+          onClick={() => onViewModeChange('grouped')}
+        >
+          Modules
+        </button>
+        <button
+          className={`btn btn--sm ${viewMode === 'flat' ? 'btn--active' : ''}`}
+          onClick={() => onViewModeChange('flat')}
+        >
+          Check list
+        </button>
+      </div>
+
+      {reviewableFindings.length > 0 && (
+        <div className="filter-bar__section">
+          <span className="filter-bar__label">Review</span>
+          <div className="filter-bar__chips filter-bar__chips--wrap">
+            <button
+              className={`chip chip--review ${filters.review === 'pending' ? 'chip--active' : ''}`}
+              onClick={() => onFiltersChange({ ...filters, review: 'pending' })}
+            >
+              Needs review
+              <span className="chip__count">{reviewCounts.pending}</span>
+            </button>
+            <button
+              className={`chip chip--review ${filters.review === 'approved' ? 'chip--active' : ''}`}
+              onClick={() => onFiltersChange({ ...filters, review: 'approved' })}
+            >
+              Approved
+              <span className="chip__count">{reviewCounts.approved}</span>
+            </button>
+            <button
+              className={`chip chip--review ${filters.review === 'dismissed' ? 'chip--active' : ''}`}
+              onClick={() => onFiltersChange({ ...filters, review: 'dismissed' })}
+            >
+              Dismissed
+              <span className="chip__count">{reviewCounts.dismissed}</span>
+            </button>
+            <button
+              className={`chip chip--review ${filters.review === 'all' ? 'chip--active' : ''}`}
+              onClick={() => onFiltersChange({ ...filters, review: 'all' })}
+            >
+              All
+              <span className="chip__count">{reviewableFindings.length}</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -202,11 +277,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {isRules && (
         <>
           {/* Status */}
-          {statuses.length > 0 && (
+          {sortedStatuses(statuses).length > 0 && (
             <div className="filter-bar__section">
               <span className="filter-bar__label">Status</span>
               <div className="filter-bar__chips">
-                {statuses.map((s) => (
+                {sortedStatuses(statuses).map((s) => (
                   <button
                     key={s}
                     className={`chip chip--status chip--status-${s
@@ -216,7 +291,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                     }`}
                     onClick={() => toggle('status', s)}
                   >
-                    {s}
+                    {statusLabel(s)}
                   </button>
                 ))}
               </div>
@@ -257,7 +332,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                   onClick={() => toggle('checkType', code)}
                   title={description}
                 >
-                  {label.charAt(0) + label.slice(1).toLowerCase()}
+                  {label === 'LANGUAGE QUALITY' ? 'Language' : label.charAt(0) + label.slice(1).toLowerCase()}
                 </button>
               ))}
             </div>
@@ -287,7 +362,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {/* ── Count + clear ───────────────────────────────────────────────────── */}
       <div className="filter-bar__footer">
         <span className="filter-bar__count">
-          {filteredCount} / {totalCount}
+          Showing {filteredCount} of {totalCount} {countLabel}
         </span>
         {hasFilters && (
           <button className="btn btn--sm btn--ghost" onClick={clearAll}>

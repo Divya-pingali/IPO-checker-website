@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import type { Finding, MatchResult } from '../types';
+import React, { useMemo, useState } from 'react';
+import type { Finding, MatchResult, ReviewDecision } from '../types';
+import { getReviewDecisionKeys, isFindingReviewable, isReviewableStatus } from '../utils/reviewState';
 
 interface FindingCardProps {
   finding: Finding;
   matchResult: MatchResult | undefined;
   isActive: boolean;
+  reviewDecision: ReviewDecision | 'mixed' | null;
+  reviewDecisions: Record<string, ReviewDecision>;
   onClick: () => void;
   onSelectCandidate?: (findingId: string, index: number) => void;
+  onReviewDecision?: (decisionKey: string, decision: ReviewDecision | null) => void;
 }
 
 const SEVERITY_CLASS: Record<string, string> = {
@@ -28,7 +32,7 @@ const CHECK_TYPE_LABELS: Record<string, string> = {
   D: 'Disclosure',
   T: 'Threshold',
   K: 'Consistency',
-  L: 'Language Quality',
+  L: 'Language',
   R: 'Reasoning',
 };
 
@@ -59,8 +63,11 @@ export const FindingCard: React.FC<FindingCardProps> = ({
   finding,
   matchResult,
   isActive,
+  reviewDecision,
+  reviewDecisions,
   onClick,
   onSelectCandidate,
+  onReviewDecision,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -72,11 +79,48 @@ export const FindingCard: React.FC<FindingCardProps> = ({
     e.stopPropagation();
     setExpanded((v) => !v);
   };
+  const reviewDecisionKeys = useMemo(() => getReviewDecisionKeys(finding), [finding]);
+  const isReviewable = isFindingReviewable(finding);
+
+  const applyDecision = (e: React.MouseEvent, decision: ReviewDecision | null) => {
+    e.stopPropagation();
+    if (!onReviewDecision) return;
+    for (const key of reviewDecisionKeys) onReviewDecision(key, decision);
+  };
+
+  const applyCheckDecision = (
+    e: React.MouseEvent,
+    itemIndex: number,
+    checkType: string,
+    decision: ReviewDecision | null,
+  ) => {
+    e.stopPropagation();
+    onReviewDecision?.(`${finding.id}::${checkType}::${itemIndex}`, decision);
+  };
+
+  const displayStatus =
+    finding.status === 'Present'
+      ? 'Clear'
+      : finding.status === 'Insufficient'
+        ? 'Needs detail'
+        : finding.status === 'Absent'
+          ? 'Missing disclosure'
+        : finding.status;
+  const reviewLabel =
+    reviewDecision === 'approved'
+      ? 'Approved'
+      : reviewDecision === 'dismissed'
+        ? 'Dismissed'
+        : reviewDecision === 'mixed'
+          ? 'Part-reviewed'
+          : 'Needs review';
+  const getCheckDecision = (itemIndex: number, checkType: string) =>
+    reviewDecisions[`${finding.id}::${checkType}::${itemIndex}`] ?? null;
 
   return (
     <div
       className={`finding-card ${isActive ? 'finding-card--active' : ''} finding-card--${matchStatus}`}
-      data-finding-id={finding.id}
+      data-finding-id={finding.parentFindingId ?? finding.id}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -91,7 +135,7 @@ export const FindingCard: React.FC<FindingCardProps> = ({
           </span>
         )}
         <span className={`badge ${STATUS_CLASS[finding.status] ?? 'badge--na'}`}>
-          {finding.status}
+          {displayStatus}
         </span>
         <span
           className={`finding-card__match-indicator match-${matchStatus}`}
@@ -100,6 +144,40 @@ export const FindingCard: React.FC<FindingCardProps> = ({
           {MATCH_ICONS[matchStatus]}
         </span>
       </div>
+
+      {isReviewable && (
+        <div className="finding-card__review-strip" onClick={(e) => e.stopPropagation()}>
+          <span
+            className={`finding-card__review-state finding-card__review-state--${reviewDecision ?? 'pending'}`}
+          >
+            {reviewLabel}
+          </span>
+          <div className="finding-card__review-actions">
+            <button
+              className={`review-action review-action--approve ${
+                reviewDecision === 'approved' ? 'review-action--active' : ''
+              }`}
+              onClick={(e) =>
+                applyDecision(e, reviewDecision === 'approved' ? null : 'approved')
+              }
+              title="Approve this check"
+            >
+              ✓ Approve
+            </button>
+            <button
+              className={`review-action review-action--dismiss ${
+                reviewDecision === 'dismissed' ? 'review-action--active' : ''
+              }`}
+              onClick={(e) =>
+                applyDecision(e, reviewDecision === 'dismissed' ? null : 'dismissed')
+              }
+              title="Dismiss this check"
+            >
+              ✕ Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Check type badges */}
       {finding.checkTypes.length > 0 && (
@@ -173,31 +251,112 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       {/* Expanded detail */}
       {expanded && (
         <div className="finding-card__detail">
-          {finding.explanation && (
-            <div className="finding-card__detail-section">
-              <strong>Explanation</strong>
-              <p>{finding.explanation}</p>
-            </div>
-          )}
-          {finding.recommendation && (
-            <div className="finding-card__detail-section">
-              <strong>Recommendation</strong>
-              <p>{finding.recommendation}</p>
-            </div>
-          )}
-          {finding.anchorText && (
-            <div className="finding-card__detail-section">
-              <strong>Anchor phrase</strong>
-              <blockquote className="finding-card__anchor-quote">
-                {finding.anchorText}
-              </blockquote>
-            </div>
-          )}
-          {finding.sourceFile && (
-            <div className="finding-card__detail-section">
-              <strong>Source</strong>
-              <code>{finding.sourceFile}</code>
-            </div>
+          {finding.findings && finding.findings.length > 0 ? (
+            finding.findings.map((f, i) => (
+              <div key={i} className="finding-card__check-detail">
+                  <div className="finding-card__check-detail-header">
+                    <span className="check-type-badge">{CHECK_TYPE_LABELS[f.check_type] ?? f.check_type}</span>
+                    <span className={`badge badge--sm ${STATUS_CLASS[f.issue_type] ?? 'badge--na'}`}>
+                      {f.issue_type === 'Insufficient'
+                        ? 'Needs detail'
+                        : f.issue_type === 'Absent'
+                          ? 'Missing disclosure'
+                          : f.issue_type}
+                    </span>
+                    {isReviewableStatus(f.issue_type) && (
+                      <div className="finding-card__check-review" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          className={`review-action review-action--approve ${
+                            getCheckDecision(i, f.check_type) === 'approved'
+                              ? 'review-action--active'
+                              : ''
+                          }`}
+                          onClick={(e) =>
+                            applyCheckDecision(
+                              e,
+                              i,
+                              f.check_type,
+                              getCheckDecision(i, f.check_type) === 'approved' ? null : 'approved',
+                            )
+                          }
+                          title="Approve this flagged check"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          className={`review-action review-action--dismiss ${
+                            getCheckDecision(i, f.check_type) === 'dismissed'
+                              ? 'review-action--active'
+                              : ''
+                          }`}
+                          onClick={(e) =>
+                            applyCheckDecision(
+                              e,
+                              i,
+                              f.check_type,
+                              getCheckDecision(i, f.check_type) === 'dismissed' ? null : 'dismissed',
+                            )
+                          }
+                          title="Dismiss this flagged check"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                {f.explanation && (
+                  <div className="finding-card__detail-section">
+                    <strong>Explanation</strong>
+                    <p>{f.explanation}</p>
+                  </div>
+                )}
+                {f.recommendation && (
+                  <div className="finding-card__detail-section">
+                    <strong>Recommendation</strong>
+                    <p>{f.recommendation}</p>
+                  </div>
+                )}
+                {f.source_anchor?.anchor_phrase && (
+                  <div className="finding-card__detail-section">
+                    <strong>Source anchor</strong>
+                    <blockquote className="finding-card__anchor-quote">{f.source_anchor.anchor_phrase}</blockquote>
+                  </div>
+                )}
+                {f.source_anchor?.source_file && (
+                  <div className="finding-card__detail-section">
+                    <strong>Source</strong>
+                    <code>{f.source_anchor.source_file}{f.source_anchor.page ? ` · p.${f.source_anchor.page}` : ''}</code>
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <>
+              {finding.explanation && (
+                <div className="finding-card__detail-section">
+                  <strong>Explanation</strong>
+                  <p>{finding.explanation}</p>
+                </div>
+              )}
+              {finding.recommendation && (
+                <div className="finding-card__detail-section">
+                  <strong>Recommendation</strong>
+                  <p>{finding.recommendation}</p>
+                </div>
+              )}
+              {finding.anchorText && (
+                <div className="finding-card__detail-section">
+                  <strong>Anchor phrase</strong>
+                  <blockquote className="finding-card__anchor-quote">{finding.anchorText}</blockquote>
+                </div>
+              )}
+              {finding.sourceFile && (
+                <div className="finding-card__detail-section">
+                  <strong>Source</strong>
+                  <code>{finding.sourceFile}</code>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

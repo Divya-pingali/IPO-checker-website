@@ -15,7 +15,7 @@ llaw3272-linklaters-ipo-checker-website/
 │   └── run_pipeline.py        CLI runner: extract → analyse in one command
 │
 ├── reference/                 Backend reference materials (not served to the browser)
-│   └── rulebook_prompt_v3.md  System prompt with all SII rules
+│   └── rulebook_prompt_v4.md  System prompt with all SII rules
 │
 ├── public/                    Static assets served by Vite
 │   ├── checker.json           Analysis output consumed by the viewer
@@ -109,7 +109,7 @@ prospectus.pdf
         ├─ extracted/tier1/<chapter>.json    full chapters (cap table, directors…)
         └─ extracted/tier2/<section>.json    SII subsections (sii_disclosure, pathfinder_sii…)
               └─► backend/analyze.py
-                    ├─ system prompt : reference/rulebook_prompt_v3.md
+                    ├─ system prompt : reference/rulebook_prompt_v4.md
                     ├─ rulebook PDF  : public/rulebook.pdf  (cached per API call)
                     └─► Claude API (module-by-module, with retry + rate-limit handling)
                           └─► public/checker.json  ← loaded by the React viewer
@@ -123,7 +123,7 @@ prospectus.pdf
 
 ## Adapting for a different rulebook or prompt
 
-- Replace `reference/rulebook_prompt_v3.md` with your new prompt, or pass `--prompt path/to/prompt.md`.
+- Replace `reference/rulebook_prompt_v4.md` with your new prompt, or pass `--prompt path/to/prompt.md`.
 - Section label mappings are in `backend/analyze.py` (`TIER2_LABEL_MAP`, `TIER1_PATTERN_MAP`).
 - To use a cheaper model for testing: `--model claude-haiku-4-5-20251001`.
 

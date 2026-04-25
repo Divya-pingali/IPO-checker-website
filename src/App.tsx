@@ -1,5 +1,11 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import type { CheckerJson, Finding, FilterState, ViewMode } from './types';
+import type {
+  CheckerJson,
+  Finding,
+  FilterState,
+  ReviewDecision,
+  ViewMode,
+} from './types';
 import { useFindingsParser } from './hooks/useFindingsParser';
 import { usePdfDocument } from './hooks/usePdfDocument';
 import { usePdfAnchorMatcher } from './hooks/usePdfAnchorMatcher';
@@ -15,6 +21,8 @@ import { HelpScreen } from './components/HelpScreen';
 type View = 'upload' | 'viewer' | 'help';
 
 export default function App() {
+  const [reviewDecisions, setReviewDecisions] = useState<Record<string, ReviewDecision>>({});
+
   // ── Navigation state ─────────────────────────────────────────────────────────
   const [view, setView] = useState<View>('upload');
   const [prevView, setPrevView] = useState<View>('upload');
@@ -94,9 +102,35 @@ export default function App() {
     moduleId: [],
     checkType: [],
     category: [],
+    review: 'pending',
     search: '',
   });
   const [viewMode, setViewMode] = useState<ViewMode>('grouped');
+
+  const reviewStorageKey = useMemo(() => {
+    if (!checkerData?.meta) return null;
+    const { company_name, analysis_date, rulebook_version } = checkerData.meta;
+    return `checker-review:${company_name}:${analysis_date}:${rulebook_version}`;
+  }, [checkerData]);
+
+  useEffect(() => {
+    if (!reviewStorageKey) {
+      setReviewDecisions({});
+      return;
+    }
+
+    try {
+      const raw = window.localStorage.getItem(reviewStorageKey);
+      setReviewDecisions(raw ? (JSON.parse(raw) as Record<string, ReviewDecision>) : {});
+    } catch {
+      setReviewDecisions({});
+    }
+  }, [reviewStorageKey]);
+
+  useEffect(() => {
+    if (!reviewStorageKey) return;
+    window.localStorage.setItem(reviewStorageKey, JSON.stringify(reviewDecisions));
+  }, [reviewDecisions, reviewStorageKey]);
 
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
@@ -109,8 +143,9 @@ export default function App() {
   // ── Handlers ──────────────────────────────────────────────────────────────────
   const handleFindingClick = useCallback(
     (finding: Finding) => {
-      setActiveFindingId((prev) => (prev === finding.id ? null : finding.id));
-      const result = matchResults.get(finding.id);
+      const targetFindingId = finding.parentFindingId ?? finding.id;
+      setActiveFindingId((prev) => (prev === targetFindingId ? null : targetFindingId));
+      const result = matchResults.get(targetFindingId);
       const candidate = result?.candidates[result.selectedCandidateIndex] ?? null;
       const targetPage = candidate?.page ?? finding.page;
       if (targetPage) {
@@ -118,7 +153,7 @@ export default function App() {
         setCurrentPage(targetPage);
         window.setTimeout(() => {
           const el = document.querySelector<HTMLElement>(
-            `[data-highlight-id="${finding.id}"]`,
+            `[data-highlight-id="${targetFindingId}"]`,
           );
           el?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
         }, 400);
@@ -135,6 +170,23 @@ export default function App() {
         ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 50);
   }, []);
+
+  const handleReviewDecision = useCallback(
+    (decisionKey: string, decision: ReviewDecision | null) => {
+      setReviewDecisions((prev) => {
+        if (decision === null) {
+          if (!(decisionKey in prev)) return prev;
+          const next = { ...prev };
+          delete next[decisionKey];
+          return next;
+        }
+
+        if (prev[decisionKey] === decision) return prev;
+        return { ...prev, [decisionKey]: decision };
+      });
+    },
+    [],
+  );
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
@@ -197,14 +249,17 @@ export default function App() {
 
         <Sidebar
           findings={findings}
+          checkerJson={checkerData}
           matchResults={matchResults}
           activeFindingId={activeFindingId}
           filters={filters}
           viewMode={viewMode}
+          reviewDecisions={reviewDecisions}
           onFiltersChange={setFilters}
           onViewModeChange={setViewMode}
           onFindingClick={handleFindingClick}
           onSelectCandidate={selectCandidate}
+          onReviewDecision={handleReviewDecision}
           extractionProgress={extractionProgress}
           onOpenRulebook={openRulebook}
           width={sidebarWidth}

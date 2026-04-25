@@ -1,5 +1,3 @@
-// ─── Raw JSON schema types ────────────────────────────────────────────────────
-
 export interface CheckerJsonMeta {
   rulebook_version: string;
   company_name: string;
@@ -29,6 +27,42 @@ export interface RuleItem {
   detail: RuleDetail;
 }
 
+export interface V4FindingItem {
+  check_type: string;
+  check_label: string;
+  severity: string;
+  issue_type: string;
+  explanation: string;
+  recommendation: string;
+  source_anchor: SourceAnchor;
+}
+
+export interface V4LegacyIssueRuleItem {
+  rule_id: string;
+  rule_description: string;
+  findings: V4FindingItem[];
+}
+
+export interface V4RuleStatusItem {
+  rule_id: string;
+  rule_description: string;
+  status: 'clear' | 'has_issues' | 'not_applicable' | string;
+  analysis: string;
+  source_anchor?: SourceAnchor | null;
+  findings?: V4FindingItem[];
+}
+
+export type AnyRuleItem = RuleItem | V4LegacyIssueRuleItem | V4RuleStatusItem;
+
+export interface FilterTags {
+  has_disclosure_issue: boolean;
+  has_threshold_issue: boolean;
+  has_consistency_issue: boolean;
+  has_language_issue: boolean;
+  has_reasoning_issue: boolean;
+  highest_severity: string | null;
+}
+
 export interface ReasoningFlagDetail {
   explanation: string;
   recommendation?: string;
@@ -40,17 +74,22 @@ export interface ReasoningFlag {
   flag_id: string;
   category: string;
   severity: string;
-  status_colour: string;
+  status_colour?: string;
+  detail?: ReasoningFlagDetail;
+  explanation?: string;
+  recommendation?: string;
+  source_anchors?: SourceAnchor[];
   rules_triggered?: string[];
   summary: string;
-  detail: ReasoningFlagDetail;
 }
 
 export interface ModuleItem {
   module_id: string;
   module_name: string;
   triggered: boolean;
-  rules: RuleItem[];
+  not_applicable_reason?: string;
+  filter_tags?: FilterTags;
+  rules: AnyRuleItem[];
 }
 
 export interface CheckerJson {
@@ -59,8 +98,6 @@ export interface CheckerJson {
   reasoning_flags?: ReasoningFlag[];
   [key: string]: unknown;
 }
-
-// ─── Normalized finding (reusable across any JSON in this schema) ─────────────
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low' | string;
 export type FindingStatus =
@@ -74,6 +111,7 @@ export type FindingKind = 'rule' | 'reasoning_flag';
 
 export interface Finding {
   id: string;
+  parentFindingId?: string;
   moduleId: string;
   moduleName: string;
   ruleId: string;
@@ -84,22 +122,16 @@ export interface Finding {
   summary: string;
   explanation: string;
   recommendation: string;
-  /** Primary page from first anchor with a page value */
   page: number | null;
-  /** Primary anchor phrase */
   anchorText: string | null;
   sourceFile: string | null;
-  /** All anchors (for flags with multiple anchors) */
   sourceAnchors: SourceAnchor[];
-  /** Check type codes: D, T, K, L, R */
   checkTypes: string[];
-  /** Raw category string from JSON (only present on reasoning_flag items) */
+  findings?: V4FindingItem[];
   category?: string;
   kind: FindingKind;
-  raw: RuleItem | ReasoningFlag;
+  raw: AnyRuleItem | ReasoningFlag;
 }
-
-// ─── PDF anchor matching ──────────────────────────────────────────────────────
 
 export type MatchStatus = 'matched' | 'unresolved' | 'ambiguous' | 'no_anchor' | 'no_page';
 
@@ -113,21 +145,19 @@ export interface TextRect {
 export interface MatchCandidate {
   page: number;
   rects: TextRect[];
-  anchorIndex: number; // which sourceAnchor this came from
+  anchorIndex: number;
 }
 
 export interface MatchResult {
   findingId: string;
   status: MatchStatus;
-  selectedCandidateIndex: number; // index into candidates array
+  selectedCandidateIndex: number;
   candidates: MatchCandidate[];
 }
 
-// ─── Extracted PDF text layer ─────────────────────────────────────────────────
-
 export interface TextItem {
   str: string;
-  transform: number[]; // [a, b, c, d, e, f]
+  transform: number[];
   width: number;
   height: number;
   fontName?: string;
@@ -136,33 +166,28 @@ export interface TextItem {
 export interface PageTextData {
   pageNumber: number;
   items: TextItem[];
-  viewportHeight: number; // viewport height at scale=1.0, used for coordinate flipping
+  viewportHeight: number;
 }
 
-// ─── Filter and UI state ─────────────────────────────────────────────────────
-
 export interface FilterState {
-  /** Top-level tab — drives which kind of finding is shown */
   tab: 'rules' | 'flags';
   severity: string[];
-  /** Applies only in the Basic Rules tab */
   status: string[];
-  /** Applies only in the Basic Rules tab */
   moduleId: string[];
-  /** Applies only in the Basic Rules tab */
   checkType: string[];
-  /** Applies only in the Overall Reasoning tab */
   category: string[];
+  review: 'pending' | 'approved' | 'dismissed' | 'all';
   search: string;
 }
 
 export type ViewMode = 'grouped' | 'flat';
 
-// ─── Asset config (swap in any prospectus set) ───────────────────────────────
+export type ReviewDecision = 'approved' | 'dismissed';
+export type ReviewFilter = FilterState['review'];
 
 export interface AssetConfig {
   prospectusUrl: string;
   checkerJsonUrl: string;
   rulebookUrl: string;
-  label?: string; // e.g. "Black Sesame Technologies"
+  label?: string;
 }

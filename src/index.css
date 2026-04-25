@@ -447,6 +447,20 @@ html, body, #root {
   gap: 3px;
 }
 
+.chip__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
 .filter-bar__section {
   display: flex;
   align-items: center;
@@ -531,8 +545,20 @@ html, body, #root {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-2);
+  line-height: 1.3;
+}
+
+.module-section__title-block {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.module-section__summary {
+  font-size: 10px;
+  color: var(--text-3);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -543,6 +569,9 @@ html, body, #root {
   align-items: center;
   gap: 3px;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 44%;
 }
 
 .module-section__count {
@@ -669,6 +698,39 @@ html, body, #root {
   margin-bottom: 6px;
 }
 
+.finding-card__review-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--surface-2);
+}
+
+.finding-card__review-state {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: .35px;
+}
+
+.finding-card__review-state--approved { color: var(--s-present); }
+.finding-card__review-state--dismissed { color: var(--s-na); }
+.finding-card__review-state--mixed { color: var(--c-medium); }
+.finding-card__review-state--pending { color: var(--c-high); }
+
+.finding-card__review-actions,
+.finding-card__check-review {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
 .finding-card__unresolved {
   font-size: 10.5px;
   color: var(--text-3);
@@ -779,6 +841,36 @@ html, body, #root {
   line-height: 1.5;
 }
 
+.module-section__clear-msg {
+  padding: 8px 12px;
+  font-size: 11.5px;
+  color: var(--text-3);
+  font-style: italic;
+  background: var(--surface);
+}
+
+.finding-card__check-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+
+.finding-card__check-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+  flex-wrap: wrap;
+}
+
+.finding-card__detail + .finding-card__check-detail {
+  margin-top: 0;
+}
+
 /* ── Badges ────────────────────────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
@@ -856,6 +948,15 @@ html, body, #root {
   padding: 2px 6px;
 }
 
+.chip--review {
+  border-color: var(--border-2);
+  background: var(--surface);
+}
+
+.chip--review.chip--active .chip__count {
+  background: rgba(255, 255, 255, 0.18);
+}
+
 /* ── Buttons ───────────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
@@ -912,6 +1013,41 @@ html, body, #root {
   color: var(--text-3);
 }
 .btn--ghost:hover:not(:disabled) { background: var(--surface-3); color: var(--text); }
+
+.review-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .12s, color .12s, border-color .12s, transform .12s;
+}
+
+.review-action:hover {
+  transform: translateY(-1px);
+}
+
+.review-action--approve:hover,
+.review-action--approve.review-action--active {
+  background: var(--s-present-bg);
+  color: var(--s-present);
+  border-color: #86efac;
+}
+
+.review-action--dismiss:hover,
+.review-action--dismiss.review-action--active {
+  background: var(--s-na-bg);
+  color: var(--s-na);
+  border-color: #cbd5e1;
+}
 
 /* ── Spinner ───────────────────────────────────────────────────────────────── */
 .spinner {

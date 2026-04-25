@@ -19,9 +19,12 @@ _OUTPUT_DIR = _PROJECT_DIR / "Output"
 
 STATUS_COLOURS = {
     "Present":        RGBColor(0x1a, 0x7a, 0x3c),   # green
+    "clear":          RGBColor(0x1a, 0x7a, 0x3c),
     "Absent":         RGBColor(0xcc, 0x00, 0x00),   # red
     "Insufficient":   RGBColor(0xe6, 0x7e, 0x00),   # amber
     "Not Applicable": RGBColor(0x60, 0x60, 0x60),   # grey
+    "not_applicable": RGBColor(0x60, 0x60, 0x60),
+    "has_issues":     RGBColor(0xe6, 0x7e, 0x00),
 }
 
 SEVERITY_COLOURS = {
@@ -83,15 +86,15 @@ def _build_word_doc(data: dict) -> Document:
         row.cells[0].text = label
         row.cells[1].text = str(value)
 
-    add_row("Total rules checked", summary.get("total_rules_checked", "—"))
-    add_row("Present",             summary.get("present", "—"))
-    add_row("Absent",              summary.get("absent", "—"))
-    add_row("Insufficient",        summary.get("insufficient", "—"))
+    add_row("Total rules evaluated", summary.get("total_rules_evaluated", summary.get("total_rules_checked", "—")))
+    add_row("Rules clear",           summary.get("rules_clear", summary.get("present", "—")))
+    add_row("Rules with issues",     summary.get("rules_with_issues", "—"))
     add_row("Not Applicable",      summary.get("not_applicable", "—"))
     add_row("Reasoning flags",     summary.get("reasoning_flags_total", "—"))
-    add_row("  Critical",          summary.get("critical_flags", "—"))
-    add_row("  High",              summary.get("high_flags", "—"))
-    add_row("  Medium",            summary.get("medium_flags", "—"))
+    sev = summary.get("findings_by_severity", {})
+    add_row("  Critical findings", sev.get("critical", "—"))
+    add_row("  High findings",     sev.get("high", "—"))
+    add_row("  Medium findings",   sev.get("medium", "—"))
 
     # Bold header row
     for cell in table.rows[0].cells:
@@ -119,7 +122,7 @@ def _build_word_doc(data: dict) -> Document:
 
         for rule in rules:
             rule_id   = rule.get("rule_id", rule.get("id", ""))
-            rule_name = rule.get("rule_name", rule.get("name", ""))
+            rule_name = rule.get("rule_description", rule.get("rule_name", rule.get("name", "")))
             status    = rule.get("status", "")
 
             # Rule heading line with coloured status
@@ -147,13 +150,31 @@ def _build_word_doc(data: dict) -> Document:
                 vr = fp.add_run(str(value))
                 vr.font.size = Pt(10)
 
-            add_field("Requirement", rule.get("requirement") or rule.get("description"))
-            add_field("Finding",     rule.get("finding") or rule.get("analysis"))
-            add_field("Evidence",    rule.get("evidence") or rule.get("quote"))
-            pages = rule.get("page_references") or rule.get("pages")
-            if isinstance(pages, list):
-                pages = ", ".join(str(p) for p in pages)
-            add_field("Pages", pages)
+            add_field("Analysis", rule.get("analysis") or rule.get("finding") or rule.get("analysis"))
+
+            if rule.get("status") in ("clear", "not_applicable"):
+                anchor = rule.get("source_anchor") or {}
+                add_field("Source", anchor.get("source_file"))
+                add_field("Page", anchor.get("page"))
+                add_field("Anchor", anchor.get("anchor_phrase"))
+
+            for idx, finding in enumerate(rule.get("findings", []) or [], start=1):
+                fp = doc.add_paragraph()
+                fp.paragraph_format.left_indent = Pt(18)
+                hdr = fp.add_run(
+                    f"Finding {idx}: {finding.get('check_label', finding.get('check_type', ''))} "
+                    f"[{finding.get('severity', '')} / {finding.get('issue_type', '')}]"
+                )
+                hdr.bold = True
+                hdr.font.size = Pt(10)
+                if finding.get("explanation"):
+                    add_field("Explanation", finding.get("explanation"))
+                if finding.get("recommendation"):
+                    add_field("Recommendation", finding.get("recommendation"))
+                anchor = finding.get("source_anchor") or {}
+                add_field("Source", anchor.get("source_file"))
+                add_field("Page", anchor.get("page"))
+                add_field("Anchor", anchor.get("anchor_phrase"))
 
         doc.add_paragraph()
 

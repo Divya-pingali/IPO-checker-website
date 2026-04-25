@@ -1,0 +1,449 @@
+{
+  "meta": {
+    "rulebook_version": "v4.0",
+    "company_name": "Black Sesame International Holding Limited",
+    "analysis_date": "2024-07-31"
+  },
+  "company_classification": {
+    "specialist_technology_industry": "Advanced hardware and software; Next-generation IT",
+    "acceptable_sector": "Semiconductors; AI",
+    "commercial_or_precommercial": "Commercial",
+    "expected_market_cap_hkd_bn": 15.0,
+    "applicable_market_cap_tier": "HK$15-30bn",
+    "applicable_aggregate_sii_threshold_pct": 15,
+    "classification_notes": "Company is classified as Commercial based on its 2023 revenue of RMB312.4 million (~HK$342.1 million), which exceeds the HK$250 million threshold. Market cap is stated to exceed HK$15 billion, placing it in the HK$15-30bn tier for threshold purposes."
+  },
+  "conditional_modules": {
+    "module_F_triggered": true,
+    "module_G_triggered": true,
+    "module_H_triggered": false,
+    "module_I_triggered": false,
+    "trigger_basis": {
+      "F": "Module F is triggered as SIIs hold Preferred Shares which are convertible securities, as disclosed in tier2/pre_ipo_investment, page 185.",
+      "G": "Module G is triggered as the applicant has identified two Pathfinder SIIs, as disclosed in tier2/pre_ipo_investment, page 186.",
+      "H": "Module H is not triggered as there is no disclosure in tier2/pre_ipo_investment or tier1/cornerstone_investors indicating reliance on SII Placees to meet the aggregate SII benchmark.",
+      "I": "Module I is not triggered as there is no disclosure indicating the applicant is already listed on a recognised overseas stock exchange."
+    }
+  },
+  "modules": [
+    {
+      "module_id": "0",
+      "module_name": "Pre-Conditions and Company Classification",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "A",
+      "module_name": "Independence",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": true,
+        "has_threshold_issue": false,
+        "has_consistency_issue": true,
+        "has_language_issue": true,
+        "has_reasoning_issue": true,
+        "highest_severity": "Critical"
+      },
+      "rules": [
+        {
+          "rule_id": "A2",
+          "rule_description": "Independence from Applicant and Controlling Shareholders",
+          "findings": [
+            {
+              "check_type": "D",
+              "check_label": "Disclosure",
+              "severity": "Critical",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A2, each SII must be independent of the applicant and its controlling shareholders. The prospectus discloses that Dr. YANG Lei, a non-executive Director of the Company, was a partner at Northern Light Venture Capital from February 2010 to October 2021 (tier2/pre_ipo_investment, page 186). Northern Light first invested in September 2016, when Dr. Yang was a partner at the fund manager. This relationship may call into question the independence of the Northern Light SIIs at the time of investment, which is a critical requirement. The disclosure is present but the reasoning for concluding independence despite this connection is not provided, rendering it insufficient.",
+              "recommendation": "Reviewer to seek clarification on the basis for determining Northern Light SIIs' independence, given the disclosed connection to a non-executive Director at the time of investment.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner"
+              }
+            },
+            {
+              "check_type": "R",
+              "check_label": "Reasoning",
+              "severity": "Critical",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A2, each SII must be independent of the applicant and its controlling shareholders. The prospectus discloses that Dr. YANG Lei, a non-executive Director of the Company, was a partner at Northern Light Venture Capital from February 2010 to October 2021 (tier2/pre_ipo_investment, page 186). Northern Light first invested in September 2016, when Dr. Yang was a partner at the fund manager. This relationship may call into question the independence of the Northern Light SIIs at the time of investment, which is a critical requirement. The disclosure is present but the reasoning for concluding independence despite this connection is not provided, rendering it insufficient.",
+              "recommendation": "Reviewer to seek clarification on the basis for determining Northern Light SIIs' independence, given the disclosed connection to a non-executive Director at the time of investment.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner"
+              }
+            },
+            {
+              "check_type": "K",
+              "check_label": "Consistency",
+              "severity": "Critical",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A2, each SII must be independent of the applicant and its controlling shareholders. The prospectus discloses that Dr. YANG Lei, a non-executive Director of the Company, was a partner at Northern Light Venture Capital from February 2010 to October 2021 (tier2/pre_ipo_investment, page 186). Northern Light first invested in September 2016, when Dr. Yang was a partner at the fund manager. This relationship may call into question the independence of the Northern Light SIIs at the time of investment, which is a critical requirement. The disclosure is present but the reasoning for concluding independence despite this connection is not provided, rendering it insufficient.",
+              "recommendation": "Reviewer to seek clarification on the basis for determining Northern Light SIIs' independence, given the disclosed connection to a non-executive Director at the time of investment.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner"
+              }
+            },
+            {
+              "check_type": "L",
+              "check_label": "Language",
+              "severity": "Critical",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A2, each SII must be independent of the applicant and its controlling shareholders. The prospectus discloses that Dr. YANG Lei, a non-executive Director of the Company, was a partner at Northern Light Venture Capital from February 2010 to October 2021 (tier2/pre_ipo_investment, page 186). Northern Light first invested in September 2016, when Dr. Yang was a partner at the fund manager. This relationship may call into question the independence of the Northern Light SIIs at the time of investment, which is a critical requirement. The disclosure is present but the reasoning for concluding independence despite this connection is not provided, rendering it insufficient.",
+              "recommendation": "Reviewer to seek clarification on the basis for determining Northern Light SIIs' independence, given the disclosed connection to a non-executive Director at the time of investment.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner"
+              }
+            }
+          ]
+        },
+        {
+          "rule_id": "A4",
+          "rule_description": "No Acting-in-Concert Arrangements",
+          "findings": [
+            {
+              "check_type": "D",
+              "check_label": "Disclosure",
+              "severity": "High",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A4, SIIs must not be acting in concert with the applicant or controlling shareholders. The disclosure on page 186 of tier2/pre_ipo_investment states that 'each of the Pre-IPO Investors is independent from each other' (with some exceptions for aggregated funds). This addresses acting-in-concert arrangements between SIIs, but it does not explicitly state that there are no such arrangements between the SIIs and the applicant or its controlling shareholders. This omission makes the disclosure insufficient.",
+              "recommendation": "Reviewer to confirm that no acting-in-concert arrangements exist between any SII and the applicant or its controlling shareholders, and ensure this is explicitly disclosed.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "each of the Pre-IPO Investors is independent from each"
+              }
+            },
+            {
+              "check_type": "K",
+              "check_label": "Consistency",
+              "severity": "High",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A4, SIIs must not be acting in concert with the applicant or controlling shareholders. The disclosure on page 186 of tier2/pre_ipo_investment states that 'each of the Pre-IPO Investors is independent from each other' (with some exceptions for aggregated funds). This addresses acting-in-concert arrangements between SIIs, but it does not explicitly state that there are no such arrangements between the SIIs and the applicant or its controlling shareholders. This omission makes the disclosure insufficient.",
+              "recommendation": "Reviewer to confirm that no acting-in-concert arrangements exist between any SII and the applicant or its controlling shareholders, and ensure this is explicitly disclosed.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "each of the Pre-IPO Investors is independent from each"
+              }
+            },
+            {
+              "check_type": "L",
+              "check_label": "Language",
+              "severity": "High",
+              "issue_type": "Insufficient",
+              "explanation": "Per Rule A4, SIIs must not be acting in concert with the applicant or controlling shareholders. The disclosure on page 186 of tier2/pre_ipo_investment states that 'each of the Pre-IPO Investors is independent from each other' (with some exceptions for aggregated funds). This addresses acting-in-concert arrangements between SIIs, but it does not explicitly state that there are no such arrangements between the SIIs and the applicant or its controlling shareholders. This omission makes the disclosure insufficient.",
+              "recommendation": "Reviewer to confirm that no acting-in-concert arrangements exist between any SII and the applicant or its controlling shareholders, and ensure this is explicitly disclosed.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": "each of the Pre-IPO Investors is independent from each"
+              }
+            }
+          ]
+        },
+        {
+          "rule_id": "A5",
+          "rule_description": "No Agreements to Return Investment",
+          "findings": [
+            {
+              "check_type": "D",
+              "check_label": "Disclosure",
+              "severity": "Critical",
+              "issue_type": "Absent",
+              "explanation": "Per Rule A5 and para 19 of the Guide, the prospectus must contain an express statement that there are no agreements or arrangements to return, reimburse, or otherwise compensate an SII in connection with their investment. A review of the provided sections did not identify such a statement. This is a critical absence.",
+              "recommendation": "An express negative statement confirming the absence of any such agreements or arrangements must be added to the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            },
+            {
+              "check_type": "K",
+              "check_label": "Consistency",
+              "severity": "Critical",
+              "issue_type": "Absent",
+              "explanation": "Per Rule A5 and para 19 of the Guide, the prospectus must contain an express statement that there are no agreements or arrangements to return, reimburse, or otherwise compensate an SII in connection with their investment. A review of the provided sections did not identify such a statement. This is a critical absence.",
+              "recommendation": "An express negative statement confirming the absence of any such agreements or arrangements must be added to the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            },
+            {
+              "check_type": "L",
+              "check_label": "Language",
+              "severity": "Critical",
+              "issue_type": "Absent",
+              "explanation": "Per Rule A5 and para 19 of the Guide, the prospectus must contain an express statement that there are no agreements or arrangements to return, reimburse, or otherwise compensate an SII in connection with their investment. A review of the provided sections did not identify such a statement. This is a critical absence.",
+              "recommendation": "An express negative statement confirming the absence of any such agreements or arrangements must be added to the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_id": "B",
+      "module_name": "Sophistication",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "C",
+      "module_name": "SII Disclosure Requirements",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": true,
+        "has_threshold_issue": true,
+        "has_consistency_issue": true,
+        "has_language_issue": true,
+        "has_reasoning_issue": false,
+        "highest_severity": "High"
+      },
+      "rules": [
+        {
+          "rule_id": "C4",
+          "rule_description": "Investment Amount Disclosure",
+          "findings": [
+            {
+              "check_type": "D",
+              "check_label": "Disclosure",
+              "severity": "High",
+              "issue_type": "Absent",
+              "explanation": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This makes it impossible to verify compliance with the amount-based alternative thresholds in Rule D3. This is a critical absence.",
+              "recommendation": "The investment amount for each SII must be disclosed in the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            },
+            {
+              "check_type": "T",
+              "check_label": "Threshold",
+              "severity": "High",
+              "issue_type": "Absent",
+              "explanation": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This makes it impossible to verify compliance with the amount-based alternative thresholds in Rule D3. This is a critical absence.",
+              "recommendation": "The investment amount for each SII must be disclosed in the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            },
+            {
+              "check_type": "K",
+              "check_label": "Consistency",
+              "severity": "High",
+              "issue_type": "Absent",
+              "explanation": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This makes it impossible to verify compliance with the amount-based alternative thresholds in Rule D3. This is a critical absence.",
+              "recommendation": "The investment amount for each SII must be disclosed in the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            },
+            {
+              "check_type": "L",
+              "check_label": "Language",
+              "severity": "High",
+              "issue_type": "Absent",
+              "explanation": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This makes it impossible to verify compliance with the amount-based alternative thresholds in Rule D3. This is a critical absence.",
+              "recommendation": "The investment amount for each SII must be disclosed in the prospectus.",
+              "source_anchor": {
+                "source_file": "tier2/pre_ipo_investment",
+                "page": 186,
+                "anchor_phrase": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_id": "D",
+      "module_name": "Pathfinder SII Requirements",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "E",
+      "module_name": "Aggregate SII Investment Benchmark",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "F",
+      "module_name": "Convertible Securities",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "G",
+      "module_name": "Lock-Up Obligations",
+      "triggered": true,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "rules": []
+    },
+    {
+      "module_id": "H",
+      "module_name": "SII Placees",
+      "triggered": false,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "not_applicable_reason": "Module H is not triggered as there is no disclosure in tier2/pre_ipo_investment or tier1/cornerstone_investors indicating reliance on SII Placees to meet the aggregate SII benchmark.",
+      "rules": []
+    },
+    {
+      "module_id": "I",
+      "module_name": "Secondary / Dual Listings",
+      "triggered": false,
+      "filter_tags": {
+        "has_disclosure_issue": false,
+        "has_threshold_issue": false,
+        "has_consistency_issue": false,
+        "has_language_issue": false,
+        "has_reasoning_issue": false,
+        "highest_severity": null
+      },
+      "not_applicable_reason": "Module I is not triggered as there is no disclosure indicating the applicant is already listed on a recognised overseas stock exchange.",
+      "rules": []
+    }
+  ],
+  "reasoning_flags": [
+    {
+      "flag_id": "RF-001",
+      "category": "cross_reference",
+      "severity": "Critical",
+      "rules_triggered": [
+        "A2"
+      ],
+      "summary": "Pathfinder SII Northern Light's independence is questionable due to its relationship with a non-executive Director.",
+      "explanation": "Rule A2 requires each SII to be independent of the applicant. The prospectus discloses in tier2/pre_ipo_investment (page 186) that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (the manager of the Northern Light SIIs) from 2010 to 2021. The initial investment by Northern Light was in September 2016 (tier1/history_corporate, page 176), a time when Dr. Yang was a partner. This pre-existing relationship between a Director and a Pathfinder SII at the time of investment raises significant questions about the SII's independence which are not addressed in the disclosure.",
+      "recommendation": "Reviewer must obtain a detailed explanation and supporting evidence for the basis on which Northern Light SIIs are considered independent despite this connection. The prospectus should be revised to address this point explicitly.",
+      "source_anchors": [
+        {
+          "source_file": "tier2/pre_ipo_investment",
+          "page": 186,
+          "anchor_phrase": "Dr. YANG Lei, our non-executive Director, was a partner"
+        },
+        {
+          "source_file": "tier1/directors_mgmt",
+          "page": 316,
+          "anchor_phrase": "Dr. YANG Lei (楊磊), aged 49, is our non-executive"
+        }
+      ]
+    },
+    {
+      "flag_id": "RF-002",
+      "category": "arithmetic",
+      "severity": "Medium",
+      "rules_triggered": [
+        "E1"
+      ],
+      "summary": "Minor 0.01% discrepancy between the sum of individual SII holdings and the disclosed aggregate figure.",
+      "explanation": "The sum of the individual SII shareholding percentages disclosed on pages 186-191 of tier2/pre_ipo_investment is 36.47% (10.47+5.44+7.00+3.69+3.53+2.71+2.33+0.78+0.52). However, the prospectus states on page 195 that the aggregate holding is 'approximately 36.46%'. While minor and likely due to rounding, this arithmetic inconsistency should be corrected for accuracy.",
+      "recommendation": "Reviewer to verify the exact percentages and ensure the individual figures sum precisely to the disclosed aggregate, or clarify the basis for the 'approximately' language.",
+      "source_anchors": [
+        {
+          "source_file": "tier2/pre_ipo_investment",
+          "page": 195,
+          "anchor_phrase": "our Sophisticated Independent Investors (as identified above) held, in"
+        },
+        {
+          "source_file": "tier2/pre_ipo_investment",
+          "page": 186,
+          "anchor_phrase": "Northern Light SIIs hold approximately 10.47% of the total"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_rules_evaluated": 24,
+    "not_applicable": 7,
+    "rules_clear": 20,
+    "rules_with_issues": 4,
+    "total_findings": 14,
+    "findings_by_type": {
+      "disclosure": 4,
+      "threshold": 1,
+      "consistency": 4,
+      "language": 4,
+      "reasoning": 1
+    },
+    "findings_by_severity": {
+      "critical": 7,
+      "high": 7,
+      "medium": 0
+    },
+    "reasoning_flags_total": 2,
+    "overall_assessment": "The disclosures generally meet the quantitative thresholds for Pathfinder and Aggregate SII requirements. However, there are critical deficiencies in the independence disclosures, notably the connection between a Pathfinder SII and a non-executive Director (Rule A2), and the complete absence of a statement regarding no-return arrangements (Rule A5). The failure to disclose individual investment amounts (Rule C4) is also a significant omission."
+  }
+}

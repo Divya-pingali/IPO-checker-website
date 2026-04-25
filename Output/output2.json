@@ -56,6 +56,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Date of Independence Assessment",
+          "status": "has_issues",
+          "analysis": "Per Rule A1 and para 17 of the Guide, independence must be determined as at the date of the definitive agreement. The prospectus (tier2/pre_ipo_investment, page 186) makes a general assertion of independence but does not state the specific date of the definitive agreement for each SII's investment, nor does it explicitly confirm independence as at that date. This is insufficient to verify compliance.",
           "findings": [
             {
               "check_type": "D",
@@ -101,6 +103,8 @@
         {
           "rule_id": "A2",
           "rule_description": "Independence from Applicant and Controlling Shareholders",
+          "status": "has_issues",
+          "analysis": "Per Rule A2 and para 17 of the Guide, each SII must be independent of the applicant, controlling shareholders, and founders. The prospectus (tier2/pre_ipo_investment, page 186) provides a blanket assertion of independence. This is insufficient as it lacks a specific factual basis for each SII. Furthermore, it discloses that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (the manager of a Pathfinder SII) at the time of its initial investment in 2016. This connection may call into question the independence of the Northern Light SIIs and is not adequately explained or addressed.",
           "findings": [
             {
               "check_type": "D",
@@ -159,6 +163,8 @@
         {
           "rule_id": "A3",
           "rule_description": "No Relationship with Founder or Close Associate",
+          "status": "has_issues",
+          "analysis": "Per Rule A3 and para 17 of the Guide, the prospectus must confirm that no SII is a close associate of a founder. The general independence statement on page 186 of tier2/pre_ipo_investment covers directors and substantial shareholders, which includes the founder, but does not explicitly use the term 'founder' or specifically address the 'close associate' test in relation to the founder. This omission makes the disclosure insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -204,6 +210,8 @@
         {
           "rule_id": "A4",
           "rule_description": "No Acting-in-Concert Arrangements",
+          "status": "has_issues",
+          "analysis": "Per Rule A4 and para 18 of the Guide, SIIs must not be acting in concert with each other, the applicant, or any controlling shareholder. The prospectus (tier2/pre_ipo_investment, page 186) states that Pre-IPO Investors are independent of each other, except for aggregated SIIs. This does not explicitly confirm the absence of acting-in-concert arrangements with the applicant or its controlling shareholders. This disclosure is insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -249,6 +257,8 @@
         {
           "rule_id": "A5",
           "rule_description": "No Agreements to Return Investment",
+          "status": "has_issues",
+          "analysis": "Per Rule A5 and para 19 of the Guide, there must be no agreement to return, reimburse, or otherwise compensate an SII for its investment. A review of the provided sections did not identify an express statement to this effect. This is a critical absence of a required disclosure.",
           "findings": [
             {
               "check_type": "D",
@@ -309,6 +319,8 @@
         {
           "rule_id": "B5",
           "rule_description": "Key Market Participant",
+          "status": "has_issues",
+          "analysis": "Per Rule B5 and para 21(iv) of the Guide, a key market participant in the applicant's industry may qualify as sophisticated. Geely and SAIC Motor are described as such (tier2/pre_ipo_investment, page 191). However, reliance on this category requires advance submission to HKEX. The prospectus does not disclose whether this submission was made, which is a required disclosure point to substantiate the claim.",
           "findings": [
             {
               "check_type": "D",
@@ -369,6 +381,8 @@
         {
           "rule_id": "C2",
           "rule_description": "Reference Date (Definitive Agreement)",
+          "status": "has_issues",
+          "analysis": "Per Rule C2 and para 25(i) of the Guide, disclosure figures must be as of a date not more than 6 months before the definitive agreement. Footnote (1) on page 191 of tier2/pre_ipo_investment states this rule is complied with and provides the reference dates for the figures. However, it does not disclose the dates of the definitive agreements themselves, making it impossible to independently verify that the gap does not exceed 6 months. This is insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -427,6 +441,8 @@
         {
           "rule_id": "C4",
           "rule_description": "Investment Amount Disclosure",
+          "status": "has_issues",
+          "analysis": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This is a material absence of required information, which also prevents verification of the monetary thresholds in Rule D3.",
           "findings": [
             {
               "check_type": "D",

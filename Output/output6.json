@@ -8,7 +8,7 @@
     "specialist_technology_industry": "Advanced hardware and software",
     "acceptable_sector": "Semiconductors",
     "commercial_or_precommercial": "Commercial",
-    "expected_market_cap_hkd_bn": 15.0,
+    "expected_market_cap_hkd_bn": 15,
     "applicable_market_cap_tier": "HK$15-30bn",
     "applicable_aggregate_sii_threshold_pct": 15,
     "classification_notes": "Company classification is based on revenue for FY2023 (RMB 312.4m) exceeding PARAM_COMM_REV_MIN. Market cap tier is based on the assumption stated in the prospectus that it will exceed HK$15 billion."
@@ -56,6 +56,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Date of independence assessment",
+          "status": "has_issues",
+          "analysis": "Per para 17 of the Guide, independence is determined as at the date of signing of the definitive agreement. The prospectus does not disclose the specific definitive agreement date for each SII. Footnote (1) on page 191 of tier2/pre_ipo_investment provides a generic description ('being a date not more than six months prior to the date on which the relevant investor signed the relevant definitive agreement') but does not state the specific date for each SII, making it impossible to verify the anchor date for the independence assessment.",
           "findings": [
             {
               "check_type": "D",
@@ -88,6 +90,8 @@
         {
           "rule_id": "A6",
           "rule_description": "Board representation by SII",
+          "status": "has_issues",
+          "analysis": "Rule A6 applies as an SII (Northern Light SIIs) has board representation. Page 186 of tier2/pre_ipo_investment discloses that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (the manager of Northern Light SIIs). However, the prospectus does not explicitly state whether Dr. YANG is a board representative nominated by the SII, nor does it confirm that the SII is not a close associate of Dr. YANG, as required by Fn 8 of the Guide.",
           "findings": [
             {
               "check_type": "D",
@@ -122,6 +126,8 @@
         {
           "rule_id": "B2",
           "rule_description": "Asset Management / Fund Threshold",
+          "status": "has_issues",
+          "analysis": "For SummitView SIIs, the prospectus on page 189 of tier2/pre_ipo_investment discloses an AUM of 'approximately HK$13.2 billion as of 31 December 2020'. This figure is below the HK$15bn threshold (PARAM_B2_AUM_MIN). The prospectus then states 'with more than HK$5 billion in Specialist Technology Companies', which appears to be an attempt to qualify under the lower threshold of Rule B4 (para 21(iii)). However, the disclosure does not clearly state which basis is being relied upon, creating ambiguity.",
           "findings": [
             {
               "check_type": "D",
@@ -141,6 +147,8 @@
         {
           "rule_id": "B4",
           "rule_description": "Specialist Technology Focus Threshold",
+          "status": "has_issues",
+          "analysis": "For Oceanpine SIIs, the prospectus on page 187 of tier2/pre_ipo_investment discloses an AUM of 'approximately HK$5.9 billion as of September 25, 2020'. This figure is below the HK$15bn threshold (PARAM_B2_AUM_MIN). The disclosure then states this AUM is 'derived primarily from the valuation of their investments in Specialist Technology Companies', which is an attempt to qualify under Rule B4 (para 21(iii)). However, the disclosed AUM of HK$5.9bn meets the HK$5bn minimum (PARAM_B4_TECH_MIN), but the second AUM figure of HK$14.3bn as of Dec 31, 2023 does not meet the HK$15bn threshold. The basis for sophistication is not clearly met on the first reference date.",
           "findings": [
             {
               "check_type": "T",
@@ -188,6 +196,8 @@
         {
           "rule_id": "C2",
           "rule_description": "Reference Date (Definitive Agreement)",
+          "status": "has_issues",
+          "analysis": "Rule C2 (para 25(i) of the Guide) requires disclosure of a reference date for sophistication figures that is no more than 6 months before the definitive agreement date. The prospectus does not disclose the specific definitive agreement date for each SII. Footnote (1) on page 191 of tier2/pre_ipo_investment provides a generic description ('being a date not more than six months prior to the date on which the relevant investor signed the relevant definitive agreement') but fails to state the specific agreement date for each of the nine SIIs. This makes it impossible to verify compliance with the 6-month look-back period.",
           "findings": [
             {
               "check_type": "D",
@@ -207,6 +217,8 @@
         {
           "rule_id": "C3",
           "rule_description": "Reference Date (Listing Application)",
+          "status": "has_issues",
+          "analysis": "Rule C3 (para 25(ii) of the Guide) requires sophistication figures as of a reference date no more than 6 months before the listing application date. The first listing application date is disclosed as June 29, 2023 (tier2/pre_ipo_investment, page 186). The second reference dates provided for SIIs are September 30, 2023 or December 31, 2023. These dates are after the listing application date, not before it, which fails the requirement of para 25(ii).",
           "findings": [
             {
               "check_type": "T",
@@ -254,6 +266,8 @@
         {
           "rule_id": "D1b",
           "rule_description": "Pathfinder SII Investment Timing",
+          "status": "has_issues",
+          "analysis": "Rule D1b (para 26(i) and para 30 of the Guide) requires each Pathfinder SII to have invested at least 12 months before the listing application date, with the investment date defined as the date of irrevocable settlement. The prospectus (tier2/pre_ipo_investment, page 195) states the Pathfinders invested 'at least 12 months prior' but fails to disclose the specific irrevocable settlement date for either Northern Light SIIs or Oceanpine SIIs. The 'History' section (tier1/history_corporate, page 176) only gives the month and year ('September 2016' and 'September 2020'), which is insufficient to verify the 12-month holding period precisely.",
           "findings": [
             {
               "check_type": "D",
@@ -316,6 +330,8 @@
         {
           "rule_id": "G1",
           "rule_description": "Temporary Dilution Without Top-Up",
+          "status": "has_issues",
+          "analysis": "Rule G1 (para 29(i) of the Guide) applies because the holdings of Pathfinder SIIs fluctuated during the pre-application 12-month period (e.g., Northern Light SIIs held 12.53% on June 29, 2022 and 11.48% on June 29, 2023). When temporary dilution occurs, the prospectus must disclose the 12-month average holding and confirm it meets the threshold. The prospectus discloses the holdings at the start and end of the period but does not disclose the 12-month average holding for either the individual or aggregate Pathfinder SIIs.",
           "findings": [
             {
               "check_type": "D",

@@ -42,6 +42,8 @@
         {
           "rule_id": "P3",
           "rule_description": "Market Capitalisation Tier",
+          "status": "has_issues",
+          "analysis": "The prospectus provides conflicting information regarding the expected market capitalisation. Tier1/listing_statistics (page 125) states it 'exceeds HK$6 billion', which would place the company in the '< HK$15bn' tier. However, tier2/pre_ipo_investment (page 195) states an assumption that the 'market capitalization at the time of Listing will exceed HK$15 billion' and applies the corresponding 15% aggregate SII threshold for the 'HK$15-30bn' tier. This inconsistency makes it difficult to verify the correct threshold application without external calculation.",
           "findings": [
             {
               "check_type": "K",
@@ -76,6 +78,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Date of Independence Assessment",
+          "status": "has_issues",
+          "analysis": "Per para 17 of the Guide, independence is assessed at the date of signing of the definitive agreement. The prospectus does not disclose the specific definitive agreement dates for each of the nine identified Sophisticated Independent Investors (SIIs). While a footnote on page 191 provides a generic definition for the reference date, it does not provide the actual dates for each SII's investment, making it impossible to verify the independence assessment date.",
           "findings": [
             {
               "check_type": "D",
@@ -108,6 +112,8 @@
         {
           "rule_id": "A6",
           "rule_description": "Board Representation by SII",
+          "status": "has_issues",
+          "analysis": "Tier2/pre_ipo_investment (page 186) discloses that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (the manager of Pathfinder SII 'Northern Light SIIs') until October 2021. This constitutes a prior relationship and potential board representation link. However, the disclosure does not explicitly state whether Dr. Yang is considered a board representative of the SII, nor does it confirm, per Fn 8 of the Guide, that the SII is not a close associate of the relevant director. The disclosure is silent on this point.",
           "findings": [
             {
               "check_type": "D",
@@ -142,6 +148,8 @@
         {
           "rule_id": "B2",
           "rule_description": "Asset Management / Fund Threshold",
+          "status": "has_issues",
+          "analysis": "For Northern Light SIIs, the prospectus on page 186 states the AUM of Northern Light Venture Capital was 'approximately HK$17.69 billion as of June 30, 2016'. The use of 'approximately' obscures whether the PARAM_B2_AUM_MIN threshold of HK$15bn was precisely met. Regulatory disclosures require specific figures to demonstrate compliance.",
           "findings": [
             {
               "check_type": "L",
@@ -161,6 +169,8 @@
         {
           "rule_id": "B4",
           "rule_description": "Specialist Technology Focus Threshold",
+          "status": "has_issues",
+          "analysis": "For Oceanpine SIIs, the prospectus on page 187 claims sophistication under para 21(iii) of the Guide, which requires AUM/fund/portfolio of at least HK$5bn (PARAM_B4_TECH_MIN) derived *primarily* from Specialist Technology investments. The disclosure states an AUM of 'approximately HK$5.9 billion as of September 25, 2020'. However, it fails to state that this value was 'primarily derived' from Specialist Technology investments for that reference date. The 'primarily derived' qualifier is only applied to the second reference date figure (HK$14.3bn as of Dec 31, 2023). This omission means the threshold compliance for the initial investment date cannot be verified.",
           "findings": [
             {
               "check_type": "T",
@@ -208,6 +218,8 @@
         {
           "rule_id": "C1",
           "rule_description": "Size Disclosure and Basis of Determination",
+          "status": "has_issues",
+          "analysis": "The prospectus uses the word 'approximately' when disclosing AUM or portfolio sizes for multiple SIIs, including Northern Light SIIs (p.186), Oceanpine SIIs (p.187), SummitView SIIs (p.189), Xiaomi SII (p.189), Tencent SII (p.189), BOCGI SII (p.190), and Future Industry Fund (p.190). This hedging language obscures whether the quantitative thresholds are precisely met, which is contrary to the requirement for specific disclosure under para 25 of the Guide.",
           "findings": [
             {
               "check_type": "L",
@@ -227,6 +239,8 @@
         {
           "rule_id": "C2",
           "rule_description": "Reference Date (Definitive Agreement)",
+          "status": "has_issues",
+          "analysis": "Para 25(i) of the Guide requires disclosure of sophistication information as of a reference date no more than 6 months before the signing of the definitive agreement. The prospectus fails to disclose the specific definitive agreement dates for any of the nine SIIs. Instead, a generic footnote on page 191 defines the reference date relative to this undisclosed agreement date. Without the agreement dates, compliance with the 6-month rule (PARAM_C2_REF_MONTHS) cannot be verified.",
           "findings": [
             {
               "check_type": "D",
@@ -246,6 +260,8 @@
         {
           "rule_id": "C3",
           "rule_description": "Reference Date (Listing Application)",
+          "status": "has_issues",
+          "analysis": "Para 25(ii) of the Guide requires sophistication information as of a reference date no more than 6 months before the listing application date. The first listing application date is disclosed as June 29, 2023 (p.186). For Xiaomi SII (p.189), the second reference date is September 30, 2023, which is more than 3 months *after* the listing application date, not before. For Tencent SII, BOCGI SII, Future Industry Fund, Geely SII, and SAIC Motor SII, the second reference date is December 31, 2023, which is more than 6 months *after* the listing application date. This does not comply with the requirement for the reference date to be *before* the application date.",
           "findings": [
             {
               "check_type": "T",
@@ -280,6 +296,8 @@
         {
           "rule_id": "D1b",
           "rule_description": "Pathfinder SII Investment Timing",
+          "status": "has_issues",
+          "analysis": "Per para 26(i) and para 30 of the Guide, each Pathfinder SII must have invested at least 12 months (PARAM_D_HOLD_MONTHS) before the listing application date, with the investment date defined as the date of irrevocable settlement. The prospectus does not disclose the specific irrevocable settlement dates for the two Pathfinder SIIs (Northern Light SIIs and Oceanpine SIIs). While tier2/history_of_group (page 176) mentions investment months ('September 2016' and 'September 2020'), this is insufficient as it lacks the specific day and does not confirm it refers to irrevocable settlement. Compliance with the 12-month holding period cannot be verified.",
           "findings": [
             {
               "check_type": "D",

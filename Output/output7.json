@@ -8,7 +8,7 @@
     "specialist_technology_industry": "Advanced hardware and software",
     "acceptable_sector": "Semiconductors; Electric and autonomous vehicles",
     "commercial_or_precommercial": "Commercial",
-    "expected_market_cap_hkd_bn": 15.0,
+    "expected_market_cap_hkd_bn": 15,
     "applicable_market_cap_tier": "HK$15-30bn",
     "applicable_aggregate_sii_threshold_pct": 15,
     "classification_notes": "Market capitalisation is stated to 'exceed HK$15 billion' (tier2/pre_ipo_investment, p.195), placing the company in the HK$15-30bn tier for threshold calculation purposes. Revenue for the most recent FY (2023) was RMB312.4 million, exceeding the HK$250m threshold for Commercial Company status."
@@ -56,6 +56,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Date of independence assessment",
+          "status": "has_issues",
+          "analysis": "Per Para 17 of the Guide, independence must be determined as at the date of signing of the definitive agreement for each SII. The prospectus (tier2/pre_ipo_investment, p.186) provides a single generic statement of independence for all SIIs but fails to disclose the specific definitive agreement date for each SII upon which this assessment was based. This prevents verification of the assessment's timing.",
           "findings": [
             {
               "check_type": "D",
@@ -75,6 +77,8 @@
         {
           "rule_id": "A5",
           "rule_description": "Prior business relationships",
+          "status": "has_issues",
+          "analysis": "Per Para 19 of the Guide, prior business relationships require disclosure of mitigating factors. The prospectus (tier2/pre_ipo_investment, p.191) discloses that the Group has business cooperation agreements with Geely SII and SAIC Motor SII. However, it fails to provide the required details on the timing, duration, operational involvement, and commercial terms of these relationships to substantiate the claim of independence.",
           "findings": [
             {
               "check_type": "D",
@@ -94,6 +98,8 @@
         {
           "rule_id": "A6",
           "rule_description": "Board representation by SII",
+          "status": "has_issues",
+          "analysis": "Per Fn 8 of the Guide, an SII with a board seat is independent unless they are a close associate of a director. The prospectus (tier2/pre_ipo_investment, p.186) discloses that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (manager of Pathfinder SII Northern Light SIIs) until October 2021. The disclosure does not explicitly state whether Northern Light SIIs are considered a close associate of Dr. Yang or provide a basis for concluding they are not, which is required to confirm independence.",
           "findings": [
             {
               "check_type": "D",
@@ -128,6 +134,8 @@
         {
           "rule_id": "B4",
           "rule_description": "Specialist Technology focus threshold",
+          "status": "has_issues",
+          "analysis": "Per Para 21(iii) of the Guide, an investor may qualify if its AUM/fund/portfolio is primarily derived from Specialist Technology investments. The prospectus (tier2/pre_ipo_investment, p.189) states that SummitView SIIs had an AUM of HK$13.2bn as of 31 Dec 2020 with 'more than HK$5 billion in Specialist Technology Companies'. This proportion (~38%) does not meet the 'primarily derived' (i.e., >50%) requirement. While the later figure for Dec 2023 does meet the 'primarily' test (HK$15.4bn/HK$23.3bn), the figure as of the reference date near the investment does not appear to satisfy the threshold.",
           "findings": [
             {
               "check_type": "T",
@@ -162,6 +170,8 @@
         {
           "rule_id": "C2",
           "rule_description": "Reference date (definitive agreement)",
+          "status": "has_issues",
+          "analysis": "Per Para 25(i) of the Guide, sophistication information must be as of a specific reference date no more than 6 months before the signing of the definitive agreement. Footnote (1) on page 191 of tier2/pre_ipo_investment only vaguely states the date is 'not more than six months prior to the date on which the relevant investor signed the relevant definitive agreement'. It fails to disclose the specific reference date and the specific definitive agreement date for each SII, making it impossible to verify compliance with the 6-month rule.",
           "findings": [
             {
               "check_type": "D",
@@ -181,6 +191,8 @@
         {
           "rule_id": "C3",
           "rule_description": "Reference date (listing application)",
+          "status": "has_issues",
+          "analysis": "Per Para 25(ii) of the Guide, sophistication information must also be given as of a reference date no more than 6 months *before* the listing application date. The prospectus discloses a first listing application date of June 29, 2023 (tier2/pre_ipo_investment, p.186). However, the second set of reference dates provided for SIIs are September 30, 2023 or December 31, 2023, which are *after* this application date. This contradicts the rule. If a later listing application date is being used, it is not disclosed, preventing verification.",
           "findings": [
             {
               "check_type": "T",
@@ -215,6 +227,8 @@
         {
           "rule_id": "D1b",
           "rule_description": "Pathfinder investment timing",
+          "status": "has_issues",
+          "analysis": "Per Para 30 of the Guide, the investment date for the 12-month holding period must be the date of irrevocable settlement. The prospectus (tier1/history_corporate, p.176) discloses investment timing for Pathfinder SIIs as 'September 2016' and 'September 2020'. This is not a specific calendar date and is not explicitly stated to be the date of irrevocable settlement. This language is too vague to verify compliance with Rule D1b.",
           "findings": [
             {
               "check_type": "L",
@@ -249,6 +263,8 @@
         {
           "rule_id": "E1",
           "rule_description": "Aggregate SII shareholding benchmark",
+          "status": "has_issues",
+          "analysis": "Per Para 26(ii) of the Guide, all SIIs must hold a minimum percentage of issued share capital *at listing*. The prospectus (tier2/pre_ipo_investment, p.195) states that SIIs 'will hold, in aggregate, no less than 15%'. This is a forward-looking statement and does not confirm how this threshold will be met (e.g., through pre-listing holdings alone or with additional at-listing allocations). The disclosure lacks the certainty required to demonstrate compliance.",
           "findings": [
             {
               "check_type": "L",
@@ -283,6 +299,8 @@
         {
           "rule_id": "F2",
           "rule_description": "Convertible securities counting basis",
+          "status": "has_issues",
+          "analysis": "Per Para 28 of the Guide, for convertible securities, the prospectus must disclose the number of shares to be converted and the corresponding investment amount for each relevant SII. While the prospectus confirms all Preferred Shares will convert (tier2/pre_ipo_investment, p.185), it does not provide a clear, consolidated table showing the specific number of conversion shares and the original investment amount for each of the nine SIIs. This information is scattered and difficult for an investor to reconcile.",
           "findings": [
             {
               "check_type": "D",
@@ -317,6 +335,8 @@
         {
           "rule_id": "G1",
           "rule_description": "Temporary dilution without top-up",
+          "status": "has_issues",
+          "analysis": "Per Para 29(i) of the Guide, where temporary dilution occurs, compliance can be shown if the threshold is met at the application date and on a 12-month average basis. The prospectus (tier2/pre_ipo_investment, p.186-187) shows Pathfinder SII holdings decreased during the 12-month pre-application period but only provides figures for the start and end dates. It does not disclose the 12-month average holding or confirm that this average meets the relevant thresholds, which is a required element when relying on this provision.",
           "findings": [
             {
               "check_type": "D",
@@ -336,6 +356,8 @@
         {
           "rule_id": "G3",
           "rule_description": "Investment date definition",
+          "status": "has_issues",
+          "analysis": "Per Para 30 of the Guide, the investment date for Pathfinder SIIs must be the date of irrevocable settlement. The prospectus (tier1/history_corporate, p.176) states the investment dates as 'September 2016' and 'September 2020' without specifying the exact date or confirming it as the date of irrevocable settlement. This language is imprecise and does not align with the specific requirement of the Guide.",
           "findings": [
             {
               "check_type": "L",

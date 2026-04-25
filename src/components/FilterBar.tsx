@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
-import type { FilterState, Finding, ReviewDecision, ViewMode } from '../types';
-import { getReviewDecisionForFinding, isFindingReviewable } from '../utils/reviewState';
+import React from 'react';
+import type { FilterState, ViewMode } from '../types';
 
 interface FilterBarProps {
   filters: FilterState;
@@ -15,8 +14,6 @@ interface FilterBarProps {
   totalCount: number;
   filteredCount: number;
   countLabel: string;
-  reviewDecisions: Record<string, ReviewDecision>;
-  visibleFindings: Finding[];
 }
 
 const SEVERITY_ORDER = ['Critical', 'High', 'Medium', 'Low'];
@@ -101,28 +98,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   totalCount,
   filteredCount,
   countLabel,
-  reviewDecisions,
-  visibleFindings,
 }) => {
   const isRules = filters.tab === 'rules';
-  const reviewableFindings = useMemo(
-    () => visibleFindings.filter((finding) => isFindingReviewable(finding)),
-    [visibleFindings],
-  );
-  const reviewCounts = useMemo(
-    () =>
-      reviewableFindings.reduce(
-        (acc, finding) => {
-          const decision = getReviewDecisionForFinding(finding, reviewDecisions);
-          if (decision === 'approved') acc.approved += 1;
-          else if (decision === 'dismissed') acc.dismissed += 1;
-          else acc.pending += 1;
-          return acc;
-        },
-        { pending: 0, approved: 0, dismissed: 0 },
-      ),
-    [reviewDecisions, reviewableFindings],
-  );
 
   // ── Tab switching ───────────────────────────────────────────────────────────
   const switchTab = (tab: FilterState['tab']) => {
@@ -216,42 +193,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           Check list
         </button>
       </div>
-
-      {reviewableFindings.length > 0 && (
-        <div className="filter-bar__section">
-          <span className="filter-bar__label">Review</span>
-          <div className="filter-bar__chips filter-bar__chips--wrap">
-            <button
-              className={`chip chip--review ${filters.review === 'pending' ? 'chip--active' : ''}`}
-              onClick={() => onFiltersChange({ ...filters, review: 'pending' })}
-            >
-              Needs review
-              <span className="chip__count">{reviewCounts.pending}</span>
-            </button>
-            <button
-              className={`chip chip--review ${filters.review === 'approved' ? 'chip--active' : ''}`}
-              onClick={() => onFiltersChange({ ...filters, review: 'approved' })}
-            >
-              Approved
-              <span className="chip__count">{reviewCounts.approved}</span>
-            </button>
-            <button
-              className={`chip chip--review ${filters.review === 'dismissed' ? 'chip--active' : ''}`}
-              onClick={() => onFiltersChange({ ...filters, review: 'dismissed' })}
-            >
-              Dismissed
-              <span className="chip__count">{reviewCounts.dismissed}</span>
-            </button>
-            <button
-              className={`chip chip--review ${filters.review === 'all' ? 'chip--active' : ''}`}
-              onClick={() => onFiltersChange({ ...filters, review: 'all' })}
-            >
-              All
-              <span className="chip__count">{reviewableFindings.length}</span>
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* ── Severity (both tabs) ────────────────────────────────────────────── */}
       {severities.length > 0 && (

@@ -14,6 +14,7 @@ import {
 } from '../utils/normalizeFindings';
 import {
   getReviewDecisionForFinding,
+  isFindingReviewable,
   matchesReviewFilter,
 } from '../utils/reviewState';
 import { FilterBar } from './FilterBar';
@@ -353,6 +354,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return filteredDisplayCount === 1 ? 'check' : 'checks';
   }, [filteredDisplayCount, isRules, viewMode]);
 
+  // ── Review counts for header dropdown ───────────────────────────────────────
+  const reviewCounts = useMemo(() => {
+    const reviewable = findings.filter(isFindingReviewable);
+    return reviewable.reduce(
+      (acc, f) => {
+        const d = getReviewDecisionForFinding(f, reviewDecisions);
+        if (d === 'approved') acc.approved += 1;
+        else if (d === 'dismissed') acc.dismissed += 1;
+        else acc.pending += 1;
+        acc.total += 1;
+        return acc;
+      },
+      { pending: 0, approved: 0, dismissed: 0, total: 0 },
+    );
+  }, [findings, reviewDecisions]);
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
   const renderCard = (f: Finding) => (
     <FindingCard
@@ -384,13 +401,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Header */}
       <div className="sidebar__header">
         <span className="sidebar__title">Findings</span>
-        <button
-          className="btn btn--sm btn--outline"
-          onClick={onOpenRulebook}
-          title="Open Rulebook reference"
-        >
-          Rulebook
-        </button>
+        <div className="sidebar__header-actions">
+          {reviewCounts.total > 0 && (
+            <select
+              className="sidebar__review-select"
+              value={filters.review}
+              onChange={(e) =>
+                onFiltersChange({ ...filters, review: e.target.value as FilterState['review'] })
+              }
+              title="Filter by review status"
+            >
+              <option value="pending">Needs review ({reviewCounts.pending})</option>
+              <option value="approved">Approved ({reviewCounts.approved})</option>
+              <option value="dismissed">Dismissed ({reviewCounts.dismissed})</option>
+              <option value="all">All ({reviewCounts.total})</option>
+            </select>
+          )}
+          <button
+            className="btn btn--sm btn--outline"
+            onClick={onOpenRulebook}
+            title="Open Rulebook reference"
+          >
+            Rulebook
+          </button>
+        </div>
       </div>
 
       {/* Extraction progress */}
@@ -420,8 +454,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         totalCount={totalDisplayCount}
         filteredCount={filteredDisplayCount}
         countLabel={countLabel}
-        reviewDecisions={reviewDecisions}
-        visibleFindings={displayFindings}
       />
 
       {/* Findings list */}

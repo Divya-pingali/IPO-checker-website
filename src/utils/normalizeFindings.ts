@@ -2,6 +2,7 @@ import type {
   CheckerJson,
   Finding,
   ModuleItem,
+  AnyRuleItem,
   RuleItem,
   V4LegacyIssueRuleItem,
   V4RuleStatusItem,
@@ -202,11 +203,35 @@ function flagToFinding(flag: ReasoningFlag): Finding {
   };
 }
 
+function mergeRulesByRuleId(rules: AnyRuleItem[]): AnyRuleItem[] {
+  const map = new Map<string, AnyRuleItem>();
+  const order: string[] = [];
+  for (const rule of rules) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const r = rule as any;
+    const id: string | undefined = r.rule_id;
+    if (!id) continue;
+    if (!map.has(id)) {
+      // Shallow clone; copy findings array so we can mutate it safely
+      const clone: AnyRuleItem = { ...rule } as AnyRuleItem;
+      if (Array.isArray(r.findings)) (clone as any).findings = [...r.findings];
+      map.set(id, clone);
+      order.push(id);
+    } else {
+      const existing = map.get(id)! as any;
+      const incoming: V4FindingItem[] = r.findings ?? [];
+      existing.findings = [...(existing.findings ?? []), ...incoming];
+    }
+  }
+  return order.map((id) => map.get(id)!);
+}
+
 export function normalizeFindings(json: CheckerJson): Finding[] {
   const findings: Finding[] = [];
 
   for (const module of json.modules ?? []) {
-    for (const rule of module.rules ?? []) {
+    const rules = mergeRulesByRuleId(module.rules ?? []);
+    for (const rule of rules) {
       if (isV3Rule(rule)) {
         findings.push(v3RuleToFinding(rule, module));
       } else if (isV4StatusRule(rule)) {

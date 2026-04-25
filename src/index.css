@@ -23,11 +23,11 @@
   --accent-bg:   #eef4fd;
   --accent-hover:#3a6bc0;
 
-  /* UI active — slate used for interactive active/selected states */
-  --ui:          #334155;
-  --ui-bg:       #f1f5f9;
-  --ui-hover-bg: #e2e8f0;
-  --ui-border:   #64748b;
+  /* UI active — blue used for interactive active/selected states */
+  --ui:          #3461a8;
+  --ui-bg:       #eef4fd;
+  --ui-hover-bg: #dce8f8;
+  --ui-border:   #5b87d0;
 
   /* Severity */
   --c-critical:  #dc2626; --c-critical-bg: #fef2f2; --c-critical-br: #fca5a5;
@@ -299,15 +299,36 @@ html, body, #root {
   padding: 10px 14px 9px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  background: var(--surface);
+  background: #f0f4fb;
 }
 
 .sidebar__title {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -.1px;
-  color: var(--text-2);
+  color: var(--text);
 }
+
+.sidebar__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar__review-select {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  padding: 3px 6px;
+  cursor: pointer;
+  outline: none;
+  max-width: 160px;
+}
+.sidebar__review-select:hover { border-color: var(--accent); }
+.sidebar__review-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
 
 /* Extraction progress */
 .sidebar__progress {
@@ -438,8 +459,8 @@ html, body, #root {
 }
 .filter-bar__search-input:focus {
   outline: none;
-  border-color: var(--ui-border);
-  box-shadow: 0 0 0 3px rgba(31,41,55,.10);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(75, 127, 212, 0.15);
 }
 
 .filter-bar__view-toggle {
@@ -523,16 +544,16 @@ html, body, #root {
   transition: background 0.12s;
   position: relative;
 }
-.module-section__header:hover { background: var(--surface-3); }
-.module-section__header:active { background: #e9eaec; }
+.module-section__header:hover { background: #f0f4fb; }
+.module-section__header:active { background: var(--surface-3); }
 
 .module-section__id {
   font-size: 10px;
   font-weight: 700;
   font-family: var(--font-mono);
-  color: var(--text-2);
-  background: var(--surface-3);
-  border: 1px solid var(--border);
+  color: var(--ui);
+  background: var(--ui-bg);
+  border: 1px solid #b8d0f0;
   border-radius: 4px;
   padding: 1px 5px;
   flex-shrink: 0;
@@ -610,7 +631,7 @@ html, body, #root {
   border-left: 3px solid transparent;
 }
 
-.finding-card:hover { background: var(--surface-3); }
+.finding-card:hover { background: #f5f8fd; }
 
 .finding-card--active {
   background: var(--accent-bg) !important;
@@ -625,10 +646,9 @@ html, body, #root {
 
 .finding-card__header {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 3px;
 }
 
 .finding-card__id {
@@ -642,8 +662,8 @@ html, body, #root {
   padding: 1px 5px;
 }
 
+
 .finding-card__match-indicator {
-  margin-left: auto;
   font-size: 10px;
   flex-shrink: 0;
   line-height: 1;
@@ -655,19 +675,28 @@ html, body, #root {
 .match-no_anchor, .match-no_page { color: var(--border-2); }
 
 .finding-card__title {
+  flex: 1;
+  min-width: 0;
   font-size: 12px;
   font-weight: 500;
   color: var(--text);
-  margin-bottom: 3px;
   line-height: 1.4;
+  padding-top: 1px;
+}
+
+.finding-card__header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .finding-card__meta {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 5px;
   flex-wrap: wrap;
+  margin-bottom: 6px;
 }
 
 .finding-card__module {
@@ -704,31 +733,54 @@ html, body, #root {
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 7px;
-  padding: 6px 8px;
+  padding: 6px 8px 6px 10px;
   border: 1px solid var(--border);
   border-radius: var(--r);
+  background: #f8fafd;
+  border-left: 3px solid var(--border-2);
+  transition: border-left-color 0.2s, background 0.2s;
+}
+
+.finding-card__review-strip--approved {
+  border-left-color: var(--s-present);
+  background: var(--s-present-bg);
+}
+
+.finding-card__review-strip--dismissed {
+  border-left-color: var(--border-2);
   background: var(--surface-2);
 }
 
+.finding-card__review-strip--mixed {
+  border-left-color: var(--s-insuf);
+  background: var(--s-insuf-bg);
+}
+
 .finding-card__review-state {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: .35px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0;
 }
 
 .finding-card__review-state--approved { color: var(--s-present); }
 .finding-card__review-state--dismissed { color: var(--s-na); }
-.finding-card__review-state--mixed { color: var(--c-medium); }
-.finding-card__review-state--pending { color: var(--c-high); }
+.finding-card__review-state--mixed { color: var(--s-insuf); }
+.finding-card__review-state--pending { color: var(--text-3); }
 
-.finding-card__review-actions,
+
+.finding-card__review-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
 .finding-card__check-review {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;
+  gap: 4px;
 }
 
 .finding-card__unresolved {
@@ -1000,8 +1052,8 @@ html, body, #root {
   border-color: var(--ui);
 }
 .btn--active:hover:not(:disabled) {
-  background: #374151;
-  border-color: #374151;
+  background: #2b539c;
+  border-color: #2b539c;
 }
 
 .btn--outline { border-color: var(--ui-border); color: var(--ui); }
@@ -1018,34 +1070,44 @@ html, body, #root {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  min-height: 24px;
+  gap: 3px;
+  height: 22px;
   padding: 0 8px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
+  border-radius: var(--r);
+  border: 1px solid var(--border-2);
   background: var(--surface);
   color: var(--text-2);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 10.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background .12s, color .12s, border-color .12s, transform .12s;
+  transition: background .15s, color .15s, border-color .15s;
 }
 
 .review-action:hover {
-  transform: translateY(-1px);
+  transform: none;
 }
 
-.review-action--approve:hover,
+.review-action--approve:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 .review-action--approve.review-action--active {
-  background: var(--s-present-bg);
-  color: var(--s-present);
-  border-color: #86efac;
+  background: var(--s-present);
+  color: #fff;
+  border-color: var(--s-present);
 }
 
-.review-action--dismiss:hover,
+.review-action--dismiss:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-2);
+}
+
 .review-action--dismiss.review-action--active {
-  background: var(--s-na-bg);
-  color: var(--s-na);
+  background: #e2e8f0;
+  color: var(--text-2);
   border-color: #cbd5e1;
 }
 

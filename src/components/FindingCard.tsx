@@ -126,87 +126,35 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
-      {/* Header row */}
+      {/* Row 1: [A1] Title .............. [Critical] [Needs detail] [●] */}
       <div className="finding-card__header">
         <span className="finding-card__id">{finding.ruleId}</span>
-        {!(finding.severity === 'Critical' && finding.status === 'Present') && (
-          <span className={`badge ${SEVERITY_CLASS[finding.severity] ?? 'badge--medium'}`}>
-            {finding.severity}
+        <span className="finding-card__title">{finding.title}</span>
+        <div className="finding-card__header-right">
+          {!(finding.severity === 'Critical' && finding.status === 'Present') && (
+            <span className={`badge ${SEVERITY_CLASS[finding.severity] ?? 'badge--medium'}`}>
+              {finding.severity}
+            </span>
+          )}
+          <span className={`badge ${STATUS_CLASS[finding.status] ?? 'badge--na'}`}>
+            {displayStatus}
           </span>
-        )}
-        <span className={`badge ${STATUS_CLASS[finding.status] ?? 'badge--na'}`}>
-          {displayStatus}
-        </span>
-        <span
-          className={`finding-card__match-indicator match-${matchStatus}`}
-          title={MATCH_TITLE[matchStatus]}
-        >
-          {MATCH_ICONS[matchStatus]}
-        </span>
+          <span
+            className={`finding-card__match-indicator match-${matchStatus}`}
+            title={MATCH_TITLE[matchStatus]}
+          >
+            {MATCH_ICONS[matchStatus]}
+          </span>
+        </div>
       </div>
 
-      {isReviewable && (
-        <div className="finding-card__review-strip" onClick={(e) => e.stopPropagation()}>
-          <span
-            className={`finding-card__review-state finding-card__review-state--${reviewDecision ?? 'pending'}`}
-          >
-            {reviewLabel}
-          </span>
-          <div className="finding-card__review-actions">
-            <button
-              className={`review-action review-action--approve ${
-                reviewDecision === 'approved' ? 'review-action--active' : ''
-              }`}
-              onClick={(e) =>
-                applyDecision(e, reviewDecision === 'approved' ? null : 'approved')
-              }
-              title="Approve this check"
-            >
-              ✓ Approve
-            </button>
-            <button
-              className={`review-action review-action--dismiss ${
-                reviewDecision === 'dismissed' ? 'review-action--active' : ''
-              }`}
-              onClick={(e) =>
-                applyDecision(e, reviewDecision === 'dismissed' ? null : 'dismissed')
-              }
-              title="Dismiss this check"
-            >
-              ✕ Dismiss
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Check type badges */}
-      {finding.checkTypes.length > 0 && (
-        <div className="finding-card__check-types">
-          {finding.checkTypes.map((code) => (
-            <span
-              key={code}
-              className="check-type-badge"
-              title={CHECK_TYPE_DESCRIPTIONS[code] ?? code}
-            >
-              {CHECK_TYPE_LABELS[code] ?? code}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Title */}
-      <div className="finding-card__title">{finding.title}</div>
-
-      {/* Module + page */}
+      {/* Row 2: [Independence] [p.186] */}
       <div className="finding-card__meta">
         <span className="finding-card__module">{finding.moduleName}</span>
         {finding.page && (
           <span className="finding-card__page">p.{finding.page}</span>
         )}
       </div>
-
-      {/* Summary */}
-      <div className="finding-card__summary">{finding.summary}</div>
 
       {/* Unresolved notice */}
       {matchStatus === 'unresolved' && (
@@ -240,6 +188,45 @@ export const FindingCard: React.FC<FindingCardProps> = ({
         </div>
       )}
 
+      {/* Row 3: [Disclosure][Consistency] */}
+      {finding.checkTypes.length > 0 && (
+        <div className="finding-card__check-types">
+          {finding.checkTypes.map((code) => (
+            <span
+              key={code}
+              className="check-type-badge"
+              title={CHECK_TYPE_DESCRIPTIONS[code] ?? code}
+            >
+              {CHECK_TYPE_LABELS[code] ?? code}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Row 4: Review actions (right-aligned) */}
+      {isReviewable && (
+        <div className="finding-card__review-actions" onClick={(e) => e.stopPropagation()}>
+          {reviewDecision !== 'approved' && (
+            <button
+              className="review-action review-action--approve"
+              onClick={(e) => applyDecision(e, 'approved')}
+              title="Approve this check"
+            >
+              ✓ Approve
+            </button>
+          )}
+          {reviewDecision !== 'dismissed' && (
+            <button
+              className="review-action review-action--dismiss"
+              onClick={(e) => applyDecision(e, 'dismissed')}
+              title="Dismiss this check"
+            >
+              ✕ Dismiss
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Expand toggle */}
       <button
         className="finding-card__expand-btn"
@@ -251,6 +238,11 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       {/* Expanded detail */}
       {expanded && (
         <div className="finding-card__detail">
+          {finding.summary && (
+            <div className="finding-card__detail-section">
+              <p>{finding.summary}</p>
+            </div>
+          )}
           {finding.findings && finding.findings.length > 0 ? (
             finding.findings.map((f, i) => (
               <div key={i} className="finding-card__check-detail">

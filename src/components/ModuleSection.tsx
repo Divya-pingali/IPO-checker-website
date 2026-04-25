@@ -47,30 +47,10 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
 
   const sorted = useMemo(() => sortFindings(findings), [findings]);
 
-  const unresolvedCount = sorted.filter((f) => {
-    const r = matchResults.get(f.parentFindingId ?? f.id);
-    return r?.status === 'unresolved';
-  }).length;
-  const reviewCounts = sorted.reduce(
-    (acc, finding) => {
-      const decision = getReviewDecisionForFinding(finding, reviewDecisions);
-      if (decision === 'approved') acc.approved += 1;
-      else if (decision === 'dismissed') acc.dismissed += 1;
-      else if (decision !== null || finding.status === 'Absent' || finding.status === 'Insufficient' || finding.status === 'Flag') {
-        acc.pending += 1;
-      }
-      return acc;
-    },
-    { pending: 0, approved: 0, dismissed: 0 },
-  );
-
-  const criticalCount = issuedFindings.filter((f) => f.severity === 'Critical').length;
   const absentCount = issuedFindings.filter((f) => f.status === 'Absent').length;
-  const insufficientCount = issuedFindings.filter(
-    (f) => f.status === 'Insufficient',
-  ).length;
+  const insufficientCount = issuedFindings.filter((f) => f.status === 'Insufficient').length;
+  const flagCount = issuedFindings.filter((f) => f.status === 'Flag').length;
   const clearCount = sorted.filter((f) => f.status === 'Present').length;
-  const naCount = sorted.filter((f) => f.status === 'Not Applicable').length;
 
   const primaryState = !triggered
     ? 'Not applicable'
@@ -78,7 +58,9 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
       ? 'Missing disclosure'
       : insufficientCount > 0
         ? 'Needs detail'
-        : 'Clear';
+        : flagCount > 0
+          ? 'Flagged'
+          : 'Clear';
 
   const derivedSummary =
     summaryText ??
@@ -92,11 +74,15 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
 
   const primaryBadgeClass = !triggered
     ? 'badge--na'
-    : hasIssues
-      ? absentCount > 0
-        ? 'badge--absent'
-        : 'badge--insufficient'
-      : 'badge--present';
+    : absentCount > 0
+      ? 'badge--absent'
+      : insufficientCount > 0
+        ? 'badge--insufficient'
+        : flagCount > 0
+          ? 'badge--flag'
+          : hasIssues
+            ? 'badge--insufficient'
+            : 'badge--present';
 
   return (
     <div className="module-section">
@@ -109,56 +95,7 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
           <span className="module-section__name">{moduleName}</span>
           <span className="module-section__summary">{derivedSummary}</span>
         </div>
-        <div className="module-section__stats">
-          <span className={`badge badge--sm ${primaryBadgeClass}`}>{primaryState}</span>
-          {!triggered && <span className="badge badge--na badge--sm">N/A</span>}
-          {triggered && !hasIssues && clearCount > 0 && (
-            <span className="badge badge--present badge--sm">{clearCount} clear</span>
-          )}
-          {triggered && hasIssues && (
-            <>
-              {reviewCounts.pending > 0 && (
-                <span className="badge badge--sm badge--flag" title="Checks awaiting lawyer review">
-                  {reviewCounts.pending} to review
-                </span>
-              )}
-              {reviewCounts.approved > 0 && (
-                <span className="badge badge--present badge--sm" title="Checks approved by lawyer">
-                  {reviewCounts.approved} approved
-                </span>
-              )}
-              {reviewCounts.dismissed > 0 && (
-                <span className="badge badge--na badge--sm" title="Checks dismissed by lawyer">
-                  {reviewCounts.dismissed} dismissed
-                </span>
-              )}
-              {criticalCount > 0 && (
-                <span className="badge badge--critical badge--sm" title="Critical findings">
-                  {criticalCount} crit
-                </span>
-              )}
-              {absentCount > 0 && (
-                <span className="badge badge--absent badge--sm" title="Missing disclosure findings">
-                  {absentCount} missing
-                </span>
-              )}
-              {insufficientCount > 0 && (
-                <span className="badge badge--insufficient badge--sm" title="Needs-detail findings">
-                  {insufficientCount} needs detail
-                </span>
-              )}
-              {unresolvedCount > 0 && (
-                <span className="badge badge--na badge--sm" title="Unresolved - anchor not found in PDF">
-                  {unresolvedCount} unresolved
-                </span>
-              )}
-              <span className="module-section__count">{issuedFindings.length}</span>
-            </>
-          )}
-          {triggered && !hasIssues && naCount > 0 && (
-            <span className="badge badge--na badge--sm">{naCount} N/A</span>
-          )}
-        </div>
+        <span className={`badge badge--sm ${primaryBadgeClass}`}>{primaryState}</span>
         <span className="module-section__toggle">{collapsed ? '▸' : '▾'}</span>
       </button>
 

@@ -8,7 +8,7 @@
     "specialist_technology_industry": "Advanced hardware and software",
     "acceptable_sector": "Semiconductors",
     "commercial_or_precommercial": "Commercial",
-    "expected_market_cap_hkd_bn": 15.0,
+    "expected_market_cap_hkd_bn": 15,
     "applicable_market_cap_tier": "HK$15-30bn",
     "applicable_aggregate_sii_threshold_pct": 15,
     "classification_notes": "Company is classified as a Commercial Company based on its 2023 revenue of RMB312.4 million (approx. HK$342.0 million), which exceeds PARAM_COMM_REV_MIN. Market cap tier is based on the disclosure on page 195 assuming market cap will exceed HK$15 billion."
@@ -56,6 +56,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Date of Independence Assessment",
+          "status": "has_issues",
+          "analysis": "Rule A1 requires independence to be determined as at the date of the definitive agreement for each SII's investment. The prospectus on page 186 makes a blanket assertion of independence but does not disclose the definitive agreement date for each SII and confirm independence as of that specific date. This is insufficient to verify compliance.",
           "findings": [
             {
               "check_type": "D",
@@ -101,6 +103,8 @@
         {
           "rule_id": "A2",
           "rule_description": "Independence from Applicant and Controlling Shareholders",
+          "status": "has_issues",
+          "analysis": "Rule A2 requires the prospectus to state the basis for determining independence. The disclosure on page 186 is a bare assertion that SIIs are independent. While a past connection for a non-executive director is disclosed, the prospectus lacks a specific factual basis for the independence of each of the nine SIIs, which is insufficient per Rule A2.",
           "findings": [
             {
               "check_type": "D",
@@ -159,6 +163,8 @@
         {
           "rule_id": "A3",
           "rule_description": "No Relationship with Founder or Close Associate",
+          "status": "has_issues",
+          "analysis": "Rule A3 requires an express confirmation that no SII is a close associate of a founder. The general independence statement on page 186 covers directors, chief executive, and substantial shareholders, but omits an explicit statement regarding founders and their close associates. This is a required disclosure and its absence is a failure under Rule A3.",
           "findings": [
             {
               "check_type": "D",
@@ -204,6 +210,8 @@
         {
           "rule_id": "A4",
           "rule_description": "No Acting-in-Concert Arrangements",
+          "status": "has_issues",
+          "analysis": "Rule A4 requires confirmation that SIIs are not acting in concert. The disclosure on page 186 states that Pre-IPO Investors are independent of each other, with an exception for aggregated SIIs (Northern Light, Oceanpine, SummitView). However, it does not contain an explicit statement confirming the absence of acting-in-concert arrangements between the different SII groups, the applicant, or controlling shareholders. This is insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -249,6 +257,8 @@
         {
           "rule_id": "A5",
           "rule_description": "No Agreements to Return Investment",
+          "status": "has_issues",
+          "analysis": "Rule A5 requires an express statement that there are no agreements or arrangements to return, reimburse, or compensate an SII for its investment. A review of the provided sections did not identify such a statement. This is a required disclosure under para 19 of the Guide, and its absence is a critical failure.",
           "findings": [
             {
               "check_type": "D",
@@ -323,6 +333,8 @@
         {
           "rule_id": "C2",
           "rule_description": "Reference Date (Definitive Agreement)",
+          "status": "has_issues",
+          "analysis": "Rule C2 requires disclosure figures to be as of a date not more than 6 months before the definitive agreement. Footnote (1) on page 191 makes a blanket statement that this is the case, but it does not provide the specific reference date for each SII's AUM/portfolio figure, nor the specific date of each definitive agreement. This makes independent verification of the 6-month rule impossible.",
           "findings": [
             {
               "check_type": "D",
@@ -381,6 +393,8 @@
         {
           "rule_id": "C4",
           "rule_description": "Investment Amount Disclosure",
+          "status": "has_issues",
+          "analysis": "Rule C4 requires the disclosure of the investment amount for each SII. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This is a material omission under para 25 of the Guide.",
           "findings": [
             {
               "check_type": "D",

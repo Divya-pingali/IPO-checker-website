@@ -8,7 +8,7 @@
     "specialist_technology_industry": "Advanced hardware and software",
     "acceptable_sector": "Semiconductors",
     "commercial_or_precommercial": "Commercial",
-    "expected_market_cap_hkd_bn": 15.0,
+    "expected_market_cap_hkd_bn": 15,
     "applicable_market_cap_tier": "HK$15-30bn",
     "applicable_aggregate_sii_threshold_pct": 15,
     "classification_notes": "Market capitalisation is stated as '>HK$6 billion' in one section and assumed to be '>HK$15 billion' in another. The HK$15-30bn tier is used for analysis as it aligns with the aggregate SII threshold calculation presented in the prospectus."
@@ -42,6 +42,8 @@
         {
           "rule_id": "P3",
           "rule_description": "Market Capitalisation Tier",
+          "status": "has_issues",
+          "analysis": "Per Rule P3, the market cap tier determines the aggregate SII threshold. The prospectus discloses the expected market cap inconsistently. Tier1/listing_statistics (page 125) states it 'exceeds HK$6 billion', which is the minimum for a Commercial Company. However, tier2/pre_ipo_investment (page 195) makes an assumption that the market cap 'will exceed HK$15 billion' to determine the applicable 15% aggregate SII threshold. While the minimum requirement is met, the lack of a definitive figure or consistent range makes the tier determination ambiguous. The analysis proceeds based on the HK$15-30bn tier as this is what the applicant uses for its own calculations.",
           "findings": [
             {
               "check_type": "D",
@@ -115,6 +117,8 @@
         {
           "rule_id": "A1",
           "rule_description": "Independence date disclosed for each SII",
+          "status": "has_issues",
+          "analysis": "Per Rule A1, independence must be determined as at the date of the definitive agreement. The prospectus (tier2/pre_ipo_investment, page 186) makes a general statement that each SII 'is independent'. While footnote (1) on page 191 links the reference dates for sophistication figures to the definitive agreement dates, there is no explicit confirmation that the independence assessment itself was made as at those specific dates for each SII. This is a vague assertion.",
           "findings": [
             {
               "check_type": "D",
@@ -160,6 +164,8 @@
         {
           "rule_id": "A2",
           "rule_description": "Independence from Applicant and Controlling Shareholders",
+          "status": "has_issues",
+          "analysis": "Per Rule A2, each SII must be independent. The prospectus (tier2/pre_ipo_investment, page 186) discloses that Dr. YANG Lei, a non-executive Director, was a partner at Northern Light Venture Capital (the manager of a Pathfinder SII) until October 2021. While the investment was made in 2016, the prospectus merely states the fact of this past relationship without providing a detailed analysis of why it does not compromise the investor's independence. A bare assertion of independence in light of this disclosed connection is insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -218,6 +224,8 @@
         {
           "rule_id": "A3",
           "rule_description": "No Relationship with Founder or Close Associate",
+          "status": "has_issues",
+          "analysis": "Per Rule A3, an SII cannot be a close associate of a founder. The disclosure on page 186 of tier2/pre_ipo_investment states independence from any 'Director, chief executive or substantial shareholder'. While the founder, Mr. Shan, is also a Director and chief executive, the rule specifically uses the term 'founder'. The disclosure does not explicitly confirm the absence of a close associate relationship with the founders in their capacity as founders. This is a language quality issue that could be interpreted as an omission.",
           "findings": [
             {
               "check_type": "D",
@@ -263,6 +271,8 @@
         {
           "rule_id": "A4",
           "rule_description": "No Acting-in-Concert Arrangements",
+          "status": "has_issues",
+          "analysis": "Per Rule A4, SIIs must not be acting in concert with the applicant or controlling shareholders. The disclosure on page 186 of tier2/pre_ipo_investment states that 'each of the Pre-IPO Investors is independent from each other' (with exceptions for aggregated funds). This addresses concert arrangements between SIIs but does not explicitly address the absence of such arrangements with the applicant or its controlling shareholders. This is an insufficient disclosure.",
           "findings": [
             {
               "check_type": "D",
@@ -308,6 +318,8 @@
         {
           "rule_id": "A5",
           "rule_description": "No Agreements to Return Investment",
+          "status": "has_issues",
+          "analysis": "Per Rule A5 (Guide para 19), the prospectus must contain an express statement that there are no agreements or arrangements to return, reimburse, or otherwise provide compensation to an SII in connection with their investment. A review of the provided sections did not identify such a statement. This is a critical omission.",
           "findings": [
             {
               "check_type": "D",
@@ -368,6 +380,8 @@
         {
           "rule_id": "B3",
           "rule_description": "Corporate Portfolio Threshold",
+          "status": "has_issues",
+          "analysis": "Per Rule B3, a corporation must have a diverse investment portfolio of at least PARAM_B3_PORT_MIN (HK$15bn), excluding consolidated subsidiaries. Xiaomi (p.189) discloses a portfolio of RMB74.5bn and Tencent (p.189) discloses RMB878.7bn, both exceeding the threshold. However, neither disclosure explicitly confirms that investments in consolidated subsidiaries are excluded from the portfolio calculation, as required by the rule. This is an insufficient disclosure.",
           "findings": [
             {
               "check_type": "D",
@@ -426,6 +440,8 @@
         {
           "rule_id": "B5",
           "rule_description": "Key Market Participant",
+          "status": "has_issues",
+          "analysis": "Per Rule B5, a key market participant in the applicant's industry may qualify as sophisticated. Geely SII and SAIC Motor SII (p.191) are described as 'a key participant in the downstream automotive industry'. However, para 32(ii) of the Guide requires advance submission to HKEX for investors qualifying under this category. The prospectus does not disclose whether this submission was made, which is a required element for substantiating the claim.",
           "findings": [
             {
               "check_type": "D",
@@ -486,6 +502,8 @@
         {
           "rule_id": "C3",
           "rule_description": "Reference Date (Listing Application)",
+          "status": "has_issues",
+          "analysis": "Per Rule C3, disclosure figures must also be as of a date not more than 6 months *before* the listing application date. The prospectus (tier2/pre_ipo_investment, page 186) identifies the first listing application date as June 29, 2023. However, the updated AUM and portfolio figures provided for all SIIs are dated September 30, 2023 or December 31, 2023 (e.g., Northern Light, p.186). These dates are *after* the application date, not before. This fails the threshold compliance check.",
           "findings": [
             {
               "check_type": "D",
@@ -531,6 +549,8 @@
         {
           "rule_id": "C4",
           "rule_description": "Investment Amount Disclosure",
+          "status": "has_issues",
+          "analysis": "Per Rule C4 (Guide para 25), the investment amount for each SII must be disclosed. The prospectus (tier2/pre_ipo_investment, pages 186-191) discloses shareholding percentages for each SII but does not state the corresponding investment amount in HKD or any other currency. This is a material omission.",
           "findings": [
             {
               "check_type": "D",

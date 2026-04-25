@@ -8,7 +8,7 @@
     "specialist_technology_industry": "Advanced hardware and software; Next-generation IT",
     "acceptable_sector": "Semiconductors; AI",
     "commercial_or_precommercial": "Commercial",
-    "expected_market_cap_hkd_bn": 15.0,
+    "expected_market_cap_hkd_bn": 15,
     "applicable_market_cap_tier": "HK$15-30bn",
     "applicable_aggregate_sii_threshold_pct": 15,
     "classification_notes": "Company is classified as Commercial based on its 2023 revenue of RMB312.4 million (~HK$342.1 million), which exceeds the HK$250 million threshold. Market cap is stated to exceed HK$15 billion, placing it in the HK$15-30bn tier for threshold purposes."
@@ -56,6 +56,8 @@
         {
           "rule_id": "A2",
           "rule_description": "Independence from Applicant and Controlling Shareholders",
+          "status": "has_issues",
+          "analysis": "Per Rule A2, each SII must be independent of the applicant and its controlling shareholders. The prospectus discloses that Dr. YANG Lei, a non-executive Director of the Company, was a partner at Northern Light Venture Capital from February 2010 to October 2021 (tier2/pre_ipo_investment, page 186). Northern Light first invested in September 2016, when Dr. Yang was a partner at the fund manager. This relationship may call into question the independence of the Northern Light SIIs at the time of investment, which is a critical requirement. The disclosure is present but the reasoning for concluding independence despite this connection is not provided, rendering it insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -114,6 +116,8 @@
         {
           "rule_id": "A4",
           "rule_description": "No Acting-in-Concert Arrangements",
+          "status": "has_issues",
+          "analysis": "Per Rule A4, SIIs must not be acting in concert with the applicant or controlling shareholders. The disclosure on page 186 of tier2/pre_ipo_investment states that 'each of the Pre-IPO Investors is independent from each other' (with some exceptions for aggregated funds). This addresses acting-in-concert arrangements between SIIs, but it does not explicitly state that there are no such arrangements between the SIIs and the applicant or its controlling shareholders. This omission makes the disclosure insufficient.",
           "findings": [
             {
               "check_type": "D",
@@ -159,6 +163,8 @@
         {
           "rule_id": "A5",
           "rule_description": "No Agreements to Return Investment",
+          "status": "has_issues",
+          "analysis": "Per Rule A5 and para 19 of the Guide, the prospectus must contain an express statement that there are no agreements or arrangements to return, reimburse, or otherwise compensate an SII in connection with their investment. A review of the provided sections did not identify such a statement. This is a critical absence.",
           "findings": [
             {
               "check_type": "D",
@@ -233,6 +239,8 @@
         {
           "rule_id": "C4",
           "rule_description": "Investment Amount Disclosure",
+          "status": "has_issues",
+          "analysis": "Per Rule C4 and para 25 of the Guide, the investment amount for each SII must be disclosed. The prospectus discloses shareholding percentages for each SII but does not disclose the corresponding investment amounts in HKD or another currency. This makes it impossible to verify compliance with the amount-based alternative thresholds in Rule D3. This is a critical absence.",
           "findings": [
             {
               "check_type": "D",

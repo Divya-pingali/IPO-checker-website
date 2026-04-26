@@ -1,7 +1,13 @@
 import type { Finding, ReviewDecision } from '../types';
 
 export function isReviewableStatus(status: Finding['status']): boolean {
-  return status === 'Absent' || status === 'Insufficient' || status === 'Flag';
+  return (
+    status === 'Absent' ||
+    status === 'Insufficient' ||
+    status === 'Present' ||
+    status === 'Not Applicable' ||
+    status === 'Flag'
+  );
 }
 
 export function isFindingReviewable(finding: Finding): boolean {
@@ -41,10 +47,11 @@ export function matchesReviewFilter(
   reviewDecisions: Record<string, ReviewDecision>,
   reviewFilter: 'pending' | 'approved' | 'dismissed' | 'all',
 ): boolean {
+  const decision = getReviewDecisionForFinding(finding, reviewDecisions);
+  // Deleted items only appear in 'all' view (in their own section)
+  if (decision === 'deleted') return reviewFilter === 'all';
   if (reviewFilter === 'all') return true;
   if (!isFindingReviewable(finding)) return false;
-
-  const decision = getReviewDecisionForFinding(finding, reviewDecisions);
   if (reviewFilter === 'pending') return decision === null || decision === 'mixed';
   return decision === reviewFilter;
 }

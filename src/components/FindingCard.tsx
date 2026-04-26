@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { Finding, MatchResult, ReviewDecision } from '../types';
-import { getReviewDecisionKeys, isFindingReviewable, isReviewableStatus } from '../utils/reviewState';
+import { getReviewDecisionKeys, isFindingReviewable } from '../utils/reviewState';
 
 interface FindingCardProps {
   finding: Finding;
@@ -88,16 +88,6 @@ export const FindingCard: React.FC<FindingCardProps> = ({
     for (const key of reviewDecisionKeys) onReviewDecision(key, decision);
   };
 
-  const applyCheckDecision = (
-    e: React.MouseEvent,
-    itemIndex: number,
-    checkType: string,
-    decision: ReviewDecision | null,
-  ) => {
-    e.stopPropagation();
-    onReviewDecision?.(`${finding.id}::${checkType}::${itemIndex}`, decision);
-  };
-
   const displayStatus =
     finding.status === 'Present'
       ? 'Clear'
@@ -106,16 +96,6 @@ export const FindingCard: React.FC<FindingCardProps> = ({
         : finding.status === 'Absent'
           ? 'Missing disclosure'
         : finding.status;
-  const reviewLabel =
-    reviewDecision === 'approved'
-      ? 'Approved'
-      : reviewDecision === 'dismissed'
-        ? 'Dismissed'
-        : reviewDecision === 'mixed'
-          ? 'Part-reviewed'
-          : 'Needs review';
-  const getCheckDecision = (itemIndex: number, checkType: string) =>
-    reviewDecisions[`${finding.id}::${checkType}::${itemIndex}`] ?? null;
 
   return (
     <div
@@ -203,37 +183,46 @@ export const FindingCard: React.FC<FindingCardProps> = ({
         </div>
       )}
 
-      {/* Row 4: Review actions (right-aligned) */}
-      {isReviewable && (
-        <div className="finding-card__review-actions" onClick={(e) => e.stopPropagation()}>
-          {reviewDecision !== 'approved' && (
-            <button
-              className="review-action review-action--approve"
-              onClick={(e) => applyDecision(e, 'approved')}
-              title="Approve this check"
-            >
-              ✓ Approve
-            </button>
-          )}
-          {reviewDecision !== 'dismissed' && (
-            <button
-              className="review-action review-action--dismiss"
-              onClick={(e) => applyDecision(e, 'dismissed')}
-              title="Dismiss this check"
-            >
-              ✕ Dismiss
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Expand toggle */}
-      <button
-        className="finding-card__expand-btn"
-        onClick={toggleExpand}
-      >
-        {expanded ? 'Hide detail ▲' : 'Show detail ▼'}
-      </button>
+      {/* Bottom bar: expand toggle + context-aware review actions */}
+      <div className="finding-card__bottom-bar">
+        <button className="finding-card__expand-btn" onClick={toggleExpand}>
+          {expanded ? 'Hide detail ▲' : 'Show detail ▼'}
+        </button>
+        {isReviewable && (
+          <div className="finding-card__review-actions" onClick={(e) => e.stopPropagation()}>
+            {(reviewDecision === null || reviewDecision === 'mixed') && (
+              <>
+                <button className="review-action review-action--approve" onClick={(e) => applyDecision(e, 'approved')}>
+                  ✓ Approve
+                </button>
+                <button className="review-action review-action--dismiss" onClick={(e) => applyDecision(e, 'dismissed')}>
+                  ✕ Dismiss
+                </button>
+              </>
+            )}
+            {reviewDecision === 'approved' && (
+              <button className="review-action review-action--undo" onClick={(e) => applyDecision(e, null)}>
+                ↩ Back to review
+              </button>
+            )}
+            {reviewDecision === 'dismissed' && (
+              <>
+                <button className="review-action review-action--undo" onClick={(e) => applyDecision(e, null)}>
+                  ↩ Restore
+                </button>
+                <button className="review-action review-action--delete" onClick={(e) => applyDecision(e, 'deleted')}>
+                  Delete
+                </button>
+              </>
+            )}
+            {reviewDecision === 'deleted' && (
+              <button className="review-action review-action--undo" onClick={(e) => applyDecision(e, null)}>
+                ↩ Restore
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Expanded detail */}
       {expanded && (
@@ -255,46 +244,6 @@ export const FindingCard: React.FC<FindingCardProps> = ({
                           ? 'Missing disclosure'
                           : f.issue_type}
                     </span>
-                    {isReviewableStatus(f.issue_type) && (
-                      <div className="finding-card__check-review" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          className={`review-action review-action--approve ${
-                            getCheckDecision(i, f.check_type) === 'approved'
-                              ? 'review-action--active'
-                              : ''
-                          }`}
-                          onClick={(e) =>
-                            applyCheckDecision(
-                              e,
-                              i,
-                              f.check_type,
-                              getCheckDecision(i, f.check_type) === 'approved' ? null : 'approved',
-                            )
-                          }
-                          title="Approve this flagged check"
-                        >
-                          ✓
-                        </button>
-                        <button
-                          className={`review-action review-action--dismiss ${
-                            getCheckDecision(i, f.check_type) === 'dismissed'
-                              ? 'review-action--active'
-                              : ''
-                          }`}
-                          onClick={(e) =>
-                            applyCheckDecision(
-                              e,
-                              i,
-                              f.check_type,
-                              getCheckDecision(i, f.check_type) === 'dismissed' ? null : 'dismissed',
-                            )
-                          }
-                          title="Dismiss this flagged check"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    )}
                   </div>
                 {f.explanation && (
                   <div className="finding-card__detail-section">

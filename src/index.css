@@ -769,12 +769,18 @@ html, body, #root {
 .finding-card__review-state--pending { color: var(--text-3); }
 
 
+.finding-card__bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
 .finding-card__review-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 4px;
-  margin-bottom: 4px;
 }
 
 .finding-card__check-review {
@@ -837,8 +843,7 @@ html, body, #root {
   padding: 2px 0;
   cursor: pointer;
   text-align: left;
-  display: block;
-  width: 100%;
+  flex: 1;
   transition: color .1s;
 }
 .finding-card__expand-btn:hover { color: var(--text); }
@@ -1111,6 +1116,66 @@ html, body, #root {
   border-color: #cbd5e1;
 }
 
+.review-action--undo {
+  color: var(--ui);
+  border-color: var(--border-2);
+}
+.review-action--undo:hover {
+  background: var(--ui-bg);
+  border-color: var(--ui);
+}
+
+.review-action--delete {
+  color: var(--c-critical);
+  border-color: var(--c-critical-br);
+  background: var(--c-critical-bg);
+}
+.review-action--delete:hover {
+  background: var(--c-critical);
+  color: #fff;
+  border-color: var(--c-critical);
+}
+
+/* ── Review section headers (All view) ─────────────────────────────────────── */
+.review-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.review-section-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.review-section-header--pending .review-section-dot  { background: #f59e0b; }
+.review-section-header--approved .review-section-dot  { background: var(--s-present); }
+.review-section-header--dismissed .review-section-dot { background: #ef4444; }
+.review-section-header--deleted .review-section-dot   { background: var(--border-2); }
+
+.review-section-count {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 5px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+
 /* ── Spinner ───────────────────────────────────────────────────────────────── */
 .spinner {
   width: 18px;
@@ -1263,6 +1328,8 @@ html, body, #root {
 .upload-card {
   width: 100%;
   max-width: 520px;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: 3px solid var(--accent);

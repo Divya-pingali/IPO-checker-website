@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Finding, MatchResult, ReviewDecision } from '../types';
 import { sortFindings } from '../utils/normalizeFindings';
-import { getReviewDecisionForFinding } from '../utils/reviewState';
+import { getReviewDecisionForFinding, isFindingReviewable } from '../utils/reviewState';
 import { FindingCard } from './FindingCard';
 
 interface ModuleSectionProps {
@@ -39,28 +39,25 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
     [findings],
   );
   const hasIssues = issuedFindings.length > 0;
-  const [collapsed, setCollapsed] = useState(!hasIssues);
+  const hasPendingReview = useMemo(
+    () =>
+      findings.some((finding) => {
+        if (!isFindingReviewable(finding)) return false;
+        const decision = getReviewDecisionForFinding(finding, reviewDecisions);
+        return decision === null || decision === 'mixed';
+      }),
+    [findings, reviewDecisions],
+  );
+  const shouldExpand = hasIssues || hasPendingReview;
+  const [collapsed, setCollapsed] = useState(!shouldExpand);
 
   useEffect(() => {
-    setCollapsed(!hasIssues);
-  }, [hasIssues, triggered]);
+    setCollapsed(!shouldExpand);
+  }, [shouldExpand, triggered]);
 
   const sorted = useMemo(() => sortFindings(findings), [findings]);
 
-  const absentCount = issuedFindings.filter((f) => f.status === 'Absent').length;
-  const insufficientCount = issuedFindings.filter((f) => f.status === 'Insufficient').length;
-  const flagCount = issuedFindings.filter((f) => f.status === 'Flag').length;
   const clearCount = sorted.filter((f) => f.status === 'Present').length;
-
-  const primaryState = !triggered
-    ? 'Not applicable'
-    : absentCount > 0
-      ? 'Missing disclosure'
-      : insufficientCount > 0
-        ? 'Needs detail'
-        : flagCount > 0
-          ? 'Flagged'
-          : 'Clear';
 
   const derivedSummary =
     summaryText ??
@@ -71,18 +68,6 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
         : clearCount > 0
           ? `${clearCount} clear check${clearCount === 1 ? '' : 's'}`
           : 'No issues raised in this module');
-
-  const primaryBadgeClass = !triggered
-    ? 'badge--na'
-    : absentCount > 0
-      ? 'badge--absent'
-      : insufficientCount > 0
-        ? 'badge--insufficient'
-        : flagCount > 0
-          ? 'badge--flag'
-          : hasIssues
-            ? 'badge--insufficient'
-            : 'badge--present';
 
   return (
     <div className="module-section">
@@ -95,7 +80,6 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
           <span className="module-section__name">{moduleName}</span>
           <span className="module-section__summary">{derivedSummary}</span>
         </div>
-        <span className={`badge badge--sm ${primaryBadgeClass}`}>{primaryState}</span>
         <span className="module-section__toggle">{collapsed ? '▸' : '▾'}</span>
       </button>
 

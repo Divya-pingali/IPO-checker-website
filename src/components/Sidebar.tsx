@@ -136,22 +136,11 @@ function buildModuleSummary(mod: {
   findings: Finding[];
   not_applicable_reason?: string;
 }): string {
-  if (!mod.triggered) return 'Not applicable for this applicant';
-  if (mod.findings.length === 0) return 'No issues raised in this module';
+  if (!mod.triggered) return 'Module not triggered for this applicant';
+  if (mod.findings.length === 0) return 'No checks in this module';
 
-  const missing = mod.findings.filter((f) => f.status === 'Absent').length;
-  const needsDetail = mod.findings.filter((f) => f.status === 'Insufficient').length;
-  const clear = mod.findings.filter((f) => f.status === 'Present').length;
-  const notApplicable = mod.findings.filter((f) => f.status === 'Not Applicable').length;
-  const critical = mod.findings.filter((f) => f.severity === 'Critical').length;
 
-  const parts: string[] = [];
-  if (missing > 0) parts.push(`${missing} missing disclosure${missing === 1 ? '' : 's'}`);
-  if (needsDetail > 0) parts.push(`${needsDetail} needs-detail item${needsDetail === 1 ? '' : 's'}`);
-  if (missing === 0 && needsDetail === 0 && clear > 0) parts.push(`${clear} clear`);
-  if (notApplicable > 0 && missing === 0 && needsDetail === 0) parts.push(`${notApplicable} not applicable`);
-  if (critical > 0) parts.push(`${critical} critical`);
-  return parts.join(' · ');
+  return `${mod.findings.length} check${mod.findings.length === 1 ? '' : 's'}`;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -462,10 +451,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* ── Basic Rules tab ─────────────────────────────────────────────── */}
         {isRules && viewMode === 'flat' && (
           <div className="sidebar__flat-list">
-            {filtered.map(renderCard)}
-            {filtered.length === 0 && (
-              <div className="sidebar__empty">No findings match the current filters.</div>
-            )}
+            {filters.review === 'all'
+              ? (() => {
+                  const pending = filtered.filter((f) => {
+                    const d = getReviewDecisionForFinding(f, reviewDecisions);
+                    return d === null || d === 'mixed';
+                  });
+                  const approved = filtered.filter((f) => getReviewDecisionForFinding(f, reviewDecisions) === 'approved');
+                  const dismissed = filtered.filter((f) => getReviewDecisionForFinding(f, reviewDecisions) === 'dismissed');
+                  const deleted = filtered.filter((f) => getReviewDecisionForFinding(f, reviewDecisions) === 'deleted');
+                  return (
+                    <>
+                      {pending.length > 0 && (
+                        <>
+                          <div className="review-section-header review-section-header--pending">
+                            <span className="review-section-dot" />
+                            Needs review <span className="review-section-count">{pending.length}</span>
+                          </div>
+                          {pending.map(renderCard)}
+                        </>
+                      )}
+                      {approved.length > 0 && (
+                        <>
+                          <div className="review-section-header review-section-header--approved">
+                            <span className="review-section-dot" />
+                            Approved <span className="review-section-count">{approved.length}</span>
+                          </div>
+                          {approved.map(renderCard)}
+                        </>
+                      )}
+                      {dismissed.length > 0 && (
+                        <>
+                          <div className="review-section-header review-section-header--dismissed">
+                            <span className="review-section-dot" />
+                            Dismissed <span className="review-section-count">{dismissed.length}</span>
+                          </div>
+                          {dismissed.map(renderCard)}
+                        </>
+                      )}
+                      {deleted.length > 0 && (
+                        <>
+                          <div className="review-section-header review-section-header--deleted">
+                            <span className="review-section-dot" />
+                            Deleted <span className="review-section-count">{deleted.length}</span>
+                          </div>
+                          {deleted.map(renderCard)}
+                        </>
+                      )}
+                      {filtered.length === 0 && (
+                        <div className="sidebar__empty">No findings match the current filters.</div>
+                      )}
+                    </>
+                  );
+                })()
+              : (
+                <>
+                  {filtered.map(renderCard)}
+                  {filtered.length === 0 && (
+                    <div className="sidebar__empty">No findings match the current filters.</div>
+                  )}
+                </>
+              )}
           </div>
         )}
 

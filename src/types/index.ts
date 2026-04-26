@@ -182,7 +182,7 @@ export interface FilterState {
 
 export type ViewMode = 'grouped' | 'flat';
 
-export type ReviewDecision = 'approved' | 'dismissed';
+export type ReviewDecision = 'approved' | 'dismissed' | 'deleted';
 export type ReviewFilter = FilterState['review'];
 
 export interface AssetConfig {

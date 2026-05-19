@@ -59,6 +59,14 @@ const MATCH_TITLE: Record<string, string> = {
   no_page: 'No page reference',
 };
 
+function statusLabel(status: string): string {
+  if (status === 'Clear') return 'Present';
+  if (status === 'Needs detail') return 'Insufficient Information';
+  if (status === 'Missing disclosure') return 'Absent';
+  if (status === 'Insufficient') return 'Insufficient Information';
+  return status;
+}
+
 export const FindingCard: React.FC<FindingCardProps> = ({
   finding,
   matchResult,
@@ -88,15 +96,6 @@ export const FindingCard: React.FC<FindingCardProps> = ({
     for (const key of reviewDecisionKeys) onReviewDecision(key, decision);
   };
 
-  const displayStatus =
-    finding.status === 'Present'
-      ? 'Clear'
-      : finding.status === 'Insufficient'
-        ? 'Needs detail'
-        : finding.status === 'Absent'
-          ? 'Missing disclosure'
-        : finding.status;
-
   return (
     <div
       className={`finding-card ${isActive ? 'finding-card--active' : ''} finding-card--${matchStatus}`}
@@ -106,7 +105,7 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
-      {/* Row 1: [A1] Title .............. [Critical] [Needs detail] [●] */}
+      {/* Row 1: [A1] Title .............. [Critical] [Insufficient Information] [●] */}
       <div className="finding-card__header">
         <span className="finding-card__id">{finding.ruleId}</span>
         <span className="finding-card__title">{finding.title}</span>
@@ -117,7 +116,7 @@ export const FindingCard: React.FC<FindingCardProps> = ({
             </span>
           )}
           <span className={`badge ${STATUS_CLASS[finding.status] ?? 'badge--na'}`}>
-            {displayStatus}
+            {statusLabel(finding.status)}
           </span>
           <span
             className={`finding-card__match-indicator match-${matchStatus}`}
@@ -238,11 +237,7 @@ export const FindingCard: React.FC<FindingCardProps> = ({
                   <div className="finding-card__check-detail-header">
                     <span className="check-type-badge">{CHECK_TYPE_LABELS[f.check_type] ?? f.check_type}</span>
                     <span className={`badge badge--sm ${STATUS_CLASS[f.issue_type] ?? 'badge--na'}`}>
-                      {f.issue_type === 'Insufficient'
-                        ? 'Needs detail'
-                        : f.issue_type === 'Absent'
-                          ? 'Missing disclosure'
-                          : f.issue_type}
+                      {statusLabel(f.issue_type)}
                     </span>
                   </div>
                 {f.explanation && (

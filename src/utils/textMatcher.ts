@@ -35,15 +35,31 @@ export function itemToRect(
   item: TextItem,
   scale: number,
   viewportHeight: number,
+  viewportTransform?: number[],
 ): TextRect {
-  const tx = item.transform[4];
-  const ty = item.transform[5];
-
   // Font size / height: prefer item.height, fall back to |transform[3]|
   const rawHeight = Math.abs(item.height) > 0.5
     ? Math.abs(item.height)
     : Math.abs(item.transform[3]);
 
+  if (viewportTransform) {
+    const [a1, b1, c1, d1, e1, f1] = viewportTransform;
+    const [a2, b2, c2, d2, e2, f2] = item.transform;
+    const tx = a1 * e2 + c1 * f2 + e1;
+    const ty = b1 * e2 + d1 * f2 + f1;
+    const h = rawHeight * scale;
+    const w = Math.abs(item.width) * scale;
+
+    return {
+      x: Math.round(tx),
+      y: Math.round(ty - h),
+      width: Math.round(Math.max(w, 4)),
+      height: Math.round(Math.max(h, 10)),
+    };
+  }
+
+  const tx = item.transform[4];
+  const ty = item.transform[5];
   const x = tx * scale;
   const baselineY = viewportHeight - ty * scale;
   const h = rawHeight * scale;
@@ -116,25 +132,16 @@ export interface TextMatchSpan {
 }
 
 /**
- * Find all occurrences of anchorPhrase in the page's text items, expanding
- * each match to the full enclosing sentence boundary.
+ * Find all occurrences of anchorPhrase in the page's text items.
  *
- * Strategy:
- *  1. Concatenate all non-empty items into a single normalised string with a
- *     char-to-item mapping.
- *  2. Find every occurrence of the anchor phrase with indexOf.
- *  3. For each occurrence, call findSentenceBounds to expand to the containing
- *     sentence (or sentence group if the anchor spans multiple sentences).
- *  4. Collect all items that overlap the expanded range and compute their rects.
- *
- * The resulting rects cover the full sentence(s). mergeRects then reduces them
- * to one rect per visual line, giving clean sentence-level highlight boxes.
+ * The result covers the full sentence that contains the source anchor.
  */
 export function matchAnchorInPage(
   items: TextItem[],
   anchorPhrase: string,
   scale: number,
   viewportHeight: number,
+  viewportTransform?: number[],
 ): TextMatchSpan[] {
   if (!anchorPhrase?.trim() || items.length === 0) return [];
 
@@ -167,15 +174,13 @@ export function matchAnchorInPage(
     if (matchIdx === -1) break;
 
     const matchEnd = matchIdx + normAnchor.length;
-
-    // Expand match to full sentence boundaries
     const { sentenceStart, sentenceEnd } = findSentenceBounds(
       fullText,
       matchIdx,
       matchEnd,
     );
 
-    // Collect parts that overlap with [sentenceStart, sentenceEnd)
+    // Collect parts that overlap with the sentence containing the anchor.
     const coveredItemIndices: number[] = [];
     for (const part of parts) {
       if (part.charEnd > sentenceStart && part.charStart < sentenceEnd) {
@@ -185,7 +190,7 @@ export function matchAnchorInPage(
 
     if (coveredItemIndices.length > 0) {
       const rects = coveredItemIndices.map((idx) =>
-        itemToRect(items[idx], scale, viewportHeight),
+        itemToRect(items[idx], scale, viewportHeight, viewportTransform),
       );
       results.push({ rects, itemIndices: coveredItemIndices, matchStart: matchIdx });
     }

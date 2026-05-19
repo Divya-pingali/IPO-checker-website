@@ -66,7 +66,7 @@ export const ModuleSection: React.FC<ModuleSectionProps> = ({
       : hasIssues
         ? `${issuedFindings.length} issue${issuedFindings.length === 1 ? '' : 's'} flagged`
         : clearCount > 0
-          ? `${clearCount} clear check${clearCount === 1 ? '' : 's'}`
+          ? `${clearCount} present check${clearCount === 1 ? '' : 's'}`
           : 'No issues raised in this module');
 
   return (

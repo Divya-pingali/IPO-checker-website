@@ -4,6 +4,7 @@ interface UseResizablePanelsOptions {
   defaultSidebarWidth?: number;
   minSidebarWidth?: number;
   maxSidebarWidth?: number;
+  resetKey?: unknown;
 }
 
 interface UseResizablePanelsResult {
@@ -21,11 +22,13 @@ export function useResizablePanels({
   defaultSidebarWidth = 420,
   minSidebarWidth = 280,
   maxSidebarWidth = 720,
+  resetKey,
 }: UseResizablePanelsOptions = {}): UseResizablePanelsResult {
   const [sidebarWidth, setSidebarWidth] = useState(defaultSidebarWidth);
   const [isDragging, setIsDragging] = useState(false);
 
   const dragging = useRef(false);
+  const hasUserResized = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(defaultSidebarWidth);
 
@@ -33,6 +36,7 @@ export function useResizablePanels({
     dragging.current = true;
     startX.current = e.clientX;
     startWidth.current = sidebarWidth;
+    hasUserResized.current = true;
     setIsDragging(true);
     e.preventDefault();
   }, [sidebarWidth]);
@@ -62,6 +66,18 @@ export function useResizablePanels({
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [handleMouseMove, handleMouseUp]);
+
+  useEffect(() => {
+    if (hasUserResized.current) return;
+    setSidebarWidth(defaultSidebarWidth);
+    startWidth.current = defaultSidebarWidth;
+  }, [defaultSidebarWidth]);
+
+  useEffect(() => {
+    hasUserResized.current = false;
+    setSidebarWidth(defaultSidebarWidth);
+    startWidth.current = defaultSidebarWidth;
+  }, [resetKey]);
 
   return { sidebarWidth, isDragging, handleMouseDown };
 }

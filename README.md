@@ -1,4 +1,4 @@
-# Linklaters IPO Prospectus Checker
+# Edith IPO Prospectus Checker
 
 A web application that runs an end-to-end compliance analysis of HKEX Chapter 18C IPO prospectuses against the Meaningful Investment (SII) requirements, and displays the results in an interactive PDF viewer.
 
@@ -7,7 +7,7 @@ A web application that runs an end-to-end compliance analysis of HKEX Chapter 18
 ## Project Structure
 
 ```
-llaw3272-linklaters-ipo-checker-website/
+llaw3272-edith-ipo-checker-website/
 ├── backend/                   Python pipeline
 │   ├── extract_sections.py    Extracts tier1/tier2 sections from a prospectus PDF
 │   ├── analyze.py             Sends sections to Claude API, produces checker.json
@@ -131,4 +131,4 @@ prospectus.pdf
 
 ## License
 
-Copyright © Linklaters
+Copyright © Edith

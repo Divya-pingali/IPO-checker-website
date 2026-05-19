@@ -25,9 +25,9 @@ const SEVERITIES = [
 ];
 
 const STATUSES = [
-  { status: 'Clear', colour: 'var(--s-present)', bg: 'var(--s-present-bg)', desc: 'The rule was checked and the disclosure appears to satisfy the requirement based on the cited prospectus text.' },
-  { status: 'Needs detail', colour: 'var(--s-insuf)', bg: 'var(--s-insuf-bg)', desc: 'A disclosure exists but is too vague, templated, or incomplete to confirm compliance. Requires improvement.' },
-  { status: 'Missing disclosure', colour: 'var(--s-absent)', bg: 'var(--s-absent-bg)', desc: 'The required disclosure is entirely missing from the prospectus and should be added.' },
+  { status: 'Present', colour: 'var(--s-present)', bg: 'var(--s-present-bg)', desc: 'The rule was checked and the disclosure appears to satisfy the requirement based on the cited prospectus text.' },
+  { status: 'Insufficient Information', colour: 'var(--s-insuf)', bg: 'var(--s-insuf-bg)', desc: 'A disclosure exists but is too vague, templated, or incomplete to confirm compliance. Requires improvement.' },
+  { status: 'Absent', colour: 'var(--s-absent)', bg: 'var(--s-absent-bg)', desc: 'The required disclosure is entirely missing from the prospectus and should be added.' },
   { status: 'Not Applicable', colour: 'var(--s-na)', bg: 'var(--s-na-bg)', desc: 'The module\'s trigger condition was not met, so all its rules are marked N/A.' },
 ];
 
@@ -88,14 +88,14 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
             <section className="help-section">
               <h2 className="help-section__title">What this tool does</h2>
               <p className="help-section__body">
-                The <strong>Linklaters IPO Prospectus Checker</strong> is a pre-submission
+                The <strong>Edith IPO Prospectus Checker</strong> is a pre-submission
                 review tool that checks Chapter 18C prospectus disclosures against the{' '}
                 <strong>Meaningful Investment</strong> requirement across all 10 modules
                 (Modules 0 and A–I).
               </p>
               <p className="help-section__body">
                 The tool extracts the relevant sections from a prospectus PDF, sends them to
-                the <strong>Gemini AI API</strong> together with the Linklaters compliance
+                the <strong>Gemini AI API</strong> together with the Edith compliance
                 rulebook as context, and produces a structured report covering every rule in
                 each module. Results are displayed in an interactive viewer with side-by-side
                 PDF navigation and highlighted source passages.
@@ -107,7 +107,7 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
                 <li>Click <strong>Analyse</strong> — the tool extracts sections and runs the AI analysis (typically 2–5 minutes).</li>
                 <li>Review findings in the sidebar, grouped by module or listed individually.</li>
                 <li>Click any finding to jump to the relevant page in the prospectus PDF.</li>
-                <li>Use the <strong>Rulebook</strong> button in the sidebar to open the Linklaters compliance rulebook alongside the prospectus.</li>
+                <li>Use the <strong>Rulebook</strong> button in the sidebar to open the Edith compliance rulebook alongside the prospectus.</li>
               </ol>
 
               <div className="help-callout help-callout--info">
@@ -275,16 +275,16 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
             <section className="help-section">
               <h2 className="help-section__title">Rulebook</h2>
 
-              <h3 className="help-section__sub">Linklaters Compliance Rulebook</h3>
+              <h3 className="help-section__sub">Edith Compliance Rulebook</h3>
               <p className="help-section__body">
                 The rulebook embedded below is a structured compliance guide developed by
-                Linklaters based on the HKEX guidelines for the Chapter 18C Meaningful
+                Edith based on the HKEX guidelines for the Chapter 18C Meaningful
                 Investment requirement. It is <strong>not</strong> an official HKEX
                 publication — it is an internal reference tool created specifically to
                 structure the AI analysis across all 10 modules.
               </p>
               <p className="help-section__body">
-                The AI analysis engine uses this Linklaters rulebook as its primary system
+                The AI analysis engine uses this Edith rulebook as its primary system
                 prompt context when evaluating prospectus disclosures. No other rulebook
                 document is sent to the API.
               </p>
@@ -294,12 +294,12 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
                 rel="noopener noreferrer"
                 className="help-rulebook-btn"
               >
-                Open Linklaters Rulebook PDF ↗
+                Open Edith Rulebook PDF ↗
               </a>
               <div className="help-rulebook-embed">
                 <iframe
                   src="/rulebook_v2.pdf"
-                  title="Linklaters Meaningful Investment Compliance Rulebook"
+                  title="Edith Meaningful Investment Compliance Rulebook"
                   className="help-rulebook-iframe"
                 />
               </div>
@@ -312,7 +312,7 @@ export const HelpScreen: React.FC<HelpScreenProps> = ({ onBack, onNewAnalysis })
                 <strong>Section 2.5 (Specialist Technology Companies)</strong>, which sets out
                 the Specialist Technology Industry definitions, minimum market capitalisation
                 requirements, R&D expenditure thresholds, and the Meaningful Investment
-                framework. This is the official HKEX document on which the Linklaters rulebook
+                framework. This is the official HKEX document on which the Edith rulebook
                 is based.
               </p>
             </section>

@@ -20,6 +20,31 @@ import { HelpScreen } from './components/HelpScreen';
 
 type View = 'upload' | 'viewer' | 'help';
 
+const DEFAULT_PDF_PAGE_WIDTH = 595;
+const INITIAL_PDF_SCALE = 1.4;
+const PDF_VIEWER_HORIZONTAL_CHROME = 40;
+const SIDEBAR_MIN_WIDTH = 360;
+const SIDEBAR_MAX_WIDTH = 760;
+const DEFAULT_FILTERS: FilterState = {
+  tab: 'rules',
+  severity: [],
+  status: [],
+  moduleId: [],
+  checkType: [],
+  category: [],
+  review: 'pending',
+  search: '',
+};
+
+function calculateSidebarWidth(viewportWidth: number, pdfPageWidth: number): number {
+  const pdfWidth = pdfPageWidth * INITIAL_PDF_SCALE + PDF_VIEWER_HORIZONTAL_CHROME;
+  const availableForSidebar = viewportWidth - pdfWidth;
+  return Math.min(
+    SIDEBAR_MAX_WIDTH,
+    Math.max(SIDEBAR_MIN_WIDTH, Math.floor(availableForSidebar)),
+  );
+}
+
 export default function App() {
   const [reviewDecisions, setReviewDecisions] = useState<Record<string, ReviewDecision>>({});
 
@@ -74,10 +99,45 @@ export default function App() {
     useRulebookReference('/rulebook_v2.pdf');
 
   // ── Panel resize ─────────────────────────────────────────────────────────────
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window === 'undefined' ? 1440 : window.innerWidth,
+  );
+  const [pdfPageWidth, setPdfPageWidth] = useState(DEFAULT_PDF_PAGE_WIDTH);
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!pdfDoc) {
+      setPdfPageWidth(DEFAULT_PDF_PAGE_WIDTH);
+      return;
+    }
+
+    let cancelled = false;
+    pdfDoc.getPage(1).then((page) => {
+      if (!cancelled) setPdfPageWidth(page.getViewport({ scale: 1 }).width);
+    }).catch(() => {
+      if (!cancelled) setPdfPageWidth(DEFAULT_PDF_PAGE_WIDTH);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pdfDoc]);
+
+  const defaultSidebarWidth = useMemo(
+    () => calculateSidebarWidth(viewportWidth, pdfPageWidth),
+    [viewportWidth, pdfPageWidth],
+  );
+
   const { sidebarWidth, isDragging, handleMouseDown } = useResizablePanels({
-    defaultSidebarWidth: 420,
-    minSidebarWidth: 280,
-    maxSidebarWidth: 720,
+    defaultSidebarWidth,
+    minSidebarWidth: SIDEBAR_MIN_WIDTH,
+    maxSidebarWidth: SIDEBAR_MAX_WIDTH,
+    resetKey: pdfDoc,
   });
 
   // ── Highlight lookup maps ─────────────────────────────────────────────────────
@@ -93,19 +153,20 @@ export default function App() {
   // ── UI state ──────────────────────────────────────────────────────────────────
   const [activeFindingId, setActiveFindingId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scale, setScale] = useState(1.4);
+  const [scale, setScale] = useState(INITIAL_PDF_SCALE);
   const [scrollToPage, setScrollToPage] = useState<number | null>(null);
-  const [filters, setFilters] = useState<FilterState>({
-    tab: 'rules',
-    severity: [],
-    status: [],
-    moduleId: [],
-    checkType: [],
-    category: [],
-    review: 'pending',
-    search: '',
-  });
-  const [viewMode, setViewMode] = useState<ViewMode>('grouped');
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const [viewMode, setViewMode] = useState<ViewMode>('flat');
+
+  useEffect(() => {
+    if (!checkerData) return;
+    setActiveFindingId(null);
+    setCurrentPage(1);
+    setScale(INITIAL_PDF_SCALE);
+    setScrollToPage(null);
+    setFilters(DEFAULT_FILTERS);
+    setViewMode('flat');
+  }, [checkerData]);
 
   const reviewStorageKey = useMemo(() => {
     if (!checkerData?.meta) return null;

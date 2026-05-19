@@ -66,9 +66,7 @@ function sortedStatuses(statuses: string[]): string[] {
 }
 
 function statusLabel(status: string): string {
-  if (status === 'Present') return 'Clear';
-  if (status === 'Insufficient') return 'Needs detail';
-  if (status === 'Absent') return 'Missing disclosure';
+  if (status === 'Insufficient') return 'Insufficient Information';
   if (status === 'Not Applicable') return 'Not applicable';
   return status;
 }

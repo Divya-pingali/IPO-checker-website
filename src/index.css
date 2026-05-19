@@ -287,8 +287,8 @@ html, body, #root {
   background: var(--surface);
   border-left: 1px solid var(--border);
   overflow: hidden;
-  min-width: 280px;
-  max-width: 720px;
+  min-width: 360px;
+  max-width: 760px;
   box-shadow: -2px 0 8px rgba(0,0,0,.04);
 }
 
@@ -1063,6 +1063,17 @@ html, body, #root {
 
 .btn--outline { border-color: var(--ui-border); color: var(--ui); }
 .btn--outline:hover:not(:disabled) { background: var(--ui-bg); }
+
+.btn--danger {
+  border-color: rgba(239, 68, 68, .35);
+  color: #b91c1c;
+  background: #fff7f7;
+}
+.btn--danger:hover:not(:disabled) {
+  border-color: rgba(220, 38, 38, .55);
+  background: #fee2e2;
+  color: #991b1b;
+}
 
 .btn--ghost {
   background: transparent;

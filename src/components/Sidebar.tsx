@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import type {
   Finding,
   MatchResult,
@@ -13,6 +13,7 @@ import {
   sortFindings,
 } from '../utils/normalizeFindings';
 import {
+  getReviewDecisionKeys,
   getReviewDecisionForFinding,
   isFindingReviewable,
   matchesReviewFilter,
@@ -162,6 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   width,
   checkerJson,
 }) => {
+  const findingsScrollRef = useRef<HTMLDivElement>(null);
   const baseDisplayFindings = useMemo(() => {
     if (filters.tab === 'rules') {
       return viewMode === 'flat'
@@ -197,6 +199,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     () => sortFindings(applyFilters(displayFindings, filters, reviewDecisions)),
     [displayFindings, filters, reviewDecisions],
   );
+
+  useEffect(() => {
+    findingsScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+  }, [filters.tab, viewMode, checkerJson]);
 
   // Findings whose PDF anchor could not be located
   const unresolvedFindings = useMemo(
@@ -359,6 +365,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
     );
   }, [findings, reviewDecisions]);
 
+  const dismissedDecisionKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const finding of findings) {
+      if (getReviewDecisionForFinding(finding, reviewDecisions) !== 'dismissed') continue;
+      for (const key of getReviewDecisionKeys(finding)) keys.add(key);
+    }
+    return [...keys];
+  }, [findings, reviewDecisions]);
+
+  const handleDeleteDismissed = () => {
+    for (const key of dismissedDecisionKeys) {
+      onReviewDecision(key, 'deleted');
+    }
+  };
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
   const renderCard = (f: Finding) => (
     <FindingCard
@@ -406,6 +427,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <option value="all">All ({reviewCounts.total})</option>
             </select>
           )}
+          {filters.review === 'dismissed' && dismissedDecisionKeys.length > 0 && (
+            <button
+              className="btn btn--sm btn--danger"
+              onClick={handleDeleteDismissed}
+              title={`Delete ${dismissedDecisionKeys.length} dismissed item${dismissedDecisionKeys.length === 1 ? '' : 's'}`}
+            >
+              Delete dismissed
+            </button>
+          )}
           <button
             className="btn btn--sm btn--outline"
             onClick={onOpenRulebook}
@@ -446,7 +476,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       />
 
       {/* Findings list */}
-      <div className="sidebar__findings">
+      <div className="sidebar__findings" ref={findingsScrollRef}>
 
         {/* ── Basic Rules tab ─────────────────────────────────────────────── */}
         {isRules && viewMode === 'flat' && (

@@ -149,6 +149,7 @@ export function usePdfAnchorMatcher(
             anchorToTry.anchor_phrase,
             EXTRACT_SCALE,
             viewport.height,
+            viewport.transform,
           );
 
           const anchorIndex = f.sourceAnchors.findIndex((a) => a === anchorsOnThisPage[0]);

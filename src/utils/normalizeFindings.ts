@@ -33,6 +33,13 @@ const STATUS_COLOUR: Record<string, string> = {
 
 const SEVERITY_RANK = ['Critical', 'High', 'Medium', 'Low'];
 
+function normalizeDisplayStatus(status: string): string {
+  if (status === 'Clear') return 'Present';
+  if (status === 'Needs detail') return 'Insufficient';
+  if (status === 'Missing disclosure') return 'Absent';
+  return status;
+}
+
 function normalizeStatus(status: string, findings?: V4FindingItem[]): string {
   if (status === 'clear') return 'Present';
   if (status === 'not_applicable') return 'Not Applicable';
@@ -62,6 +69,7 @@ function dedupeAnchors(anchors: SourceAnchor[]): SourceAnchor[] {
 
 function v3RuleToFinding(rule: RuleItem, module: ModuleItem): Finding {
   const anchor = rule.detail?.source_anchor ?? null;
+  const status = normalizeDisplayStatus(rule.status);
   return {
     id: `${module.module_id}-${rule.rule_id}`,
     moduleId: module.module_id,
@@ -69,8 +77,8 @@ function v3RuleToFinding(rule: RuleItem, module: ModuleItem): Finding {
     ruleId: rule.rule_id,
     title: rule.rule_description,
     severity: rule.severity,
-    status: rule.status,
-    statusColour: rule.status_colour ?? STATUS_COLOUR[rule.status] ?? 'grey',
+    status,
+    statusColour: rule.status_colour ?? STATUS_COLOUR[status] ?? 'grey',
     summary: rule.summary,
     explanation: rule.detail?.explanation ?? '',
     recommendation: rule.detail?.recommendation ?? '',
@@ -85,7 +93,12 @@ function v3RuleToFinding(rule: RuleItem, module: ModuleItem): Finding {
 }
 
 function v4StatusRuleToFinding(rule: V4RuleStatusItem, module: ModuleItem): Finding {
-  const items = Array.isArray(rule.findings) ? rule.findings : [];
+  const items = Array.isArray(rule.findings)
+    ? rule.findings.map((item) => ({
+        ...item,
+        issue_type: normalizeDisplayStatus(item.issue_type),
+      }))
+    : [];
   const status = normalizeStatus(rule.status, items);
   const allAnchors = dedupeAnchors(
     items.length > 0
@@ -124,7 +137,10 @@ function v4StatusRuleToFinding(rule: V4RuleStatusItem, module: ModuleItem): Find
 }
 
 function v4LegacyRuleToFinding(rule: V4LegacyIssueRuleItem, module: ModuleItem): Finding {
-  const items = rule.findings;
+  const items = rule.findings.map((item) => ({
+    ...item,
+    issue_type: normalizeDisplayStatus(item.issue_type),
+  }));
   const allAnchors = dedupeAnchors(
     items.map((f) => f.source_anchor).filter((a): a is SourceAnchor => a != null),
   );

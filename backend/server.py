@@ -5,7 +5,7 @@ LLAW Meaningful Investment Checker — API Server
 Accepts a prospectus upload, runs extraction + Gemini analysis, returns checker.json.
 
 Usage:
-    # From inside llaw3272-linklaters-ipo-checker-website/
+    # From inside llaw3272-edith-ipo-checker-website/
     python backend/server.py
 
     # With hot-reload for development:
